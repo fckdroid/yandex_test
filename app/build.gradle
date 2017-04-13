@@ -1,30 +1,65 @@
-apply plugin: 'com.android.application'
+apply plugin: "com.android.application"
+apply plugin: "com.frogermcs.androiddevmetrics"
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "llltt.yandextest"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary true
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
 }
 
+configurations.all {
+    resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+
+    testCompile rootProject.junit
+    androidTestCompile(rootProject.espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
+
+    compile rootProject.rxJava
+    compile rootProject.rxAndroid
+    compile rootProject.rxPermissions
+    compile rootProject.rxJavaAdapter
+    compile rootProject.retrofit
+    compile rootProject.gsonConverter
+    compile rootProject.dagger
+    compile rootProject.moxy
+    compile rootProject.moxyAndroid
+    compile rootProject.moxyCompiler
+    compile rootProject.moxyAppcompat
+    compile rootProject.conductor
+    compile rootProject.conductorSupport
+    compile rootProject.conductorRxLifecycle
+    compile rootProject.ormlite
+
+    compile rootProject.glide
+    compile rootProject.design
+    compile rootProject.support
+    compile rootProject.appcompat
+    compile rootProject.constraint
+    compile rootProject.recyclerview
+
+    debugCompile rootProject.stetho
+    debugCompile rootProject.stethoOkhttp
+    debugCompile rootProject.leakcanary
+
+    annotationProcessor rootProject.moxyCompiler
+    annotationProcessor rootProject.daggerCompiler
 }
+
