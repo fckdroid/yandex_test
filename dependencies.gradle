@@ -22,7 +22,7 @@ ext {
     rxJavaAdapter = "com.squareup.retrofit2:adapter-rxjava2:$retrofitV"
     rxPermissions = "com.tbruyelle.rxpermissions2:rxpermissions:$rxPermissionsV@aar"
     retrofit = "com.squareup.retrofit2:retrofit:$retrofitV"
-    gsonConverter = "com.squareup.retrofit2:converter-gson:$retrofitV"
+    retrofitGsonConverter = "com.squareup.retrofit2:converter-gson:$retrofitV"
     moxy = "com.arello-mobile:moxy:$moxyV"
     moxyAndroid = "com.arello-mobile:moxy-android:$moxyV"
     moxyAppcompat = "com.arello-mobile:moxy-app-compat:$moxyV"

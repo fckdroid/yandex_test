@@ -27,17 +27,12 @@ configurations.all {
 
 dependencies {
 
-    testCompile rootProject.junit
-    androidTestCompile(rootProject.espresso, {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
     compile rootProject.rxJava
     compile rootProject.rxAndroid
     compile rootProject.rxPermissions
     compile rootProject.rxJavaAdapter
     compile rootProject.retrofit
-    compile rootProject.gsonConverter
+    compile rootProject.retrofitGsonConverter
     compile rootProject.dagger
     compile rootProject.moxy
     compile rootProject.moxyAndroid
@@ -61,5 +56,10 @@ dependencies {
 
     annotationProcessor rootProject.moxyCompiler
     annotationProcessor rootProject.daggerCompiler
+
+    testCompile rootProject.junit
+    androidTestCompile(rootProject.espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 }
 
