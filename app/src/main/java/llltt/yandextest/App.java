@@ -15,7 +15,7 @@ import llltt.yandextest.dagger.modules.RepositoriesModule;
 
 public class App extends Application {
 
-    private static RefWatcher refWatcher;
+    public static RefWatcher refWatcher;
     static App instance;
     private AppComponent appComponent;
 
