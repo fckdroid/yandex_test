@@ -7,12 +7,17 @@ import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import llltt.yandextest.dagger.AppComponent;
+import llltt.yandextest.dagger.DaggerAppComponent;
+import llltt.yandextest.dagger.modules.RepositoriesModule;
+
 /** Created by Maksim Sukhotski on 4/14/2017. */
 
 public class App extends Application {
 
     private static RefWatcher refWatcher;
     static App instance;
+    private AppComponent appComponent;
 
     @Override
     public void onCreate() {
@@ -26,8 +31,8 @@ public class App extends Application {
                     .build());
             if (!LeakCanary.isInAnalyzerProcess(this)) refWatcher = LeakCanary.install(this);
         }
-//        appComponent = DaggerAppComponent.builder()
-//                .appModule(AppModule(this))
-//                .build()
+        appComponent = DaggerAppComponent.builder()
+                .repositoriesModule(new RepositoriesModule(this))
+                .build();
     }
 }
