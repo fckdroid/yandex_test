@@ -23,6 +23,9 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        appComponent = DaggerAppComponent.builder()
+                .repositoriesModule(new RepositoriesModule(this))
+                .build();
         if (BuildConfig.DEBUG) {
             AndroidDevMetrics.initWith(this);
             Stetho.initialize(Stetho.newInitializerBuilder(this)
@@ -31,8 +34,5 @@ public class App extends Application {
                     .build());
             if (!LeakCanary.isInAnalyzerProcess(this)) refWatcher = LeakCanary.install(this);
         }
-        appComponent = DaggerAppComponent.builder()
-                .repositoriesModule(new RepositoriesModule(this))
-                .build();
     }
 }

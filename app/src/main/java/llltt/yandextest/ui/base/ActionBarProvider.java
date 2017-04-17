@@ -1,6 +1,6 @@
 package llltt.yandextest.ui.base;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 
 /**
  * Created by Maksim Sukhotski on 4/15/2017.
