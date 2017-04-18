@@ -1,6 +1,5 @@
 package llltt.yandextest.ui.base;
 
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +16,7 @@ import llltt.yandextest.App;
 
 /** Created by Maksim Sukhotski on 4/15/2017. */
 
-public abstract class MoxyController extends Controller {
+public abstract class MoxyController extends Controller {//todo remake with extends
 
     private final MvpDelegate<MoxyController> mvpDelegate = new MvpDelegate<>(this);
     boolean isStateSaved = false;
@@ -42,31 +41,7 @@ public abstract class MoxyController extends Controller {
 
     protected abstract View inflateView(LayoutInflater inflater, ViewGroup container);
 
-    protected abstract void onViewBound(View view);
-
-    @Override
-    protected void onAttach(@NonNull View view) {
-        setTitle();
-        super.onAttach(view);
-    }
-
-    protected void setTitle() {
-        Controller parentController = getParentController();
-        while (parentController != null) {
-            if (parentController instanceof MoxyController &&
-                    ((MoxyController) parentController).getTitle() != null) return;
-            parentController = parentController.getParentController();
-        }
-        String title = getTitle();
-        if (title != null) getActionBar().setTitle(title);
-    }
-
-    protected String getTitle() {
-        return null;
-    }
-
-    private ActionBar getActionBar() {
-        return ((ActionBarProvider) getActivity()).getSupportActionBar();
+    protected void onViewBound(@NonNull View view) {
     }
 
     @Override

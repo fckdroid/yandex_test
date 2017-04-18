@@ -1,5 +1,4 @@
 ext {
-
     supportV = "25.3.1"
     retrofitV = "2.2.0"
     okhttpV = "3.4.1"
