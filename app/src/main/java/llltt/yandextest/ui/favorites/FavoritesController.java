@@ -16,6 +16,6 @@ public class FavoritesController extends MoxyController implements FavoritesView
 
     @Override
     protected View inflateView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.part_recycler, container, false);
+        return inflater.inflate(R.layout.part_pager, container, false);
     }
 }

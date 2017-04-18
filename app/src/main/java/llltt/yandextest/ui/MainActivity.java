@@ -22,6 +22,8 @@ import llltt.yandextest.ui.translator.TranslatorController;
 
 public final class MainActivity extends AppCompatActivity implements ActionBarProvider {
 
+    public static final String NAVIGATION_KEY = "navigation_key";
+
     Animation controllerAnim;
     Animation navigationAnim;
     private Router translatorRouter;
@@ -83,6 +85,19 @@ public final class MainActivity extends AppCompatActivity implements ActionBarPr
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
         controllerAnim = AnimationUtils.loadAnimation(this, R.anim.controller);
         navigationAnim = AnimationUtils.loadAnimation(this, R.anim.navigation);
+//        bottomNavigationView.getSelectedItemId()
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        bottomNavigationView.setSelectedItemId(savedInstanceState.getInt(NAVIGATION_KEY));
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(NAVIGATION_KEY, bottomNavigationView.getSelectedItemId());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
