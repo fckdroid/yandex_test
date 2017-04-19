@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 apply plugin: "com.android.application"
 apply plugin: "com.frogermcs.androiddevmetrics"
 
@@ -18,44 +20,61 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-}
-
-configurations.all {
-    resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
+    productFlavors {
+        dev {
+            //TODO: Provide your own api_key at "~./app/yandex.json"
+            buildConfigField('String',
+                    'API_URL',
+                    "\"" + (new JsonSlurper().parseText(file('yandex.json').text)).api_url + "\"")
+            buildConfigField('String',
+                    'API_KEY',
+                    "\"" + (new JsonSlurper().parseText(file('yandex.json').text)).api_key + "\"")
+        }
+    }
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
+    }
 }
 
 dependencies {
-
-    compile rootProject.rxJava
-    compile rootProject.rxAndroid
-    compile rootProject.rxPermissions
-    compile rootProject.rxJavaAdapter
-    compile rootProject.retrofit
-    compile rootProject.retrofitGsonConverter
-    compile rootProject.dagger
-    compile rootProject.moxy
-    compile rootProject.moxyAndroid
-    compile rootProject.moxyCompiler
-    compile rootProject.moxyAppcompat
-    compile rootProject.conductor
-    compile rootProject.conductorSupport
-    compile rootProject.conductorRxLifecycle
-    compile rootProject.ormlite
-
-    compile rootProject.glide
-    compile rootProject.design
-    compile rootProject.support
-    compile rootProject.appcompat
-    compile rootProject.constraint
-    compile rootProject.recyclerview
-
-    debugCompile rootProject.stetho
-    debugCompile rootProject.stethoOkhttp
-    debugCompile rootProject.leakcanary
-
+    /*The definitions of the <rootProject.*> are placed in ~.dependencies.gradle*/
     annotationProcessor rootProject.moxyCompiler
     annotationProcessor rootProject.daggerCompiler
-
+    compile(
+            /*core*/
+            rootProject.rxJava,
+            rootProject.rxAndroid,
+            rootProject.rxPermissions,
+            rootProject.rxJavaAdapter,
+            /*MVP*/
+            rootProject.moxy,
+            rootProject.moxyAndroid,
+            rootProject.moxyCompiler,
+            rootProject.moxyAppcompat,
+            /*dependency injection*/
+            rootProject.dagger,
+            /*network*/
+            rootProject.retrofit,
+            rootProject.retrofitGsonConverter,
+            /*view*/
+            rootProject.conductor,
+            rootProject.conductorSupport,
+            rootProject.conductorRxLifecycle,
+            /*database*/
+            rootProject.ormlite,
+            /*design*/
+            rootProject.glide,
+            rootProject.design,
+            rootProject.support,
+            rootProject.appcompat,
+            rootProject.constraint,
+            rootProject.recyclerview,
+    )
+    debugCompile(
+            rootProject.stetho,
+            rootProject.stethoOkhttp,
+            rootProject.leakcanary
+    )
     testCompile rootProject.junit
     androidTestCompile(rootProject.espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'

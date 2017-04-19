@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
 
-    <llltt.yandextest.ui.translator.ClearableEditText
+    <rxlll.yandextest.ui.translator.ClearableEditText
         android:id="@+id/editText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
