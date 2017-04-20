@@ -7,6 +7,7 @@ import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import rxlll.yandextest.dagger.AppComponent;
 import rxlll.yandextest.dagger.DaggerAppComponent;
 import rxlll.yandextest.dagger.modules.NetworkModule;
 import rxlll.yandextest.dagger.modules.RepositoriesModule;
@@ -19,11 +20,12 @@ import static rxlll.yandextest.BuildConfig.API_URL;
 public class App extends Application {
 
     public static RefWatcher refWatcher;
+    public static AppComponent appComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        DaggerAppComponent.builder()
+        appComponent = DaggerAppComponent.builder()
                 .repositoriesModule(new RepositoriesModule(this))
                 .networkModule(new NetworkModule(API_URL, API_KEY))
                 .build();

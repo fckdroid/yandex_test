@@ -16,6 +16,6 @@ public class HistoryController extends MoxyController implements HistoryView {
 
     @Override
     protected View inflateView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.part_pager, container, false);
+        return inflater.inflate(R.layout.part_recycler, container, false);
     }
 }

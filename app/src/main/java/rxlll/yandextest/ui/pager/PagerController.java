@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -21,10 +22,11 @@ import rxlll.yandextest.ui.history.HistoryController;
  */
 
 public class PagerController extends MoxyController implements PagerView {
-    public static final int COUNT_OF_PAGES = 2;
+    private static final int COUNT_OF_PAGES = 2;
     private final RouterPagerAdapter pagerAdapter;
-    ViewPager viewPager;
-    TabLayout tabLayout;
+    private final ViewPager.OnPageChangeListener onPageChangedListener;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     public PagerController() {
         pagerAdapter = new RouterPagerAdapter(this) {
@@ -53,6 +55,25 @@ public class PagerController extends MoxyController implements PagerView {
                 return FavoritesController.TAB_NAME;
             }
         };
+        onPageChangedListener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                EditText searchEditText = (EditText) getActivity().findViewById(R.id.search_edit_text);
+                if (position == 0) {
+                    searchEditText.setHint("Найти в истории");
+                } else {
+                    searchEditText.setHint("Найти в избранном");
+                }
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        };
     }
 
     @Override
@@ -61,6 +82,7 @@ public class PagerController extends MoxyController implements PagerView {
         viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(onPageChangedListener);
         tabLayout.setupWithViewPager(viewPager);
     }
 

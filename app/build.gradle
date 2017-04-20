@@ -1,5 +1,8 @@
 import groovy.json.JsonSlurper
 
+plugins {
+    id "me.tatarka.retrolambda" version "3.5.0"
+}
 apply plugin: "com.android.application"
 apply plugin: "com.frogermcs.androiddevmetrics"
 
@@ -7,7 +10,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "llltt.yandextest"
+        applicationId "rxlll.yandextest"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -22,7 +25,7 @@ android {
     }
     productFlavors {
         dev {
-            //TODO: Provide your own api_key at "~./app/yandex.json"
+            //TODO: Provide your own api_key to "~./app/yandex.json"
             buildConfigField('String',
                     'API_URL',
                     "\"" + (new JsonSlurper().parseText(file('yandex.json').text)).api_url + "\"")
@@ -31,8 +34,15 @@ android {
                     "\"" + (new JsonSlurper().parseText(file('yandex.json').text)).api_key + "\"")
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
+    }
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
     }
 }
 

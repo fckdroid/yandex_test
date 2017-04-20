@@ -25,16 +25,42 @@ public abstract class MoxyController extends Controller {
     boolean hasExited = false;
 
     public MoxyController() {
-        this.mvpDelegate.onCreate();
+        mvpDelegate.onCreate();
     }
 
     public MoxyController(@Nullable Bundle args) {
-        this.mvpDelegate.onCreate(args);
+        mvpDelegate.onCreate(args);
     }
 
     protected abstract View inflateView(LayoutInflater inflater, ViewGroup container);
 
     protected void onViewBound(@NonNull View view) {
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mvpDelegate.onAttach();
+    }
+
+    @Override
+    protected void onDetach(@NonNull View view) {
+        super.onDetach(view);
+        mvpDelegate.onDetach();
+    }
+
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        super.onDestroyView(view);
+        mvpDelegate.onDetach();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (hasExited) App.refWatcher.watch(this);
+        if (isStateSaved) return;
+        mvpDelegate.onDestroy();
     }
 
     @NonNull

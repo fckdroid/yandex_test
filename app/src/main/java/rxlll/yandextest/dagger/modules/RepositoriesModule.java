@@ -9,6 +9,8 @@ import dagger.Module;
 import dagger.Provides;
 import rxlll.yandextest.data.repositories.preferences.PreferencesRepository;
 import rxlll.yandextest.data.repositories.preferences.PreferencesRepositoryImpl;
+import rxlll.yandextest.data.repositories.translator.TranslatorRepository;
+import rxlll.yandextest.data.repositories.translator.TranslatorRepositoryImpl;
 
 /** Created by Maksim Sukhotski on 4/14/2017. */
 
@@ -27,11 +29,11 @@ public class RepositoriesModule {
     public PreferencesRepository providePreferencesRepository() {
         return new PreferencesRepositoryImpl(context);
     }
-//
-//    @Provides
-//    @NonNull
-//    @Singleton
-//    public DatabaseHelper getDatabaseHelper() {
-//        return OpenHelperManager.getHelper(appContext, DatabaseHelper.class);
-//    }
+
+    @Provides
+    @NonNull
+    @Singleton
+    public TranslatorRepository provideTranslatorRepository() {
+        return new TranslatorRepositoryImpl();
+    }
 }
