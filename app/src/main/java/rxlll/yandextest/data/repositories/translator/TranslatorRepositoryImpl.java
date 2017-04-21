@@ -2,10 +2,11 @@ package rxlll.yandextest.data.repositories.translator;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
+import retrofit2.Response;
 import rxlll.yandextest.App;
 import rxlll.yandextest.data.network.TranslatorApi;
-import rxlll.yandextest.data.network.models.BaseResponse;
 import rxlll.yandextest.data.network.models.Detect;
 import rxlll.yandextest.data.network.models.Langs;
 import rxlll.yandextest.data.network.models.Translate;
@@ -22,27 +23,32 @@ public class TranslatorRepositoryImpl implements TranslatorRepository {
     }
 
     @Override
-    public Single<BaseResponse<Translate>> translate(String text, String lang) {
+    public Single<Response<Translate>> translate(String text, String lang) {
         return translatorApi.translate(text, lang, null);
     }
 
     @Override
-    public Single<BaseResponse<Translate>> translate(String text, String lang, String options) {
+    public Single<Response<Translate>> translate(String text, String lang, String options) {
         return translatorApi.translate(text, lang, options);
     }
 
     @Override
-    public Single<BaseResponse<Detect>> detect(String text) {
+    public Single<Response<Detect>> detect(String text) {
         return translatorApi.detect(text, null);
     }
 
     @Override
-    public Single<BaseResponse<Detect>> detect(String text, String hint) {
+    public Single<Response<Detect>> detect(String text, String hint) {
         return translatorApi.detect(text, hint);
     }
 
     @Override
-    public Single<Langs> getLangs(String ui) {
+    public Single<Response<Langs>> getLangs(String ui) {
         return translatorApi.getLangs(ui);
+    }
+
+    @Override
+    public Completable saveLangs(Langs langs) {
+        return null;
     }
 }

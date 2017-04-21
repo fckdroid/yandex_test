@@ -30,6 +30,13 @@ public class RepositoriesModule {
         return new PreferencesRepositoryImpl(context);
     }
 
+//    @Provides
+//    @NonNull
+//    @Singleton
+//    public DatabaseRepository provideDatabaseRepository() {
+//        return new DatabaseRepositoryImpl(context);
+//    }
+
     @Provides
     @NonNull
     @Singleton

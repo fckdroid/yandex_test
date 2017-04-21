@@ -1,5 +1,7 @@
 package rxlll.yandextest.ui.translator;
 
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,9 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
     private TextView leftTextView;
     private TextView rightTextView;
+    private View navigationView;
+    private View swapImageView;
+    private TextView copyRightTextView;
 
     @Override
     protected View inflateView(LayoutInflater inflater, ViewGroup container) {
@@ -38,18 +43,23 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     protected void onViewBound(View view) {
         leftTextView = (TextView) view.findViewById(R.id.lang_left_text_view);
         rightTextView = (TextView) view.findViewById(R.id.lang_right_text_view);
-        leftTextView.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new LangsController())
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler())));
+        swapImageView = view.findViewById(R.id.swap_image_view);
+        copyRightTextView = ((TextView) view.findViewById(R.id.copyright_text_view));
+        navigationView = getActivity().findViewById(R.id.navigation);
+        navigationView.setVisibility(View.VISIBLE);
+
+        leftTextView.setOnClickListener(v -> translatorPresenter.pushLangsController());
         rightTextView.setOnClickListener(v -> Toast.makeText(getActivity(), "right" + rightTextView.getText(), Toast.LENGTH_SHORT).show());
-        view.findViewById(R.id.swap_image_view)
-                .setOnClickListener(v -> translatorPresenter.setRoute(new Pair<>(rightTextView.getText(), leftTextView.getText())));
+        swapImageView.setOnClickListener(v -> translatorPresenter.setRoute(new Pair<>(rightTextView.getText(), leftTextView.getText())));
+        copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
+        copyRightTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+
     }
 
     @Override
     public void showRoute(Pair<String, String> route) {
-        getActivity().findViewById(R.id.swap_image_view)
-                .startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
+        swapImageView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
         Animation animLeftToCenter = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_left_to_center);
         Animation animCenterToLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_center_to_left);
         Animation animRightToCenter = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_right_to_center);
@@ -92,5 +102,31 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         leftTextView.startAnimation(animLeftToCenter);
         rightTextView.startAnimation(animRightToCenter);
     }
+
+    @Override
+    public void showLangsController() {
+        getRouter().pushController(RouterTransaction.with(new LangsController())
+                .pushChangeHandler(new VerticalChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler()));
+        Animation animNavHide = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_down);
+        animNavHide.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                navigationView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        navigationView.startAnimation(animNavHide);
+    }
+
 
 }

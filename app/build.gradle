@@ -5,6 +5,7 @@ plugins {
 }
 apply plugin: "com.android.application"
 apply plugin: "com.frogermcs.androiddevmetrics"
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 25
@@ -71,7 +72,7 @@ dependencies {
             rootProject.conductorSupport,
             rootProject.conductorRxLifecycle,
             /*database*/
-            rootProject.ormlite,
+            rootProject.greendao,
             /*design*/
             rootProject.glide,
             rootProject.design,

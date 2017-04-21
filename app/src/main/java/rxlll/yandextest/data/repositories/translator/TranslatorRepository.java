@@ -1,7 +1,8 @@
 package rxlll.yandextest.data.repositories.translator;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
-import rxlll.yandextest.data.network.models.BaseResponse;
+import retrofit2.Response;
 import rxlll.yandextest.data.network.models.Detect;
 import rxlll.yandextest.data.network.models.Langs;
 import rxlll.yandextest.data.network.models.Translate;
@@ -10,17 +11,19 @@ import rxlll.yandextest.data.network.models.Translate;
 
 public interface TranslatorRepository {
 
-    Single<BaseResponse<Translate>> translate(String text,
-                                              String lang);
+    Single<Response<Translate>> translate(String text,
+                                          String lang);
 
-    Single<BaseResponse<Translate>> translate(String text,
-                                              String lang,
-                                              String options);
+    Single<Response<Translate>> translate(String text,
+                                          String lang,
+                                          String options);
 
-    Single<BaseResponse<Detect>> detect(String text);
+    Single<Response<Detect>> detect(String text);
 
-    Single<BaseResponse<Detect>> detect(String text,
-                                        String hint);
+    Single<Response<Detect>> detect(String text,
+                                    String hint);
 
-    Single<Langs> getLangs(String ui);
+    Single<Response<Langs>> getLangs(String ui);
+
+    Completable saveLangs(Langs langs);
 }

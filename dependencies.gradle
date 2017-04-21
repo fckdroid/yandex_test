@@ -14,7 +14,7 @@ ext {
     leakcanaryV = "1.5"
     junitV = "4.12"
     espressoV = "2.2.2"
-    ormliteV = "5.0"
+    greendaoV = "3.2.2"
 
     rxJava = "io.reactivex.rxjava2:rxjava:$rxjava"
     rxAndroid = "io.reactivex.rxjava2:rxandroid:$rxjava"
@@ -31,7 +31,7 @@ ext {
     conductorSupport = "com.bluelinelabs:conductor-support:$conductorV"
     dagger = "com.google.dagger:dagger:$daggerV"
     daggerCompiler = "com.google.dagger:dagger-compiler:$daggerV"
-    ormlite = "com.j256.ormlite:ormlite-android:$ormliteV"
+    greendao = "org.greenrobot:greendao:$greendaoV"
 
     appcompat = "com.android.support:appcompat-v7:$supportV"
     recyclerview = "com.android.support:recyclerview-v7:$supportV"

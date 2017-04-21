@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 import rxlll.yandextest.App;
-import rxlll.yandextest.data.network.models.BaseResponse;
 import rxlll.yandextest.data.network.models.Detect;
 import rxlll.yandextest.data.network.models.Langs;
 import rxlll.yandextest.data.network.models.Translate;
@@ -24,35 +24,35 @@ public class TranslatorInteractorImpl implements TranslatorInteractor {
     }
 
     @Override
-    public Single<BaseResponse<Translate>> translate(String text, String lang) {
+    public Single<Response<Translate>> translate(String text, String lang) {
         return translatorRepository.translate(text, lang)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
-    public Single<BaseResponse<Translate>> translate(String text, String lang, String options) {
+    public Single<Response<Translate>> translate(String text, String lang, String options) {
         return translatorRepository.translate(text, lang, options)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
-    public Single<BaseResponse<Detect>> detect(String text) {
+    public Single<Response<Detect>> detect(String text) {
         return translatorRepository.detect(text)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
-    public Single<BaseResponse<Detect>> detect(String text, String hint) {
+    public Single<Response<Detect>> detect(String text, String hint) {
         return translatorRepository.detect(text, hint)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
-    public Single<Langs> getLangs(String ui) {
+    public Single<Response<Langs>> getLangs(String ui) {
         return translatorRepository.getLangs(ui)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

@@ -1,6 +1,6 @@
 package rxlll.yandextest.data.network.models;
 
-import com.google.gson.internal.LinkedTreeMap;
+import java.util.Map;
 
 /**
  * Created by Maksim Sukhotski on 4/15/2017.
@@ -9,13 +9,13 @@ import com.google.gson.internal.LinkedTreeMap;
 public class Langs {
 
     private String dirs[];
-    private LinkedTreeMap<String, String> langs;
+    private Map<String, String> langs;
 
     public String[] getDirs() {
         return dirs;
     }
 
-    public LinkedTreeMap<String, String> getLangs() {
+    public Map<String, String> getLangs() {
         return langs;
     }
 }

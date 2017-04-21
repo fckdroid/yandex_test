@@ -4,6 +4,7 @@ import android.util.Pair;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 /**
@@ -14,4 +15,9 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 public interface TranslatorView extends MvpView {
 
     void showRoute(Pair<String, String> route);
+
+//    void swapRoute(Pair<String, String> route);
+
+    @StateStrategyType(SkipStrategy.class)
+    void showLangsController();
 }
