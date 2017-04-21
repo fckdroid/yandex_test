@@ -7,6 +7,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import rxlll.yandextest.data.repositories.dictionary.DictionaryRepository;
+import rxlll.yandextest.data.repositories.dictionary.DictionaryRepositoryImpl;
 import rxlll.yandextest.data.repositories.preferences.PreferencesRepository;
 import rxlll.yandextest.data.repositories.preferences.PreferencesRepositoryImpl;
 import rxlll.yandextest.data.repositories.translator.TranslatorRepository;
@@ -42,5 +44,12 @@ public class RepositoriesModule {
     @Singleton
     public TranslatorRepository provideTranslatorRepository() {
         return new TranslatorRepositoryImpl();
+    }
+
+    @Provides
+    @NonNull
+    @Singleton
+    public DictionaryRepository provideDictionaryRepository() {
+        return new DictionaryRepositoryImpl();
     }
 }

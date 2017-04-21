@@ -3,6 +3,6 @@
     <string name="translate">Переводчик</string>
     <string name="phrasebook">Разговорник</string>
     <string name="settings">Настройки</string>
-    <string name="translateFragment_copyright" tools:ignore="TypographyQuotes"><![CDATA[Переведено с помощью сервисов “<a href="http://translate.yandex.ru/">Яндекс.Переводчик</a>” и “<a href="https://tech.yandex.ru/dictionary/">Яндекс.Словарь</a>”.]]></string>
+    <string name="translateFragment_copyright" tools:ignore="TypographyQuotes"><![CDATA[Реализовано с помощью сервисов «<a href="http://translate.yandex.ru/">Яндекс.Переводчик</a>» и «<a href="https://tech.yandex.ru/dictionary/">Яндекс.Словарь</a>».]]></string>
 
 </resources>

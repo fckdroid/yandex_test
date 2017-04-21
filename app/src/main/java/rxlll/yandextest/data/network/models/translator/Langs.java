@@ -1,4 +1,4 @@
-package rxlll.yandextest.data.network.models;
+package rxlll.yandextest.data.network.models.translator;
 
 import java.util.Map;
 
@@ -7,14 +7,11 @@ import java.util.Map;
  */
 
 public class Langs {
-
     private String dirs[];
     private Map<String, String> langs;
-
     public String[] getDirs() {
         return dirs;
     }
-
     public Map<String, String> getLangs() {
         return langs;
     }

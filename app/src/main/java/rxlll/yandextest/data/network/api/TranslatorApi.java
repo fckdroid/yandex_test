@@ -1,13 +1,13 @@
-package rxlll.yandextest.data.network;
+package rxlll.yandextest.data.network.api;
 
 import io.reactivex.Single;
 import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
-import rxlll.yandextest.data.network.models.Detect;
-import rxlll.yandextest.data.network.models.Langs;
-import rxlll.yandextest.data.network.models.Translate;
+import rxlll.yandextest.data.network.models.translator.Detect;
+import rxlll.yandextest.data.network.models.translator.Langs;
+import rxlll.yandextest.data.network.models.translator.Translate;
 
 /** Created by Maksim Sukhotski on 4/14/2017. */
 

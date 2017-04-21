@@ -7,6 +7,7 @@ import rxlll.yandextest.business.translator.TranslatorInteractorImpl;
 import rxlll.yandextest.dagger.modules.InteractorsModule;
 import rxlll.yandextest.dagger.modules.NetworkModule;
 import rxlll.yandextest.dagger.modules.RepositoriesModule;
+import rxlll.yandextest.data.repositories.dictionary.DictionaryRepositoryImpl;
 import rxlll.yandextest.data.repositories.translator.TranslatorRepositoryImpl;
 import rxlll.yandextest.ui.translator.TranslatorPresenter;
 
@@ -20,4 +21,6 @@ public interface AppComponent {
     void inject(TranslatorInteractorImpl translatorInteractor);
 
     void inject(TranslatorRepositoryImpl translatorRepository);
+
+    void inject(DictionaryRepositoryImpl dictionaryRepository);
 }

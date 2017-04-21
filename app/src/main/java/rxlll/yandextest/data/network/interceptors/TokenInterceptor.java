@@ -11,10 +11,10 @@ import okio.Buffer;
 
 /** Created by Maksim Sukhotski on 4/15/2017. */
 
-public class AuthInterceptor implements Interceptor {
+public class TokenInterceptor implements Interceptor {
     private String apiKey;
 
-    public AuthInterceptor(String token) {
+    public TokenInterceptor(String token) {
         this.apiKey = token;
     }
 

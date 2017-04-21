@@ -53,8 +53,6 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         swapImageView.setOnClickListener(v -> translatorPresenter.setRoute(new Pair<>(rightTextView.getText(), leftTextView.getText())));
         copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
         copyRightTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
-
     }
 
     @Override

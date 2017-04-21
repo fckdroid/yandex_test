@@ -24,17 +24,6 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-    productFlavors {
-        dev {
-            //TODO: Provide your own api_key to "~./app/yandex.json"
-            buildConfigField('String',
-                    'API_URL',
-                    "\"" + (new JsonSlurper().parseText(file('yandex.json').text)).api_url + "\"")
-            buildConfigField('String',
-                    'API_KEY',
-                    "\"" + (new JsonSlurper().parseText(file('yandex.json').text)).api_key + "\"")
-        }
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -44,6 +33,23 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
+    }
+    productFlavors {
+        dev {
+            //TODO: Provide your own api_key to "~./app/yandex-api.json"
+            buildConfigField('String',
+                    'TRANSLATOR_API_URL',
+                    "\"" + (new JsonSlurper().parseText(file('yandex-api.json').text)).translator_api_url + "\"")
+            buildConfigField('String',
+                    'TRANSLATOR_API_KEY',
+                    "\"" + (new JsonSlurper().parseText(file('yandex-api.json').text)).translator_api_key + "\"")
+            buildConfigField('String',
+                    'DICTIONARY_API_URL',
+                    "\"" + (new JsonSlurper().parseText(file('yandex-api.json').text)).dictionary_api_url + "\"")
+            buildConfigField('String',
+                    'DICTIONARY_API_KEY',
+                    "\"" + (new JsonSlurper().parseText(file('yandex-api.json').text)).dictionary_api_key + "\"")
+        }
     }
 }
 

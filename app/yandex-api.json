@@ -1,0 +1,6 @@
+{
+  "translator_api_url": "https://translate.yandex.net/api/v1.5/tr.json/",
+  "translator_api_key": "",
+  "dictionary_api_url": "https://dictionary.yandex.net/api/v1/dicservice.json/",
+  "dictionary_api_key": ""
+}
