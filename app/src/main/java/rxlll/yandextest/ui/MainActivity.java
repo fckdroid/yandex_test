@@ -76,27 +76,19 @@ public final class MainActivity extends AppCompatActivity {
         settingsRouter = Conductor.attachRouter(this,
                 (ViewGroup) findViewById(R.id.settings_container),
                 savedInstanceState);
-        translatorRouter.setRoot(RouterTransaction.with(new TranslatorController()));
-        pagerRouter.setRoot(RouterTransaction.with(new PagerController()));
-        settingsRouter.setRoot(RouterTransaction.with(new SettingsController()));
+
+        if (!translatorRouter.hasRootController())
+            translatorRouter.setRoot(RouterTransaction.with(new TranslatorController()));
+        if (!pagerRouter.hasRootController())
+            pagerRouter.setRoot(RouterTransaction.with(new PagerController()));
+        if (!settingsRouter.hasRootController())
+            settingsRouter.setRoot(RouterTransaction.with(new SettingsController()));
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
         controllerAnim = AnimationUtils.loadAnimation(this, R.anim.controller);
         navigationAnim = AnimationUtils.loadAnimation(this, R.anim.navigation);
 //        bottomNavigationView.getSelectedItemId()
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        bottomNavigationView.setSelectedItemId(savedInstanceState.getInt(NAVIGATION_KEY));
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(NAVIGATION_KEY, bottomNavigationView.getSelectedItemId());
-        super.onSaveInstanceState(outState);
     }
 
     @Override

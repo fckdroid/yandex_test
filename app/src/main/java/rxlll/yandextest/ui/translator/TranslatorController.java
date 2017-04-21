@@ -10,9 +10,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import rxlll.yandextest.R;
 import rxlll.yandextest.ui.base.MoxyController;
+import rxlll.yandextest.ui.langs.LangsController;
 
 /**
  * Created by Maksim Sukhotski on 4/16/2017.
@@ -23,8 +26,8 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     @InjectPresenter
     TranslatorPresenter translatorPresenter;
 
-    TextView leftTextView;
-    TextView rightTextView;
+    private TextView leftTextView;
+    private TextView rightTextView;
 
     @Override
     protected View inflateView(LayoutInflater inflater, ViewGroup container) {
@@ -35,22 +38,16 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     protected void onViewBound(View view) {
         leftTextView = (TextView) view.findViewById(R.id.lang_left_text_view);
         rightTextView = (TextView) view.findViewById(R.id.lang_right_text_view);
-        leftTextView.setOnClickListener(v -> Toast.makeText(getActivity(), "left" + leftTextView.getText(), Toast.LENGTH_SHORT).show());
+        leftTextView.setOnClickListener(v -> getRouter().pushController(RouterTransaction.with(new LangsController())
+                .pushChangeHandler(new VerticalChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler())));
         rightTextView.setOnClickListener(v -> Toast.makeText(getActivity(), "right" + rightTextView.getText(), Toast.LENGTH_SHORT).show());
         view.findViewById(R.id.swap_image_view)
-                .setOnClickListener(v -> translatorPresenter.swapLangs());
+                .setOnClickListener(v -> translatorPresenter.setRoute(new Pair<>(rightTextView.getText(), leftTextView.getText())));
     }
 
     @Override
-    public void showCurrentRoute(Pair<String, String> route) {
-        ((TextView) getActivity().findViewById(R.id.lang_left_text_view)).setText(route.first);
-        ((TextView) getActivity().findViewById(R.id.lang_right_text_view)).setText(route.second);
-    }
-
-    @Override
-    public void swapLangs() {
-        String leftPreviousText = leftTextView.getText().toString();
-        String rightPreviousText = rightTextView.getText().toString();
+    public void showRoute(Pair<String, String> route) {
         getActivity().findViewById(R.id.swap_image_view)
                 .startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
         Animation animLeftToCenter = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_left_to_center);
@@ -65,7 +62,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                leftTextView.setText(rightPreviousText);
+                leftTextView.setText(route.first);
                 leftTextView.startAnimation(animCenterToLeft);
             }
 
@@ -74,7 +71,6 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             }
         });
-        leftTextView.startAnimation(animLeftToCenter);
         animRightToCenter.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -83,7 +79,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                rightTextView.setText(leftPreviousText);
+                rightTextView.setText(route.second);
                 rightTextView.startAnimation(animCenterToRight);
             }
 
@@ -92,7 +88,9 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             }
         });
-        rightTextView.startAnimation(animRightToCenter);
 
+        leftTextView.startAnimation(animLeftToCenter);
+        rightTextView.startAnimation(animRightToCenter);
     }
+
 }

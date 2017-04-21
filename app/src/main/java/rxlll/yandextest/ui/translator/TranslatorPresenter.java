@@ -31,13 +31,13 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
         super.onFirstViewAttach();
         String ui = Locale.getDefault().getLanguage();
         translatorInteractor.getLangs(ui).subscribe(
-                response -> getViewState().showCurrentRoute(new Pair<>(response.getLangs().get(ui),
+                response -> getViewState().showRoute(new Pair<>(response.getLangs().get(ui),
                         response.getLangs().get(ui == "en" ? "ru" : "en"))),
                 error -> {
                 });
     }
 
-    public void swapLangs() {
-        getViewState().swapLangs();
+    public void setRoute(Pair pair) {
+        getViewState().showRoute(pair);
     }
 }
