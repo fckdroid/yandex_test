@@ -37,16 +37,20 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(langsResponse ->//// TODO: 4/22/2017 cach lang for langcontroller
-                        getViewState().showDir(new Pair<>(langsResponse.body().getLangs().get(ui),
+                        getViewState().showDirUpdated(new Pair<>(langsResponse.body().getLangs().get(ui),
                                 langsResponse.body().getLangs().get(ui == "en" ? "ru" : "en")))
                 );
     }
 
-    public void setDir(Pair pair) {
-        getViewState().showDir(pair);
+    public void setDir(Pair dir) {
+        getViewState().showDirUpdated(dir);
     }
 
     public void pushLangsController(boolean type, String s) {
         getViewState().showLangsController(type, s);
+    }
+
+    public void saveCurrentDir(Pair<String, String> dir) {
+        getViewState().showDir(dir);
     }
 }

@@ -6,14 +6,14 @@
     android:orientation="vertical">
 
     <rxlll.yandextest.ui.translator.ClearableEditText
-        android:id="@+id/editText"
+        android:id="@+id/translator_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="0dp"
         android:gravity="top"
-        android:hint="Введите текст на ..."
+        android:hint="Введите текст "
         android:imeOptions="actionDone"
         android:inputType="textMultiLine"
         android:maxLines="5"
@@ -30,7 +30,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         android:text="100 / 10000"
-        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintBottom_toBottomOf="@+id/translator_edit_text"
         app:layout_constraintRight_toRightOf="parent" />
 
     <Button
@@ -57,7 +57,7 @@
         android:layout_marginRight="0dp"
         android:layout_marginTop="0dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintTop_toBottomOf="@+id/translator_edit_text"
         app:srcCompat="@drawable/star" />
 
     <TextView

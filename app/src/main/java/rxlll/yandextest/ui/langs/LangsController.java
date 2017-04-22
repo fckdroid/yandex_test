@@ -29,10 +29,8 @@ public class LangsController extends MoxyController implements LangsView {
     LangsPresenter langsPresenter;
     private boolean type;
     private String currentLang;
-    private RecyclerView allRecyclerView;
-    private RecyclerView frequentlyRecyclerView;
-    private LangsRecyclerAdapter allRecyclerViewAdapter;
-    private LangsRecyclerAdapter frequentlyRecyclerViewAdapter;
+    private RecyclerView recyclerView;
+    private LangsRecyclerAdapter recyclerAdapter;
 
     public LangsController() {
 
@@ -52,20 +50,11 @@ public class LangsController extends MoxyController implements LangsView {
 
     @Override
     public void showLangs(List<Lang> langs) {
-        frequentlyRecyclerViewAdapter = new LangsRecyclerAdapter(langs, currentLang, FAVORITE_LANG_COUNT);
-        frequentlyRecyclerViewAdapter.notifyDataSetChanged();
-        frequentlyRecyclerView.setAdapter(frequentlyRecyclerViewAdapter);
-        frequentlyRecyclerView.setHasFixedSize(true);
-
-        allRecyclerViewAdapter = new LangsRecyclerAdapter(langs, currentLang, ALL_LANG);
-        allRecyclerViewAdapter.notifyDataSetChanged();
-        allRecyclerView.setAdapter(allRecyclerViewAdapter);
-        allRecyclerView.setHasFixedSize(true);
-
-        frequentlyRecyclerViewAdapter.setOnItemClickListener(lang -> {
-            langsPresenter.setLang(type, lang, getTargetController());
-        });
-        allRecyclerViewAdapter.setOnItemClickListener(lang -> {
+        recyclerAdapter = new LangsRecyclerAdapter(langs, currentLang, type);
+        recyclerAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerAdapter.setOnItemClickListener(lang -> {
             langsPresenter.setLang(type, lang, getTargetController());
         });
     }
@@ -84,15 +73,9 @@ public class LangsController extends MoxyController implements LangsView {
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         langsPresenter.setTitleText(type);
-        view.findViewById(R.id.switch1).setVisibility(type ? View.GONE : View.VISIBLE);
-        allRecyclerView = (RecyclerView) view.findViewById(R.id.all_recycler_view);
-        frequentlyRecyclerView = (RecyclerView) view.findViewById(R.id.frequently_recycler_view);
-
-        allRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        allRecyclerView.setAdapter(allRecyclerViewAdapter);
-
-        frequentlyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        frequentlyRecyclerView.setAdapter(frequentlyRecyclerViewAdapter);
+        recyclerView = (RecyclerView) view.findViewById(R.id.langs_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(recyclerAdapter);
 
         view.findViewById(R.id.back_image_view).setOnClickListener(v -> {
             langsPresenter.popController();
