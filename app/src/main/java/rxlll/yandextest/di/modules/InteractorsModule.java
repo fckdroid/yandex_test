@@ -6,8 +6,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import rxlll.yandextest.business.AppInteractor;
-import rxlll.yandextest.business.AppInteractorImpl;
+import rxlll.yandextest.business.api.ApiInteractor;
+import rxlll.yandextest.business.api.ApiInteractorImpl;
+import rxlll.yandextest.business.client.ClientInteractor;
+import rxlll.yandextest.business.client.ClientInteractorImpl;
 
 /** Created by Maksim Sukhotski on 4/14/2017. */
 
@@ -17,7 +19,14 @@ public final class InteractorsModule {
     @Provides
     @NonNull
     @Singleton
-    public AppInteractor provideTranslatorInteractor() {
-        return new AppInteractorImpl();
+    public ApiInteractor provideApiInteractor() {
+        return new ApiInteractorImpl();
+    }
+
+    @Provides
+    @NonNull
+    @Singleton
+    public ClientInteractor provideClientInteractor() {
+        return new ClientInteractorImpl();
     }
 }

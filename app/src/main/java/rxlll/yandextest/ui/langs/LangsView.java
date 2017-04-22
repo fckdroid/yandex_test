@@ -18,4 +18,6 @@ public interface LangsView extends MvpView {
     void showLangs(List<Lang> langs);
 
     void showTitleText(boolean type);
+
+    void showSwitch(boolean b);
 }

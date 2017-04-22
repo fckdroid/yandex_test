@@ -1,7 +1,6 @@
 package rxlll.yandextest.ui.langs;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import java.util.List;
 import rxlll.yandextest.R;
 import rxlll.yandextest.data.repositories.database.Lang;
 
-import static rxlll.yandextest.App.LOG_TAG;
 import static rxlll.yandextest.ui.translator.TranslatorController.TYPE_L;
 import static rxlll.yandextest.ui.translator.TranslatorController.TYPE_R;
 
@@ -28,18 +26,27 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
     private static final int VIEW_TYPE_LANG = 0;
     private final String checkedLang;
     private final boolean type;
-    private OnItemClickmapener onItemClickmapener;
+    private boolean switchState;
     private List<Lang> langs;
     private boolean atFirst = true;
+    private OnLangClickClickListener onLangClickListener;
+    private OnSwitchClickClickListener onSwitchClickListener;
+    private Switch switchView;
 
-    public LangsRecyclerAdapter(List<Lang> langs, String checkedLang, boolean type) {
+    public LangsRecyclerAdapter(List<Lang> langs, String checkedLang, boolean type, boolean switchState) {
         this.langs = langs;
         this.checkedLang = checkedLang;
         this.type = type;
+        this.switchState = switchState;
     }
 
-    LangsRecyclerAdapter setOnItemClickListener(LangsRecyclerAdapter.OnItemClickmapener onItemClickmapener) {
-        this.onItemClickmapener = onItemClickmapener;
+    LangsRecyclerAdapter setOnLangClickListener(OnLangClickClickListener onLangClickListener) {
+        this.onLangClickListener = onLangClickListener;
+        return this;
+    }
+
+    LangsRecyclerAdapter setOnSwitchListener(OnSwitchClickClickListener onSwitchClickListener) {
+        this.onSwitchClickListener = onSwitchClickListener;
         return this;
     }
 
@@ -71,12 +78,13 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
     @Override
     public void onBindViewHolder(LangsRecyclerAdapter.RecyclerViewHolder holder, int position) {
         if (holder.getItemViewType() == VIEW_TYPE_LANG) {
-            holder.itemView.setOnClickListener(view -> onItemClickmapener.onItemClick(langs.get(position)));
+            holder.itemView.setOnClickListener(view -> onLangClickListener.onLangClick(langs.get(position)));
             holder.textView.setText(langs.get(position).getDescription());
         } else if (holder.getItemViewType() == VIEW_TYPE_SWITCH) {
-            holder.switchAuto.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                Log.d(LOG_TAG, String.valueOf(isChecked));
-            });
+            switchView = holder.switchView;
+            switchView.setChecked(switchState);
+            holder.switchView.setOnCheckedChangeListener((buttonView, isChecked) ->
+                    onSwitchClickListener.onSwitchClick(isChecked));
         } else {
             if (atFirst) {
                 atFirst = false;
@@ -92,12 +100,16 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
         return langs.size();
     }
 
-    interface OnItemClickmapener {
-        void onItemClick(Lang lang);
+    interface OnLangClickClickListener {
+        void onLangClick(Lang lang);
+    }
+
+    interface OnSwitchClickClickListener {
+        void onSwitchClick(boolean checked);
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        private final Switch switchAuto;
+        private final Switch switchView;
         TextView textView;
         ImageView checkedImageView;
 
@@ -105,7 +117,7 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.text_view);
             checkedImageView = (ImageView) itemView.findViewById(R.id.image_view);
-            switchAuto = (Switch) itemView.findViewById(R.id.auto_switch);
+            switchView = (Switch) itemView.findViewById(R.id.switch_view);
         }
     }
 }

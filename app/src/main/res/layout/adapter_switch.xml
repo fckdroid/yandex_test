@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <Switch
-        android:id="@+id/auto_switch"
+        android:id="@+id/switch_view"
         style="@style/TextPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

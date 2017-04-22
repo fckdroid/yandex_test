@@ -1,4 +1,4 @@
-package rxlll.yandextest.business;
+package rxlll.yandextest.business.api;
 
 import android.util.Log;
 
@@ -23,7 +23,7 @@ import static rxlll.yandextest.App.LOG_TAG;
  * Created by Maksim Sukhotski on 4/14/2017.
  */
 
-public class AppInteractorImpl implements AppInteractor {
+public class ApiInteractorImpl implements ApiInteractor {
 
     @Inject
     TranslatorRepository translatorRepository;
@@ -37,7 +37,7 @@ public class AppInteractorImpl implements AppInteractor {
     @Inject
     PreferencesRepository preferencesRepository;
 
-    public AppInteractorImpl() {
+    public ApiInteractorImpl() {
         App.appComponent.inject(this);
     }
 
@@ -65,8 +65,8 @@ public class AppInteractorImpl implements AppInteractor {
      * On first app launch: Langs received locally ->
      *                      But were empty ->
      *                      Langs received remotely ->
-     *                      Dirs are written to the preferences ->
-     *                      Langs are written to the database;
+     *                      Dirs were written to the preferences ->
+     *                      Langs were written to the database;
      * Next time we will see only: Langs received locally.
      */
     @Override
@@ -75,10 +75,10 @@ public class AppInteractorImpl implements AppInteractor {
                 .doOnSuccess(response -> {
                     Log.d(LOG_TAG, "Langs received remotely");
                     preferencesRepository.putDirs(response.body().getDirs())
-                            .doOnComplete(() -> Log.d(LOG_TAG, "Dirs are written to the preferences"))
+                            .doOnComplete(() -> Log.d(LOG_TAG, "Dirs were written to the preferences"))
                             .subscribe();
                     databaseRepository.putLangs(response.body().getLangs())
-                            .doOnComplete(() -> Log.d(LOG_TAG, "Langs are written to the database"))
+                            .doOnComplete(() -> Log.d(LOG_TAG, "Langs were written to the database"))
                             .subscribe();
                 });
 

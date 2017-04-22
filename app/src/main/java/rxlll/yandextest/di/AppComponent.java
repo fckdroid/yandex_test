@@ -3,7 +3,8 @@ package rxlll.yandextest.di;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import rxlll.yandextest.business.AppInteractorImpl;
+import rxlll.yandextest.business.api.ApiInteractorImpl;
+import rxlll.yandextest.business.client.ClientInteractorImpl;
 import rxlll.yandextest.data.repositories.database.DatabaseRepositoryImpl;
 import rxlll.yandextest.data.repositories.dictionary.DictionaryRepositoryImpl;
 import rxlll.yandextest.data.repositories.translator.TranslatorRepositoryImpl;
@@ -26,7 +27,7 @@ import rxlll.yandextest.ui.translator.TranslatorPresenter;
 public interface AppComponent {
     void inject(TranslatorPresenter translatorPresenter);
 
-    void inject(AppInteractorImpl translatorInteractor);
+    void inject(ApiInteractorImpl translatorInteractor);
 
     void inject(TranslatorRepositoryImpl translatorRepository);
 
@@ -35,4 +36,6 @@ public interface AppComponent {
     void inject(DatabaseRepositoryImpl databaseRepository);
 
     void inject(LangsPresenter langsPresenter);
+
+    void inject(ClientInteractorImpl clientInteractor);
 }

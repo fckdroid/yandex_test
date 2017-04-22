@@ -14,4 +14,10 @@ public interface PreferencesRepository {
     Completable putDirs(Set<String> langs);
 
     Single<Set<String>> getDirs();
+
+    Completable putAutoDetectSetting(boolean isTurnedOn);
+
+    Single<Boolean> getAutoDetectSetting();
+
+
 }

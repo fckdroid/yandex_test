@@ -16,6 +16,7 @@ import io.reactivex.Single;
 public class PreferencesRepositoryImpl implements PreferencesRepository {
     private static final String PREFERENCES_NAME = "app-preferences";
     private static final String KEY_DIRS = "key_routes";
+    private static final String KEY_AUTO_DETECT_SETTING = "key_auto_detect_setting";
 
     private SharedPreferences preferences;
 
@@ -31,5 +32,15 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     @Override
     public Single<Set<String>> getDirs() {
         return Single.fromCallable(() -> preferences.getStringSet(KEY_DIRS, new HashSet<>()));
+    }
+
+    @Override
+    public Completable putAutoDetectSetting(boolean isTurnedOn) {
+        return Completable.fromAction(() -> preferences.edit().putBoolean(KEY_AUTO_DETECT_SETTING, isTurnedOn).commit());
+    }
+
+    @Override
+    public Single<Boolean> getAutoDetectSetting() {
+        return Single.fromCallable(() -> preferences.getBoolean(KEY_AUTO_DETECT_SETTING, false));
     }
 }

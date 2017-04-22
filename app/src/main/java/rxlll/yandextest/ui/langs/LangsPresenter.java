@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxlll.yandextest.App;
-import rxlll.yandextest.business.AppInteractor;
+import rxlll.yandextest.business.api.ApiInteractor;
+import rxlll.yandextest.business.client.ClientInteractor;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.ui.translator.TranslatorController;
 
@@ -23,7 +24,10 @@ import rxlll.yandextest.ui.translator.TranslatorController;
 public class LangsPresenter extends MvpPresenter<LangsView> {
 
     @Inject
-    AppInteractor appInteractor;
+    ApiInteractor apiInteractor;
+
+    @Inject
+    ClientInteractor clientInteractor;
 
     public LangsPresenter() {
         App.appComponent.inject(this);
@@ -32,12 +36,11 @@ public class LangsPresenter extends MvpPresenter<LangsView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        appInteractor.getLangs(Locale.getDefault().getLanguage())
+        apiInteractor.getLangs(Locale.getDefault().getLanguage())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(langsResponse ->
                         getViewState().showLangs(langsResponse.body().getLangsPretty()));
-
     }
 
 
@@ -50,9 +53,27 @@ public class LangsPresenter extends MvpPresenter<LangsView> {
     }
 
     public void setLang(boolean type, Lang lang, Controller targetController) {
-        if (targetController != null) {
+        if (targetController != null)
             ((TranslatorController) targetController).onLangPicked(type, lang.getDescription());
-        }
         getViewState().popController();
+    }
+
+    public void setAutoDetect(boolean type, boolean checked, Controller targetController) {
+        clientInteractor.putAutoDetectSetting(checked)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnComplete(() -> {
+                    ((TranslatorController) targetController).onLangPicked(type, "Определить");
+                    getViewState().popController();
+                })
+                .subscribe();
+    }
+
+    public void setSwitchState() {
+        clientInteractor.getAutoDetectSetting()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(b -> getViewState().showSwitch(b));
+
     }
 }

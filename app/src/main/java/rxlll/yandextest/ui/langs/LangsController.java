@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -16,6 +17,8 @@ import rxlll.yandextest.R;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.ui.base.MoxyController;
 import rxlll.yandextest.ui.translator.TranslatorController;
+
+import static rxlll.yandextest.ui.translator.TranslatorController.TYPE_L;
 
 /**
  * Created by Maksim Sukhotski on 4/21/2017.
@@ -31,6 +34,8 @@ public class LangsController extends MoxyController implements LangsView {
     private String currentLang;
     private RecyclerView recyclerView;
     private LangsRecyclerAdapter recyclerAdapter;
+    private Switch switchView;
+    private boolean switchState;
 
     public LangsController() {
 
@@ -50,18 +55,22 @@ public class LangsController extends MoxyController implements LangsView {
 
     @Override
     public void showLangs(List<Lang> langs) {
-        recyclerAdapter = new LangsRecyclerAdapter(langs, currentLang, type);
+        recyclerAdapter = new LangsRecyclerAdapter(langs, currentLang, type, switchState);
         recyclerAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setHasFixedSize(true);
-        recyclerAdapter.setOnItemClickListener(lang -> {
-            langsPresenter.setLang(type, lang, getTargetController());
-        });
+        recyclerAdapter.setOnLangClickListener(lang -> langsPresenter.setLang(type, lang, getTargetController()));
+        recyclerAdapter.setOnSwitchListener(checked -> langsPresenter.setAutoDetect(type, checked, getTargetController()));
     }
 
     @Override
     public void showTitleText(boolean type) {
         ((TextView) getView().findViewById(R.id.header_text_view)).setText(type ? "Язык перевода" : "Язык оригинала");
+    }
+
+    @Override
+    public void showSwitch(boolean b) {
+        this.switchState = b;
     }
 
     @Override
@@ -75,12 +84,10 @@ public class LangsController extends MoxyController implements LangsView {
         langsPresenter.setTitleText(type);
         recyclerView = (RecyclerView) view.findViewById(R.id.langs_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(recyclerAdapter);
-
-        view.findViewById(R.id.back_image_view).setOnClickListener(v -> {
-            langsPresenter.popController();
-        });
+        view.findViewById(R.id.back_image_view).setOnClickListener(v -> langsPresenter.popController());
         getActivity().findViewById(R.id.navigation).setVisibility(View.GONE);
+        switchView = (Switch) view.findViewById(R.id.switch_view);
+        if (type == TYPE_L) langsPresenter.setSwitchState();
     }
 
     public interface TargetLangEntryControllerListener {

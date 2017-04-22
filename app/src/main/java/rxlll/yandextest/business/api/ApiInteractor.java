@@ -1,4 +1,4 @@
-package rxlll.yandextest.business;
+package rxlll.yandextest.business.api;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -10,7 +10,7 @@ import rxlll.yandextest.data.network.models.translator.Translate;
 
 /** Created by Maksim Sukhotski on 4/14/2017. */
 
-public interface AppInteractor {
+public interface ApiInteractor {
 
     Single<Response<Translate>> translate(String text,
                                           String lang);
@@ -34,5 +34,4 @@ public interface AppInteractor {
     Single<Response<Dictionary>> lookup(String text,
                                         String lang,
                                         String ui);
-
 }

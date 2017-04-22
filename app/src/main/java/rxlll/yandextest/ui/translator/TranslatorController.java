@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import rxlll.yandextest.R;
 import rxlll.yandextest.ui.base.MoxyController;
@@ -132,13 +133,19 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     public void showDir(Pair<String, String> dir) {
         leftTextView.setText(dir.first);
         rightTextView.setText(dir.second);
-        translatorEditText.setHint("Введите текст (" + dir.first + ")");
+        if (dir.first == "Определить") {
+            translatorEditText.setHint("Введите текст");
+            swapImageView.setClickable(false);
+            swapImageView.setBackground(getResources().getDrawable(R.drawable.circle_gray));
+        } else {
+            translatorEditText.setHint("Введите текст (" + dir.first + ")");
+            swapImageView.setClickable(true);
+        }
     }
 
     @Override
     public void showLangsController(boolean type, String s) {
-        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getView().getWindowToken(), 0);
 
         Animation animNavHide = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_down);
         animNavHide.setAnimationListener(new Animation.AnimationListener() {
@@ -158,7 +165,9 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             }
         });
         navigationView.startAnimation(animNavHide);
-        getRouter().pushController(RouterTransaction.with(new LangsController(this, type, s)));
+        getRouter().pushController(RouterTransaction.with(new LangsController(this, type, s))
+                .pushChangeHandler(new VerticalChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler()));
     }
 
 

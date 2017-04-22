@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxlll.yandextest.App;
-import rxlll.yandextest.business.AppInteractor;
+import rxlll.yandextest.business.api.ApiInteractor;
 
 /**
  * Created by Maksim Sukhotski on 4/16/2017.
@@ -22,7 +22,7 @@ import rxlll.yandextest.business.AppInteractor;
 public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
 
     @Inject
-    AppInteractor appInteractor;
+    ApiInteractor apiInteractor;
 
     public TranslatorPresenter() {
         App.appComponent.inject(this);
@@ -33,7 +33,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
         super.onFirstViewAttach();
         String ui = Locale.getDefault().getLanguage();
 
-        appInteractor.getLangs(ui)
+        apiInteractor.getLangs(ui)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(langsResponse ->//// TODO: 4/22/2017 cach lang for langcontroller
