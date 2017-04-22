@@ -1,5 +1,6 @@
 package rxlll.yandextest.data.network.api;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 import retrofit2.Response;
 import retrofit2.http.Field;
@@ -26,5 +27,5 @@ public interface TranslatorApi {
 
     @FormUrlEncoded
     @POST("getLangs")
-    Single<Response<Langs>> getLangs(@Field("ui") String ui);
+    Maybe<Response<Langs>> getLangs(@Field("ui") String ui);
 }

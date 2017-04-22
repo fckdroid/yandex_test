@@ -25,6 +25,11 @@ public class Langs {
         this.langs = langs;
     }
 
+    public Langs(Set<String> dirs, List<Lang> langs) {
+        this.dirs = dirs;
+        setLangs(langs);
+    }
+
     public void setLangs(Map<String, String> langs) {
         this.langs = langs;
     }

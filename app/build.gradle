@@ -36,7 +36,7 @@ android {
     }
     productFlavors {
         dev {
-            //TODO: Provide your own api_key to "~./app/yandex-api.json"
+            //TODO: Provide your own api_key`s to "~./app/yandex-api.json"
             buildConfigField('String',
                     'TRANSLATOR_API_URL',
                     "\"" + (new JsonSlurper().parseText(file('yandex-api.json').text)).translator_api_url + "\"")

@@ -1,12 +1,14 @@
 package rxlll.yandextest.business;
 
-import java.util.List;
+import android.util.Log;
+
 import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 import retrofit2.Response;
 import rxlll.yandextest.App;
@@ -15,12 +17,15 @@ import rxlll.yandextest.data.network.models.translator.Detect;
 import rxlll.yandextest.data.network.models.translator.Langs;
 import rxlll.yandextest.data.network.models.translator.Translate;
 import rxlll.yandextest.data.repositories.database.DatabaseRepository;
-import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.data.repositories.dictionary.DictionaryRepository;
 import rxlll.yandextest.data.repositories.preferences.PreferencesRepository;
 import rxlll.yandextest.data.repositories.translator.TranslatorRepository;
 
-/** Created by Maksim Sukhotski on 4/14/2017. */
+import static rxlll.yandextest.App.LOG_TAG;
+
+/**
+ * Created by Maksim Sukhotski on 4/14/2017.
+ */
 
 public class AppInteractorImpl implements AppInteractor {
 
@@ -60,14 +65,36 @@ public class AppInteractorImpl implements AppInteractor {
         return translatorRepository.detect(text, hint);
     }
 
+    /**
+     * On first app launch: Langs received locally -> But were empty -> Langs received remotely -> Dirs are written to the preferences -> Langs are written to the database
+     * Next time we will see only: Langs received locally
+     */
     @Override
-    public Single<Response<Langs>> getLangs(String ui) {
-        return translatorRepository.getLangs(ui);
-    }
+    public Maybe<Response<Langs>> getLangs(String ui) {
+        Maybe<Response<Langs>> sourceRemote = translatorRepository.getLangs(ui)
+                .doOnSuccess(response -> {
+                    Log.d(LOG_TAG, "Langs received remotely");
+                    preferencesRepository.putDirs(response.body().getDirs())
+                            .doOnComplete(() -> Log.d(LOG_TAG, "Dirs are written to the preferences"))
+                            .subscribe();
+                    databaseRepository.putLangs(response.body().getLangs())
+                            .doOnComplete(() -> Log.d(LOG_TAG, "Langs are written to the database"))
+                            .subscribe();
+                });
 
-    @Override
-    public Single<List<Lang>> getLangsLocal() {
-        return databaseRepository.getLangs();
+        return Single.zip(preferencesRepository.getDirs(), databaseRepository.getLangs(),
+                (dirs, langs) -> {
+                    Log.d(LOG_TAG, "Langs received locally");
+                    return Response.success(new Langs(dirs, langs));
+                })
+                .filter(langsResponse -> {
+                    if (langsResponse.body().getLangs().size() == 0 || langsResponse.body().getDirs().size() == 0) {
+                        Log.d(LOG_TAG, "But were empty");
+                        return false;
+                    }
+                    return true;
+                })
+                .switchIfEmpty(sourceRemote);
     }
 
     @Override
@@ -86,12 +113,7 @@ public class AppInteractorImpl implements AppInteractor {
     }
 
     @Override
-    public Completable putRoutes(Set<String> langs) {
-        return preferencesRepository.putRoutes(langs);
-    }
-
-    @Override
-    public Single<Set<String>> getRoutes() {
-        return preferencesRepository.getRoutes();
+    public Completable putDirs(Set<String> dirs) {
+        return preferencesRepository.putDirs(dirs);
     }
 }

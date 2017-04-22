@@ -15,7 +15,7 @@ import io.reactivex.Single;
 
 public class PreferencesRepositoryImpl implements PreferencesRepository {
     private static final String PREFERENCES_NAME = "app-preferences";
-    private static final String KEY_ROUTES = "key_routes";
+    private static final String KEY_DIRS = "key_routes";
 
     private SharedPreferences preferences;
 
@@ -24,12 +24,12 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     @Override
-    public Completable putRoutes(Set<String> langs) {
-        return Completable.fromAction(() -> preferences.edit().putStringSet(KEY_ROUTES, langs).commit());
+    public Completable putDirs(Set<String> dirs) {
+        return Completable.fromAction(() -> preferences.edit().putStringSet(KEY_DIRS, dirs).commit());
     }
 
     @Override
-    public Single<Set<String>> getRoutes() {
-        return Single.fromCallable(() -> preferences.getStringSet(KEY_ROUTES, new HashSet<>()));
+    public Single<Set<String>> getDirs() {
+        return Single.fromCallable(() -> preferences.getStringSet(KEY_DIRS, new HashSet<>()));
     }
 }

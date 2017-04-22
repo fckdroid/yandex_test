@@ -1,5 +1,6 @@
 package rxlll.yandextest.ui.translator;
 
+import android.content.Context;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Pair;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,13 +52,13 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
         leftTextView.setOnClickListener(v -> translatorPresenter.pushLangsController());
         rightTextView.setOnClickListener(v -> Toast.makeText(getActivity(), "right" + rightTextView.getText(), Toast.LENGTH_SHORT).show());
-        swapImageView.setOnClickListener(v -> translatorPresenter.setRoute(new Pair<>(rightTextView.getText(), leftTextView.getText())));
+        swapImageView.setOnClickListener(v -> translatorPresenter.setDir(new Pair<>(rightTextView.getText(), leftTextView.getText())));
         copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
         copyRightTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
-    public void showRoute(Pair<String, String> route) {
+    public void showDir(Pair<String, String> dir) {
         swapImageView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
         Animation animLeftToCenter = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_left_to_center);
         Animation animCenterToLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_center_to_left);
@@ -70,7 +72,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                leftTextView.setText(route.first);
+                leftTextView.setText(dir.first);
                 leftTextView.startAnimation(animCenterToLeft);
             }
 
@@ -87,7 +89,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                rightTextView.setText(route.second);
+                rightTextView.setText(dir.second);
                 rightTextView.startAnimation(animCenterToRight);
             }
 
@@ -103,6 +105,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
     @Override
     public void showLangsController() {
+        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getView().getWindowToken(), 0);
         getRouter().pushController(RouterTransaction.with(new LangsController(this))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));

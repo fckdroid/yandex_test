@@ -28,8 +28,8 @@ import static rxlll.yandextest.BuildConfig.TRANSLATOR_API_URL;
 
 public class App extends Application {
 
+    public static final String LOG_TAG = "app-logs";
     private static final String DATABASE_NAME = "app-database";
-
     public static RefWatcher refWatcher;
     public static AppComponent appComponent;
 

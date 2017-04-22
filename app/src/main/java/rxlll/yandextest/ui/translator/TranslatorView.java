@@ -14,7 +14,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface TranslatorView extends MvpView {
 
-    void showRoute(Pair<String, String> route);
+    void showDir(Pair<String, String> route);
 
 //    void swapRoute(Pair<String, String> route);
 

@@ -11,7 +11,7 @@ import io.reactivex.Single;
 
 public interface PreferencesRepository {
 
-    Completable putRoutes(Set<String> langs);
+    Completable putDirs(Set<String> langs);
 
-    Single<Set<String>> getRoutes();
+    Single<Set<String>> getDirs();
 }

@@ -2,6 +2,7 @@ package rxlll.yandextest.data.repositories.translator;
 
 import javax.inject.Inject;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 import retrofit2.Response;
 import rxlll.yandextest.App;
@@ -42,7 +43,7 @@ public class TranslatorRepositoryImpl implements TranslatorRepository {
     }
 
     @Override
-    public Single<Response<Langs>> getLangs(String ui) {
+    public Maybe<Response<Langs>> getLangs(String ui) {
         return translatorApi.getLangs(ui);
     }
 

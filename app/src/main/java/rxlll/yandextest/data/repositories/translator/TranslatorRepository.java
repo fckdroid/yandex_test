@@ -1,5 +1,6 @@
 package rxlll.yandextest.data.repositories.translator;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 import retrofit2.Response;
 import rxlll.yandextest.data.network.models.translator.Detect;
@@ -22,7 +23,7 @@ public interface TranslatorRepository {
     Single<Response<Detect>> detect(String text,
                                     String hint);
 
-    Single<Response<Langs>> getLangs(String ui);
+    Maybe<Response<Langs>> getLangs(String ui);
 
 //    Completable putLangs(Langs langs);
 }
