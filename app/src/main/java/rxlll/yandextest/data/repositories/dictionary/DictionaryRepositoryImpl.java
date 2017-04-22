@@ -13,6 +13,7 @@ import rxlll.yandextest.data.network.models.dictionary.Dictionary;
  */
 
 public class DictionaryRepositoryImpl implements DictionaryRepository {
+
     @Inject
     DictionaryApi dictionaryApi;
 

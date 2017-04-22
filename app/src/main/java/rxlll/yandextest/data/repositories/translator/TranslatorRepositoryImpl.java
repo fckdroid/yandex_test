@@ -47,7 +47,7 @@ public class TranslatorRepositoryImpl implements TranslatorRepository {
     }
 
 //    @Override
-//    public Completable saveLangs(Langs langs) {
+//    public Completable putLangs(Langs langs) {
 //        return null;
 //    }
 }

@@ -24,5 +24,5 @@ public interface TranslatorRepository {
 
     Single<Response<Langs>> getLangs(String ui);
 
-//    Completable saveLangs(Langs langs);
+//    Completable putLangs(Langs langs);
 }

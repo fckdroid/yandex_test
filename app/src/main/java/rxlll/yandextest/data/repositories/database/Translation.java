@@ -1,4 +1,4 @@
-package rxlll.yandextest.data.database;
+package rxlll.yandextest.data.repositories.database;
 
 import android.support.annotation.NonNull;
 

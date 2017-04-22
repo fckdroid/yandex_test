@@ -25,10 +25,12 @@ public abstract class MoxyController extends Controller {
     boolean hasExited = false;
 
     public MoxyController() {
+        super();
         mvpDelegate.onCreate();
     }
 
     public MoxyController(@Nullable Bundle args) {
+        super(args);
         mvpDelegate.onCreate(args);
     }
 

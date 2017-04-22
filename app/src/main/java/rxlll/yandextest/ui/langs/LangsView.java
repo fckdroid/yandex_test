@@ -7,4 +7,5 @@ import com.arellomobile.mvp.MvpView;
  */
 
 public interface LangsView extends MvpView {
+    void popController();
 }

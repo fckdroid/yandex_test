@@ -7,10 +7,15 @@ import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
-import rxlll.yandextest.dagger.AppComponent;
-import rxlll.yandextest.dagger.DaggerAppComponent;
-import rxlll.yandextest.dagger.modules.NetworkModule;
-import rxlll.yandextest.dagger.modules.RepositoriesModule;
+import org.greenrobot.greendao.database.Database;
+
+import rxlll.yandextest.data.database.DaoMaster;
+import rxlll.yandextest.data.database.DaoSession;
+import rxlll.yandextest.di.AppComponent;
+import rxlll.yandextest.di.DaggerAppComponent;
+import rxlll.yandextest.di.modules.DatabaseModule;
+import rxlll.yandextest.di.modules.NetworkModule;
+import rxlll.yandextest.di.modules.RepositoriesModule;
 
 import static rxlll.yandextest.BuildConfig.DICTIONARY_API_KEY;
 import static rxlll.yandextest.BuildConfig.DICTIONARY_API_URL;
@@ -23,6 +28,8 @@ import static rxlll.yandextest.BuildConfig.TRANSLATOR_API_URL;
 
 public class App extends Application {
 
+    private static final String DATABASE_NAME = "app-database";
+
     public static RefWatcher refWatcher;
     public static AppComponent appComponent;
 
@@ -31,6 +38,7 @@ public class App extends Application {
         super.onCreate();
         appComponent = DaggerAppComponent.builder()
                 .repositoriesModule(new RepositoriesModule(this))
+                .databaseModule(new DatabaseModule(getDaoSession()))
                 .networkModule(new NetworkModule(TRANSLATOR_API_URL,
                         TRANSLATOR_API_KEY,
                         DICTIONARY_API_URL,
@@ -44,5 +52,11 @@ public class App extends Application {
                     .build());
             if (!LeakCanary.isInAnalyzerProcess(this)) refWatcher = LeakCanary.install(this);
         }
+    }
+
+    private DaoSession getDaoSession() {
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(this, DATABASE_NAME);
+        Database database = devOpenHelper.getWritableDb();
+        return new DaoMaster(database).newSession();
     }
 }

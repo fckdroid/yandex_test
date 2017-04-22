@@ -1,4 +1,4 @@
-package rxlll.yandextest.dagger.modules;
+package rxlll.yandextest.di.modules;
 
 import android.support.annotation.NonNull;
 
@@ -13,7 +13,7 @@ import rxlll.yandextest.data.network.api.TranslatorApi;
 /** Created by Maksim Sukhotski on 4/14/2017. */
 
 @Module
-public class NetworkModule {
+public final class NetworkModule {
 
     private final String translatorApiUrl;
     private final String translatorApiKey;

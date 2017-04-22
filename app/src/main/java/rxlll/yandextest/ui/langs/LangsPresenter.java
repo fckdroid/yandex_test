@@ -9,4 +9,14 @@ import com.arellomobile.mvp.MvpPresenter;
 
 @InjectViewState
 public class LangsPresenter extends MvpPresenter<LangsView> {
+
+    @Override
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+    }
+
+
+    public void popController() {
+        getViewState().popController();
+    }
 }

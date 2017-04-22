@@ -23,7 +23,7 @@ import rxlll.yandextest.ui.langs.LangsController;
  * Created by Maksim Sukhotski on 4/16/2017.
  */
 
-public class TranslatorController extends MoxyController implements TranslatorView {
+public class TranslatorController extends MoxyController implements TranslatorView, LangsController.TargetLangEntryControllerListener {
 
     @InjectPresenter
     TranslatorPresenter translatorPresenter;
@@ -103,7 +103,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
     @Override
     public void showLangsController() {
-        getRouter().pushController(RouterTransaction.with(new LangsController())
+        getRouter().pushController(RouterTransaction.with(new LangsController(this))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
         Animation animNavHide = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_down);
@@ -127,4 +127,8 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
 
+    @Override
+    public void onLangPicked(String lang) {
+        //// TODO: 4/22/2017  
+    }
 }
