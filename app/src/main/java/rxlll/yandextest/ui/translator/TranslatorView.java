@@ -19,5 +19,5 @@ public interface TranslatorView extends MvpView {
 //    void swapRoute(Pair<String, String> route);
 
     @StateStrategyType(SkipStrategy.class)
-    void showLangsController();
+    void showLangsController(boolean type, String s);
 }

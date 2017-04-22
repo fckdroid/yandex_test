@@ -1,9 +1,5 @@
 package rxlll.yandextest.business;
 
-import java.util.Map;
-import java.util.Set;
-
-import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import retrofit2.Response;
@@ -30,8 +26,6 @@ public interface AppInteractor {
 
     Maybe<Response<Langs>> getLangs(String ui);
 
-//    Single<List<Lang>> getLangsLocal();
-
     Single<Response<Dictionary>> lookup(String text,
                                         String lang,
                                         String ui,
@@ -41,9 +35,4 @@ public interface AppInteractor {
                                         String lang,
                                         String ui);
 
-    Completable putLangs(Map<String, String> langs);
-
-    Completable putDirs(Set<String> langs);
-
-//    Single<Set<String>> getDirs();
 }

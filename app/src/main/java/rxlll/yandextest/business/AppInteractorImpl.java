@@ -2,12 +2,8 @@ package rxlll.yandextest.business;
 
 import android.util.Log;
 
-import java.util.Map;
-import java.util.Set;
-
 import javax.inject.Inject;
 
-import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import retrofit2.Response;
@@ -66,8 +62,12 @@ public class AppInteractorImpl implements AppInteractor {
     }
 
     /**
-     * On first app launch: Langs received locally -> But were empty -> Langs received remotely -> Dirs are written to the preferences -> Langs are written to the database
-     * Next time we will see only: Langs received locally
+     * On first app launch: Langs received locally ->
+     *                      But were empty ->
+     *                      Langs received remotely ->
+     *                      Dirs are written to the preferences ->
+     *                      Langs are written to the database;
+     * Next time we will see only: Langs received locally.
      */
     @Override
     public Maybe<Response<Langs>> getLangs(String ui) {
@@ -105,15 +105,5 @@ public class AppInteractorImpl implements AppInteractor {
     @Override
     public Single<Response<Dictionary>> lookup(String text, String lang, String ui) {
         return dictionaryRepository.lookup(text, lang, ui);
-    }
-
-    @Override
-    public Completable putLangs(Map<String, String> langs) {
-        return databaseRepository.putLangs(langs);
-    }
-
-    @Override
-    public Completable putDirs(Set<String> dirs) {
-        return preferencesRepository.putDirs(dirs);
     }
 }

@@ -24,8 +24,6 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
     @Inject
     AppInteractor appInteractor;
 
-    private String ui;
-
     public TranslatorPresenter() {
         App.appComponent.inject(this);
     }
@@ -33,12 +31,12 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        ui = Locale.getDefault().getLanguage();
+        String ui = Locale.getDefault().getLanguage();
 
         appInteractor.getLangs(ui)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(langsResponse ->
+                .subscribe(langsResponse ->//// TODO: 4/22/2017 cach lang for langcontroller
                         getViewState().showDir(new Pair<>(langsResponse.body().getLangs().get(ui),
                                 langsResponse.body().getLangs().get(ui == "en" ? "ru" : "en")))
                 );
@@ -48,7 +46,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
         getViewState().showDir(pair);
     }
 
-    public void pushLangsController() {
-        getViewState().showLangsController();
+    public void pushLangsController(boolean type, String s) {
+        getViewState().showLangsController(type, s);
     }
 }

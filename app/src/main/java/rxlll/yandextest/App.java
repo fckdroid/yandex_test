@@ -9,8 +9,8 @@ import com.squareup.leakcanary.RefWatcher;
 
 import org.greenrobot.greendao.database.Database;
 
-import rxlll.yandextest.data.database.DaoMaster;
-import rxlll.yandextest.data.database.DaoSession;
+import rxlll.yandextest.data.repositories.database.DaoMaster;
+import rxlll.yandextest.data.repositories.database.DaoSession;
 import rxlll.yandextest.di.AppComponent;
 import rxlll.yandextest.di.DaggerAppComponent;
 import rxlll.yandextest.di.modules.DatabaseModule;

@@ -7,9 +7,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import rxlll.yandextest.data.database.DaoSession;
-import rxlll.yandextest.data.database.LangDao;
-import rxlll.yandextest.data.database.TranslationDao;
+import rxlll.yandextest.data.repositories.database.DaoSession;
+import rxlll.yandextest.data.repositories.database.LangDao;
+import rxlll.yandextest.data.repositories.database.TranslationDao;
 
 /**
  * Created by Maksim Sukhotski on 4/14/2017.

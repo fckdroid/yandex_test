@@ -11,6 +11,7 @@ import rxlll.yandextest.di.modules.DatabaseModule;
 import rxlll.yandextest.di.modules.InteractorsModule;
 import rxlll.yandextest.di.modules.NetworkModule;
 import rxlll.yandextest.di.modules.RepositoriesModule;
+import rxlll.yandextest.ui.langs.LangsPresenter;
 import rxlll.yandextest.ui.translator.TranslatorPresenter;
 
 /**
@@ -32,4 +33,6 @@ public interface AppComponent {
     void inject(DictionaryRepositoryImpl dictionaryRepository);
 
     void inject(DatabaseRepositoryImpl databaseRepository);
+
+    void inject(LangsPresenter langsPresenter);
 }

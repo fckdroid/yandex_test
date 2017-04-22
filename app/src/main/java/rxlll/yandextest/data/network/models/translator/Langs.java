@@ -47,10 +47,14 @@ public class Langs {
     }
 
     public void setLangs(List<Lang> langs) {
+        this.langsPretty = langs;
         this.langs = new LinkedTreeMap<>(String::compareTo);
         for (Lang lang : langs) {
             this.langs.put(lang.getCode(), lang.getDescription());
         }
-        this.langsPretty = langs;
+    }
+
+    public List<Lang> getLangsPretty() {
+        return langsPretty;
     }
 }

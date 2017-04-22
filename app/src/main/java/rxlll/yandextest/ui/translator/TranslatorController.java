@@ -11,7 +11,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -27,9 +26,10 @@ import rxlll.yandextest.ui.langs.LangsController;
 
 public class TranslatorController extends MoxyController implements TranslatorView, LangsController.TargetLangEntryControllerListener {
 
+    private static final boolean TYPE_L = false;
+    private static final boolean TYPE_R = true;
     @InjectPresenter
     TranslatorPresenter translatorPresenter;
-
     private TextView leftTextView;
     private TextView rightTextView;
     private View navigationView;
@@ -48,13 +48,35 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         swapImageView = view.findViewById(R.id.swap_image_view);
         copyRightTextView = ((TextView) view.findViewById(R.id.copyright_text_view));
         navigationView = getActivity().findViewById(R.id.navigation);
-        navigationView.setVisibility(View.VISIBLE);
 
-        leftTextView.setOnClickListener(v -> translatorPresenter.pushLangsController());
-        rightTextView.setOnClickListener(v -> Toast.makeText(getActivity(), "right" + rightTextView.getText(), Toast.LENGTH_SHORT).show());
-        swapImageView.setOnClickListener(v -> translatorPresenter.setDir(new Pair<>(rightTextView.getText(), leftTextView.getText())));
+        leftTextView.setOnClickListener(v ->
+                translatorPresenter.pushLangsController(TYPE_L, leftTextView.getText().toString()));
+        rightTextView.setOnClickListener(v ->
+                translatorPresenter.pushLangsController(TYPE_R, leftTextView.getText().toString()));
+
+        swapImageView.setOnClickListener(v ->
+                translatorPresenter.setDir(new Pair<>(rightTextView.getText(), leftTextView.getText())));
         copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
         copyRightTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+        Animation animNavHide = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_up);
+        animNavHide.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                navigationView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        navigationView.startAnimation(animNavHide);
     }
 
     @Override
@@ -104,9 +126,9 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
     @Override
-    public void showLangsController() {
+    public void showLangsController(boolean type, String s) {
         ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getView().getWindowToken(), 0);
-        getRouter().pushController(RouterTransaction.with(new LangsController(this))
+        getRouter().pushController(RouterTransaction.with(new LangsController(this, type, s))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
         Animation animNavHide = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_down);
@@ -131,7 +153,12 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
 
     @Override
-    public void onLangPicked(String lang) {
-        //// TODO: 4/22/2017  
+    public void onLangPicked(boolean type, String lang) {
+        if (type == TYPE_L) {
+            leftTextView.setText(lang);
+        } else {
+            rightTextView.setText(lang);
+        }
+        translatorPresenter.setDir(new Pair(leftTextView.getText().toString(), rightTextView.getText().toString()));
     }
 }
