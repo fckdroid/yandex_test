@@ -1,5 +1,10 @@
 package rxlll.yandextest.ui.translator;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.util.Pair;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -12,6 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 import rxlll.yandextest.App;
 import rxlll.yandextest.business.api.ApiInteractor;
 import rxlll.yandextest.business.client.ClientInteractor;
+import rxlll.yandextest.data.network.errors.ErrorConsumer;
 import rxlll.yandextest.data.repositories.database.Lang;
 
 import static rxlll.yandextest.App.UI;
@@ -29,31 +35,49 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
     @Inject
     ClientInteractor clientInteractor;
 
-    public TranslatorPresenter() {
+    private boolean dataReceived;
+
+    public TranslatorPresenter(Context context) {
         App.appComponent.inject(this);
+        dataReceived = true;
+        updateNetworkState(context);
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
+        getData();
+    }
+
+    private void getData() {
         clientInteractor.getDir()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapMaybe(langPair -> apiInteractor.getLangs(UI)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .doOnSuccess(langsResponse -> {
                             langPair.first.setDescription(langsResponse.body().getLangs().get(langPair.first.getCode()));
                             langPair.second.setDescription(langsResponse.body().getLangs().get(langPair.second.getCode()));
                             getViewState().showDirUpdated(langPair);
+                            dataReceived = true;
                         }))
-                .subscribe();
+                .subscribe(langsResponse -> {
+                        }, new ErrorConsumer(retrofitException -> {
+                            dataReceived = false;
+                            getViewState().showMessage("Проверьте подключение к сети");
+                        })
+                );
     }
 
-    public void setDir(Pair<Lang, Lang> dir) {
-        clientInteractor.putDir(dir)
+    public void swapDir(Pair<Lang, Lang> dir) {
+        if (dir == null) return;
+        Pair<Lang, Lang> newDir = new Pair<>(dir.first, dir.second);
+        clientInteractor.putDir(newDir)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
-        getViewState().showDirUpdated(dir);
+        getViewState().showDirUpdated(newDir);
     }
 
     public void pushLangsController(boolean type, String currLang) {
@@ -61,10 +85,32 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
     }
 
     public void updateCurrentDir(Pair<Lang, Lang> dir) {
+        if (dir == null) return;
         clientInteractor.putDir(dir)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
         getViewState().showDir(dir);
     }
+
+    public void translateText(String text, Pair<Lang, Lang> dir) {
+        if (text.isEmpty() || dir == null) return;
+        apiInteractor.translate(text, dir.first.getCode() + "-" + dir.second.getCode())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(translateResponse -> getViewState().showTranslation(translateResponse.body()),
+                        new ErrorConsumer(retrofitException -> getViewState().showMessage("Проверьте подключение к сети")));
+    }
+
+    private void updateNetworkState(Context context) {
+        BroadcastReceiver broadcastReceiver;
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (!dataReceived) getData();
+            }
+        };
+        context.registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
 }

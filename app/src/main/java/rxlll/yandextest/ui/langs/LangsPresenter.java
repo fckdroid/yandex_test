@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers;
 import rxlll.yandextest.App;
 import rxlll.yandextest.business.api.ApiInteractor;
 import rxlll.yandextest.business.client.ClientInteractor;
+import rxlll.yandextest.data.network.errors.ErrorConsumer;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.ui.translator.TranslatorController;
 
@@ -40,7 +41,8 @@ public class LangsPresenter extends MvpPresenter<LangsView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(langsResponse ->
-                        getViewState().showLangs(langsResponse.body().getLangsPretty()));
+                                getViewState().showLangs(langsResponse.body().getLangsPretty()),
+                        new ErrorConsumer(retrofitException -> getViewState().showMessage("Проверьте подключение к сети")));
     }
 
 

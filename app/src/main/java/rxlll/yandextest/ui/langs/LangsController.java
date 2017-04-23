@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -55,6 +56,7 @@ public class LangsController extends MoxyController implements LangsView {
 
     @Override
     public void showLangs(List<Lang> langs) {
+        if (langs == null) return;
         recyclerAdapter = new LangsRecyclerAdapter(langs, currentLang, type, switchState);
         recyclerAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(recyclerAdapter);
@@ -71,6 +73,11 @@ public class LangsController extends MoxyController implements LangsView {
     @Override
     public void showSwitch(boolean b) {
         this.switchState = b;
+    }
+
+    @Override
+    public void showMessage(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -35,10 +35,12 @@ public class App extends Application {
     private static final String DATABASE_NAME = "app-database";
     public static RefWatcher refWatcher;
     public static AppComponent appComponent;
+    public static App instance;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         appComponent = DaggerAppComponent.builder()
                 .repositoriesModule(new RepositoriesModule(this))
                 .databaseModule(new DatabaseModule(getDaoSession()))

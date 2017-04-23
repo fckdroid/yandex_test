@@ -7,6 +7,7 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
+import rxlll.yandextest.data.network.models.translator.Translate;
 import rxlll.yandextest.data.repositories.database.Lang;
 
 /**
@@ -23,4 +24,9 @@ public interface TranslatorView extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
     void showLangsController(boolean type, String s);
+
+    void showTranslation(Translate body);
+
+    @StateStrategyType(SkipStrategy.class)
+    void showMessage(String localizedMessage);
 }

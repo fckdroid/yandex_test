@@ -20,7 +20,7 @@ public class TextWatcherAdapter implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        listener.onTextChanged(view, s.toString());
+        listener.onTextChanged(view, s);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class TextWatcherAdapter implements TextWatcher {
 
     public interface TextWatcherListener {
 
-        void onTextChanged(EditText view, String text);
+        void onTextChanged(EditText view, CharSequence text);
 
     }
 

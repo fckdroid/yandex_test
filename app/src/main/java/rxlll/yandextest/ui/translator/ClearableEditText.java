@@ -3,6 +3,7 @@ package rxlll.yandextest.ui.translator;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -101,10 +102,15 @@ public class ClearableEditText extends android.support.v7.widget.AppCompatEditTe
     }
 
     @Override
-    public void onTextChanged(EditText view, String text) {
+    public void onTextChanged(EditText view, CharSequence text) {
         if (isFocused()) {
             setClearIconVisible(isNotEmpty(text));
+            setCounter(text.length());
         }
+    }
+
+    private void setCounter(int length) {
+
     }
 
     @Override
@@ -129,7 +135,8 @@ public class ClearableEditText extends android.support.v7.widget.AppCompatEditTe
         if (xD == null) {
             xD = getResources().getDrawable(R.drawable.cancel);
         }
-        xD.setBounds(0, 0, xD.getIntrinsicWidth() / 4, xD.getIntrinsicHeight() / 4);
+        xD.setBounds(0, 0, xD.getIntrinsicWidth() / 5 * 2, xD.getIntrinsicHeight() / 5 * 2);
+        setPadding(getPaddingLeft(), getPaddingTop(), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()), getPaddingBottom());
         int min = getPaddingTop() + xD.getIntrinsicHeight() + getPaddingBottom();
         if (getSuggestedMinimumHeight() < min) {
             setMinimumHeight(min);

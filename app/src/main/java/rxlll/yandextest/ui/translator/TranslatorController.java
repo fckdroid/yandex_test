@@ -10,13 +10,18 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
+import rxlll.yandextest.App;
 import rxlll.yandextest.R;
+import rxlll.yandextest.data.network.models.translator.Translate;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.ui.base.MoxyController;
 import rxlll.yandextest.ui.langs.LangsController;
@@ -38,6 +43,12 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     private TextView copyRightTextView;
     private TextView translatorEditText;
     private Pair<Lang, Lang> dir;
+    private Button translateButton;
+
+    @ProvidePresenter
+    TranslatorPresenter translatorPresenter() {
+        return new TranslatorPresenter(App.instance.getApplicationContext());
+    }
 
     @Override
     protected View inflateView(LayoutInflater inflater, ViewGroup container) {
@@ -51,6 +62,12 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         swapImageView = view.findViewById(R.id.swap_image_view);
         copyRightTextView = ((TextView) view.findViewById(R.id.copyright_text_view));
         translatorEditText = ((TextView) view.findViewById(R.id.translator_edit_text));
+        translateButton = ((Button) view.findViewById(R.id.button));
+
+        translateButton.setOnClickListener(v -> {
+            closeKeyboard();
+            translatorPresenter.translateText(translatorEditText.getText().toString(), dir);
+        });
         navigationView = getActivity().findViewById(R.id.navigation);
 
         leftTextView.setOnClickListener(v ->
@@ -59,7 +76,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
                 translatorPresenter.pushLangsController(TYPE_R, rightTextView.getText().toString()));
 
         swapImageView.setOnClickListener(v ->
-                translatorPresenter.setDir(new Pair<>(dir.second, dir.first)));
+                translatorPresenter.swapDir(dir));
         copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
         copyRightTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -148,7 +165,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
     @Override
     public void showLangsController(boolean type, String currLang) {
-        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        closeKeyboard();
 
         Animation animNavHide = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_down);
         animNavHide.setAnimationListener(new Animation.AnimationListener() {
@@ -171,6 +188,20 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         getRouter().pushController(RouterTransaction.with(new LangsController(this, type, currLang))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
+    }
+
+    @Override
+    public void showTranslation(Translate body) {
+
+    }
+
+    @Override
+    public void showMessage(String localizedMessage) {
+        Toast.makeText(getActivity(), localizedMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    private void closeKeyboard() {
+        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 
 
