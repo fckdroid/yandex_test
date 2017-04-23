@@ -56,8 +56,8 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
         getViewState().showDirUpdated(dir);
     }
 
-    public void pushLangsController(boolean type, String s) {
-        getViewState().showLangsController(type, s);
+    public void pushLangsController(boolean type, String currLang) {
+        getViewState().showLangsController(type, currLang);
     }
 
     public void updateCurrentDir(Pair<Lang, Lang> dir) {

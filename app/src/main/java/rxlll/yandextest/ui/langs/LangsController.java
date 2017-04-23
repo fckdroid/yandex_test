@@ -41,11 +41,11 @@ public class LangsController extends MoxyController implements LangsView {
 
     }
 
-    public LangsController(TranslatorController translatorController, boolean type, String s) {
+    public LangsController(TranslatorController translatorController, boolean type, String currLang) {
         super();
         setTargetController(translatorController);
         this.type = type;
-        this.currentLang = s;
+        this.currentLang = currLang;
     }
 
     @Override

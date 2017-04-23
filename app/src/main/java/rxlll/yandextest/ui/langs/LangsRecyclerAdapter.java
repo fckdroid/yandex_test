@@ -32,12 +32,15 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
     private OnLangClickClickListener onLangClickListener;
     private OnSwitchClickClickListener onSwitchClickListener;
     private Switch switchView;
+    private boolean isChecked;
+    private int checkedPos;
 
     public LangsRecyclerAdapter(List<Lang> langs, String checkedLang, boolean type, boolean switchState) {
         this.langs = langs;
         this.checkedLang = checkedLang;
         this.type = type;
         this.switchState = switchState;
+        checkedPos = -1;
     }
 
     LangsRecyclerAdapter setOnLangClickListener(OnLangClickClickListener onLangClickListener) {
@@ -80,6 +83,16 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
         if (holder.getItemViewType() == VIEW_TYPE_LANG) {
             holder.itemView.setOnClickListener(view -> onLangClickListener.onLangClick(langs.get(position)));
             holder.textView.setText(langs.get(position).getDescription());
+            if (!isChecked) {
+                if (checkedLang.equals(langs.get(position).getDescription())) {
+                    checkedPos = position;
+                }
+            }
+            if (position == checkedPos) {
+                holder.checkedImageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.checkedImageView.setVisibility(View.INVISIBLE);
+            }
         } else if (holder.getItemViewType() == VIEW_TYPE_SWITCH) {
             switchView = holder.switchView;
             switchView.setChecked(switchState);

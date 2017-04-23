@@ -56,7 +56,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         leftTextView.setOnClickListener(v ->
                 translatorPresenter.pushLangsController(TYPE_L, leftTextView.getText().toString()));
         rightTextView.setOnClickListener(v ->
-                translatorPresenter.pushLangsController(TYPE_R, leftTextView.getText().toString()));
+                translatorPresenter.pushLangsController(TYPE_R, rightTextView.getText().toString()));
 
         swapImageView.setOnClickListener(v ->
                 translatorPresenter.setDir(new Pair<>(dir.second, dir.first)));
@@ -133,6 +133,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
     @Override
     public void showDir(Pair<Lang, Lang> dir) {
+        this.dir = dir;
         leftTextView.setText(dir.first.getDescription());
         rightTextView.setText(dir.second.getDescription());
         if (dir.first.getDescription() == "Определить") {
@@ -146,7 +147,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
     @Override
-    public void showLangsController(boolean type, String s) {
+    public void showLangsController(boolean type, String currLang) {
         ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getView().getWindowToken(), 0);
 
         Animation animNavHide = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_down);
@@ -167,7 +168,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             }
         });
         navigationView.startAnimation(animNavHide);
-        getRouter().pushController(RouterTransaction.with(new LangsController(this, type, s))
+        getRouter().pushController(RouterTransaction.with(new LangsController(this, type, currLang))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }
