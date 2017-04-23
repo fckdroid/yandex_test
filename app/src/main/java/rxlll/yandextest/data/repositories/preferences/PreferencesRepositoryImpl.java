@@ -2,12 +2,18 @@ package rxlll.yandextest.data.repositories.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Pair;
+
+import com.google.gson.Gson;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import rxlll.yandextest.data.repositories.database.Lang;
+
+import static rxlll.yandextest.App.UI;
 
 /**
  * Created by Maksim Sukhotski on 4/14/2017.
@@ -15,7 +21,9 @@ import io.reactivex.Single;
 
 public class PreferencesRepositoryImpl implements PreferencesRepository {
     private static final String PREFERENCES_NAME = "app-preferences";
-    private static final String KEY_DIRS = "key_routes";
+    private static final String KEY_DIRS = "key_dirs";
+    private static final String KEY_LANG_LEFT = "key_lang_left";
+    private static final String KEY_LANG_RIGHT = "key_lang_right";
     private static final String KEY_AUTO_DETECT_SETTING = "key_auto_detect_setting";
 
     private SharedPreferences preferences;
@@ -32,6 +40,27 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     @Override
     public Single<Set<String>> getDirs() {
         return Single.fromCallable(() -> preferences.getStringSet(KEY_DIRS, new HashSet<>()));
+    }
+
+    @Override
+    public Completable putDir(Pair<Lang, Lang> dir) {
+        return Completable.fromAction(() -> {
+            preferences.edit().putString(KEY_LANG_LEFT, new Gson().toJson(dir.first)).apply();
+            preferences.edit().putString(KEY_LANG_RIGHT, new Gson().toJson(dir.second)).apply();
+        });
+    }
+
+    @Override
+    public Single<Pair<Lang, Lang>> getDir() {
+        return Single.fromCallable(() -> {
+            Lang langLeft = new Lang();
+            Lang langRight = new Lang();
+            langLeft.setCode(UI);
+            langRight.setCode(UI.equals("ru") ? "en" : "ru");
+            Lang langLeftFinal = new Gson().fromJson(preferences.getString(KEY_LANG_LEFT, new Gson().toJson(langLeft)), Lang.class);
+            Lang langRightFinal = new Gson().fromJson(preferences.getString(KEY_LANG_RIGHT, new Gson().toJson(langRight)), Lang.class);
+            return new Pair<>(langLeftFinal, langRightFinal);
+        });
     }
 
     @Override

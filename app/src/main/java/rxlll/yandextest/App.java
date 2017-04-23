@@ -9,6 +9,8 @@ import com.squareup.leakcanary.RefWatcher;
 
 import org.greenrobot.greendao.database.Database;
 
+import java.util.Locale;
+
 import rxlll.yandextest.data.repositories.database.DaoMaster;
 import rxlll.yandextest.data.repositories.database.DaoSession;
 import rxlll.yandextest.di.AppComponent;
@@ -29,6 +31,7 @@ import static rxlll.yandextest.BuildConfig.TRANSLATOR_API_URL;
 public class App extends Application {
 
     public static final String LOG_TAG = "app-logs";
+    public static final String UI = Locale.getDefault().getLanguage();
     private static final String DATABASE_NAME = "app-database";
     public static RefWatcher refWatcher;
     public static AppComponent appComponent;

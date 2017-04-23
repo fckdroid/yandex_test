@@ -5,14 +5,16 @@ import android.util.Pair;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import java.util.Locale;
-
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxlll.yandextest.App;
 import rxlll.yandextest.business.api.ApiInteractor;
+import rxlll.yandextest.business.client.ClientInteractor;
+import rxlll.yandextest.data.repositories.database.Lang;
+
+import static rxlll.yandextest.App.UI;
 
 /**
  * Created by Maksim Sukhotski on 4/16/2017.
@@ -24,6 +26,9 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
     @Inject
     ApiInteractor apiInteractor;
 
+    @Inject
+    ClientInteractor clientInteractor;
+
     public TranslatorPresenter() {
         App.appComponent.inject(this);
     }
@@ -31,18 +36,23 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        String ui = Locale.getDefault().getLanguage();
-
-        apiInteractor.getLangs(ui)
+        clientInteractor.getDir()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(langsResponse ->//// TODO: 4/22/2017 cach lang for langcontroller
-                        getViewState().showDirUpdated(new Pair<>(langsResponse.body().getLangs().get(ui),
-                                langsResponse.body().getLangs().get(ui == "en" ? "ru" : "en")))
-                );
+                .flatMapMaybe(langPair -> apiInteractor.getLangs(UI)
+                        .doOnSuccess(langsResponse -> {
+                            langPair.first.setDescription(langsResponse.body().getLangs().get(langPair.first.getCode()));
+                            langPair.second.setDescription(langsResponse.body().getLangs().get(langPair.second.getCode()));
+                            getViewState().showDirUpdated(langPair);
+                        }))
+                .subscribe();
     }
 
-    public void setDir(Pair dir) {
+    public void setDir(Pair<Lang, Lang> dir) {
+        clientInteractor.putDir(dir)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
         getViewState().showDirUpdated(dir);
     }
 
@@ -50,7 +60,11 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
         getViewState().showLangsController(type, s);
     }
 
-    public void saveCurrentDir(Pair<String, String> dir) {
+    public void updateCurrentDir(Pair<Lang, Lang> dir) {
+        clientInteractor.putDir(dir)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
         getViewState().showDir(dir);
     }
 }

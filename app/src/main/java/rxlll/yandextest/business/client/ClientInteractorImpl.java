@@ -1,10 +1,13 @@
 package rxlll.yandextest.business.client;
 
+import android.util.Pair;
+
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import rxlll.yandextest.App;
+import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.data.repositories.preferences.PreferencesRepository;
 
 /**
@@ -28,5 +31,15 @@ public class ClientInteractorImpl implements ClientInteractor {
     @Override
     public Single<Boolean> getAutoDetectSetting() {
         return preferencesRepository.getAutoDetectSetting();
+    }
+
+    @Override
+    public Completable putDir(Pair<Lang, Lang> dir) {
+        return preferencesRepository.putDir(dir);
+    }
+
+    @Override
+    public Single<Pair<Lang, Lang>> getDir() {
+        return preferencesRepository.getDir();
     }
 }

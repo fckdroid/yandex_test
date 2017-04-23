@@ -54,7 +54,7 @@ public class LangsPresenter extends MvpPresenter<LangsView> {
 
     public void setLang(boolean type, Lang lang, Controller targetController) {
         if (targetController != null)
-            ((TranslatorController) targetController).onLangPicked(type, lang.getDescription());
+            ((TranslatorController) targetController).onLangPicked(type, lang);
         getViewState().popController();
     }
 
@@ -63,8 +63,10 @@ public class LangsPresenter extends MvpPresenter<LangsView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnComplete(() -> {
-                    ((TranslatorController) targetController).onLangPicked(type, "Определить");
-                    getViewState().popController();
+                    Lang lang = new Lang();
+                    lang.setDescription("Определить");
+                    ((TranslatorController) targetController).onLangPicked(type, lang);
+                    if (checked) getViewState().popController();
                 })
                 .subscribe();
     }

@@ -91,6 +91,6 @@ public class LangsController extends MoxyController implements LangsView {
     }
 
     public interface TargetLangEntryControllerListener {
-        void onLangPicked(boolean type, String lang);
+        void onLangPicked(boolean type, Lang lang);
     }
 }

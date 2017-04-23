@@ -67,6 +67,7 @@ public class ApiInteractorImpl implements ApiInteractor {
      *                      Langs received remotely ->
      *                      Dirs were written to the preferences ->
      *                      Langs were written to the database;
+     *
      * Next time we will see only: Langs received locally.
      */
     @Override

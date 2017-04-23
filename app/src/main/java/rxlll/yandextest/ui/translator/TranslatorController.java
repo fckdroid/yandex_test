@@ -17,6 +17,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import rxlll.yandextest.R;
+import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.ui.base.MoxyController;
 import rxlll.yandextest.ui.langs.LangsController;
 
@@ -36,6 +37,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     private View swapImageView;
     private TextView copyRightTextView;
     private TextView translatorEditText;
+    private Pair<Lang, Lang> dir;
 
     @Override
     protected View inflateView(LayoutInflater inflater, ViewGroup container) {
@@ -49,7 +51,6 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         swapImageView = view.findViewById(R.id.swap_image_view);
         copyRightTextView = ((TextView) view.findViewById(R.id.copyright_text_view));
         translatorEditText = ((TextView) view.findViewById(R.id.translator_edit_text));
-
         navigationView = getActivity().findViewById(R.id.navigation);
 
         leftTextView.setOnClickListener(v ->
@@ -58,7 +59,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
                 translatorPresenter.pushLangsController(TYPE_R, leftTextView.getText().toString()));
 
         swapImageView.setOnClickListener(v ->
-                translatorPresenter.setDir(new Pair<>(rightTextView.getText(), leftTextView.getText())));
+                translatorPresenter.setDir(new Pair<>(dir.second, dir.first)));
         copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
         copyRightTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -83,7 +84,8 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
     @Override
-    public void showDirUpdated(Pair<String, String> dir) {
+    public void showDirUpdated(Pair<Lang, Lang> dir) {
+        this.dir = dir;
         swapImageView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
         Animation animLeftToCenter = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_left_to_center);
         Animation animCenterToLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_center_to_left);
@@ -97,7 +99,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                leftTextView.setText(dir.first);
+                leftTextView.setText(dir.first.getDescription());
                 leftTextView.startAnimation(animCenterToLeft);
             }
 
@@ -114,9 +116,9 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                rightTextView.setText(dir.second);
+                rightTextView.setText(dir.second.getDescription());
                 rightTextView.startAnimation(animCenterToRight);
-                translatorPresenter.saveCurrentDir(dir);
+                translatorPresenter.updateCurrentDir(dir);
             }
 
             @Override
@@ -130,15 +132,15 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
     @Override
-    public void showDir(Pair<String, String> dir) {
-        leftTextView.setText(dir.first);
-        rightTextView.setText(dir.second);
-        if (dir.first == "Определить") {
+    public void showDir(Pair<Lang, Lang> dir) {
+        leftTextView.setText(dir.first.getDescription());
+        rightTextView.setText(dir.second.getDescription());
+        if (dir.first.getDescription() == "Определить") {
             translatorEditText.setHint("Введите текст");
             swapImageView.setClickable(false);
             swapImageView.setBackground(getResources().getDrawable(R.drawable.circle_gray));
         } else {
-            translatorEditText.setHint("Введите текст (" + dir.first + ")");
+            translatorEditText.setHint("Введите текст (" + dir.first.getDescription() + ")");
             swapImageView.setClickable(true);
         }
     }
@@ -172,12 +174,19 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
 
     @Override
-    public void onLangPicked(boolean type, String lang) {
+    public void onLangPicked(boolean type, Lang lang) {
         if (type == TYPE_L) {
-            leftTextView.setText(lang);
+            leftTextView.setText(lang.getDescription());
+            dir.first.setDescription(lang.getDescription());
+            dir.first.setCode(lang.getCode());
+            dir.first.setRating(lang.getRating());
+            translatorPresenter.updateCurrentDir(new Pair(dir.first, dir.second));
         } else {
-            rightTextView.setText(lang);
+            rightTextView.setText(lang.getDescription());
+            dir.second.setDescription(lang.getDescription());
+            dir.second.setCode(lang.getCode());
+            dir.second.setRating(lang.getRating());
+            translatorPresenter.updateCurrentDir(new Pair(dir.first, dir.second));
         }
-        translatorPresenter.saveCurrentDir(new Pair(leftTextView.getText().toString(), rightTextView.getText().toString()));
     }
 }

@@ -7,6 +7,8 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
+import rxlll.yandextest.data.repositories.database.Lang;
+
 /**
  * Created by Maksim Sukhotski on 4/16/2017.
  */
@@ -15,11 +17,9 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 public interface TranslatorView extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
-    void showDirUpdated(Pair<String, String> dir);
+    void showDirUpdated(Pair<Lang, Lang> dir);
 
-    void showDir(Pair<String, String> dir);
-
-//    void swapRoute(Pair<String, String> route);
+    void showDir(Pair<Lang, Lang> dir);
 
     @StateStrategyType(SkipStrategy.class)
     void showLangsController(boolean type, String s);
