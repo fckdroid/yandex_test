@@ -24,6 +24,7 @@ public final class MainActivity extends AppCompatActivity {
 
     public static final String NAVIGATION_KEY = "navigation_key";
     public static final String TRANSLATOR_CONTROLLER_TAG = "TranslatorController";
+    private static final String VISIBLE_LAYOUT_ID = "visible_layout_id";
 
     Animation controllerAnim;
     Animation navigationAnim;
@@ -31,6 +32,7 @@ public final class MainActivity extends AppCompatActivity {
     private Router pagerRouter;
     private Router settingsRouter;
     private BottomNavigationView bottomNavigationView;
+    private int visibleLayoutNumber = -1;
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -46,20 +48,24 @@ public final class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.translator:
                     translatorView.setVisibility(View.VISIBLE);
+                    visibleLayoutNumber = 1;
                     if (bottomNavigationView.getSelectedItemId() != item.getItemId())
                         translatorView.startAnimation(controllerAnim);
                     break;
                 case R.id.pager:
                     pagerView.setVisibility(View.VISIBLE);
+                    visibleLayoutNumber = 2;
                     if (bottomNavigationView.getSelectedItemId() != item.getItemId())
                         pagerView.startAnimation(controllerAnim);
                     break;
                 case R.id.settings:
                     settingsView.setVisibility(View.VISIBLE);
+                    visibleLayoutNumber = 3;
                     if (bottomNavigationView.getSelectedItemId() != item.getItemId())
                         settingsView.startAnimation(controllerAnim);
                     break;
             }
+
             findViewById(item.getItemId()).startAnimation(navigationAnim);
             return true;
         }
@@ -91,6 +97,40 @@ public final class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
         controllerAnim = AnimationUtils.loadAnimation(this, R.anim.controller);
         navigationAnim = AnimationUtils.loadAnimation(this, R.anim.navigation);
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (visibleLayoutNumber != -1) {
+            switch (visibleLayoutNumber) {
+                case 1:
+                    findViewById(R.id.translator_container).setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    findViewById(R.id.pager_container).setVisibility(View.VISIBLE);
+                    break;
+                case 3:
+                    findViewById(R.id.settings_container).setVisibility(View.VISIBLE);
+                    break;
+
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(VISIBLE_LAYOUT_ID, visibleLayoutNumber);
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        visibleLayoutNumber = savedInstanceState.getInt(VISIBLE_LAYOUT_ID);
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

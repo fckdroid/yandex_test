@@ -20,4 +20,6 @@ public interface DatabaseRepository {
     Single<List<Translation>> getTranslations(boolean favorites);
 
     Single<Translation> getTranslation(String text, String lang);
+
+    Completable deleteAll();
 }

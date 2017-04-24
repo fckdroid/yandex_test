@@ -15,7 +15,7 @@
         android:layout_marginStart="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/imageView3"
+        app:layout_constraintRight_toLeftOf="@+id/delete_image_view"
         app:layout_constraintTop_toTopOf="parent"
         app:tabGravity="fill"
         app:tabIndicatorColor="@android:color/black"
@@ -34,7 +34,7 @@
     </android.support.design.widget.TabLayout>
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/delete_image_view"
         android:layout_width="?attr/actionBarSize"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginBottom="0dp"

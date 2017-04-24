@@ -36,6 +36,9 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
     }
 
     public void setFavorite(Translation translation) {
-        clientInteractor.putTranslationFavorite(translation);
+        clientInteractor.putTranslationFavorite(translation)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 }

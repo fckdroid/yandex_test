@@ -60,4 +60,9 @@ public class ClientInteractorImpl implements ClientInteractor {
         return databaseRepository.getTranslations(favorites);
     }
 
+    @Override
+    public Completable deleteAll() {
+        return databaseRepository.deleteAll();
+    }
+
 }

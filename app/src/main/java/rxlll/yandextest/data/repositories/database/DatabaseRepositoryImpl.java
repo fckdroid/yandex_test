@@ -90,4 +90,12 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
             }
         });
     }
+
+    @Override
+    public Completable deleteAll() {
+        return Completable.fromAction(() -> {
+            translationDao.deleteAll();
+            langDao.deleteAll();
+        });
+    }
 }
