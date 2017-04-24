@@ -30,4 +30,5 @@ public interface TranslatorView extends MvpView {
     @StateStrategyType(SkipStrategy.class)
     void showMessage(String localizedMessage);
 
+    void showTranslationFavorite(boolean isFavorite);
 }

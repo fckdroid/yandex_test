@@ -6,6 +6,7 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -13,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +40,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
     public static final boolean TYPE_L = false;
     public static final boolean TYPE_R = true;
+    public static final int MAX_LETTERS = 10000;
     @InjectPresenter
     TranslatorPresenter translatorPresenter;
     private TextView leftTextView;
@@ -66,6 +69,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     private Animation animRightToCenter;
     private Animation animCenterToRight;
     private Translation translation;
+    private ImageView favoriteImageView;
 
     @ProvidePresenter
     TranslatorPresenter translatorPresenter() {
@@ -91,12 +95,20 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         buttonContainer = ((LinearLayout) view.findViewById(R.id.button_container));
         translatedLinearLayout = ((LinearLayout) view.findViewById(R.id.translated_linear_layout));
         navigationView = getActivity().findViewById(R.id.navigation);
+        favoriteImageView = (ImageView) view.findViewById(R.id.favorite_image_view);
 
         copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
         copyRightTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         translatorEditText.addTextChangedListener(new TextWatcherAdapter(translatorEditText, this));
 
+        favoriteImageView.setOnClickListener(v -> {
+            if (translationUpdated) {
+                boolean wasFavorite = favoriteImageView.getDrawable().getConstantState() ==
+                        getResources().getDrawable(R.drawable.star_full).getConstantState();
+                translatorPresenter.setTranslateFavorite(translation, !wasFavorite);
+            }
+        });
         leftTextView.setOnClickListener(v ->
                 translatorPresenter.pushLangsController(TYPE_L, leftTextView.getText().toString()));
         rightTextView.setOnClickListener(v ->
@@ -112,6 +124,17 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
         });
 
+        translatorEditText.setOnTouchListener((v, event) -> {
+            if (v.getId() == R.id.translator_edit_text) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+            }
+            return false;
+        });
         Animation animNavHide = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_up);
         animNavHide.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -189,19 +212,14 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     public void showTranslation(Translation translation) {
         if (translation.isNotEmpty()) {
             this.translation = translation;
-
+            translationUpdated = true;
             if (translatedLinearLayout.getVisibility() == View.GONE) {
                 translateHeaderTextView.setText(translation.getTranslatePretty().getText());
                 if (translation.getDictionaryPretty() != null &&
-                        translation.getDictionaryPretty().getDef().length > 0) {
+                        translation.getDictionaryPretty().getDef().length > 0)
                     translateDescrTextView.setText(translation.getDictionaryPretty().getDef()[0].getTs());
-                }
-                translationUpdated = true;
                 translatedLinearLayout.startAnimation(animFadingInvert);
-            } else {
-                translationUpdated = true;
-                translatedLinearLayout.startAnimation(animFadingForRepeat);
-            }
+            } else translatedLinearLayout.startAnimation(animFadingForRepeat);
         }
     }
 
@@ -236,7 +254,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         } else if (translationUpdated && text.length() > 0) {
             translatedLinearLayout.startAnimation(animFadingInvert);
         }
-        if (text.length() > 10000) {
+        if (text.length() > MAX_LETTERS) {
             translateButton.setClickable(false);
             translateButton.setBackground(getResources().getDrawable(R.drawable.button_inactive));
         } else {
@@ -248,6 +266,12 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     @Override
     public void showMessage(String localizedMessage) {
         Toast.makeText(getActivity(), localizedMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showTranslationFavorite(boolean isFavorite) {
+        favoriteImageView.setImageDrawable(getResources()
+                .getDrawable(isFavorite ? R.drawable.star_full : R.drawable.star));
     }
 
     private void closeKeyboard() {

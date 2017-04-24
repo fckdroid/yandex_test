@@ -7,7 +7,9 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import rxlll.yandextest.App;
+import rxlll.yandextest.data.repositories.database.DatabaseRepository;
 import rxlll.yandextest.data.repositories.database.Lang;
+import rxlll.yandextest.data.repositories.database.Translation;
 import rxlll.yandextest.data.repositories.preferences.PreferencesRepository;
 
 /**
@@ -18,6 +20,9 @@ public class ClientInteractorImpl implements ClientInteractor {
 
     @Inject
     PreferencesRepository preferencesRepository;
+
+    @Inject
+    DatabaseRepository databaseRepository;
 
     public ClientInteractorImpl() {
         App.appComponent.inject(this);
@@ -41,5 +46,10 @@ public class ClientInteractorImpl implements ClientInteractor {
     @Override
     public Single<Pair<Lang, Lang>> getDir() {
         return preferencesRepository.getDir();
+    }
+
+    @Override
+    public Completable putTranslationFavorite(Translation translation) {
+        return databaseRepository.putTranslation(translation);
     }
 }

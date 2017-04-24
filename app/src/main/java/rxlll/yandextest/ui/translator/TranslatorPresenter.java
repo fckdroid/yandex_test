@@ -101,7 +101,10 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
         apiInteractor.translate(text, dirRequest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(translateResponse -> getViewState().showTranslation(translateResponse),
+                .subscribe(translateResponse -> {
+                            getViewState().showTranslation(translateResponse);
+                            getViewState().showTranslationFavorite(translateResponse.getIsFavorite());
+                        },
                         new ErrorConsumer(retrofitException -> getViewState().showMessage("Проверьте подключение к сети")));
     }
 
@@ -122,5 +125,11 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
 
     public void clearTranslatedText() {
         getViewState().showTranslation(new Translation());
+        getViewState().showTranslationFavorite(false);
+    }
+
+    public void setTranslateFavorite(Translation translation, boolean isFavorite) {
+        translation.setIsFavorite(isFavorite);
+        getViewState().showTranslationFavorite(isFavorite);
     }
 }
