@@ -15,6 +15,7 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 
 import rxlll.yandextest.R;
+import rxlll.yandextest.data.repositories.database.Translation;
 import rxlll.yandextest.ui.pager.PagerController;
 import rxlll.yandextest.ui.settings.SettingsController;
 import rxlll.yandextest.ui.translator.TranslatorController;
@@ -22,6 +23,7 @@ import rxlll.yandextest.ui.translator.TranslatorController;
 public final class MainActivity extends AppCompatActivity {
 
     public static final String NAVIGATION_KEY = "navigation_key";
+    public static final String TRANSLATOR_CONTROLLER_TAG = "TranslatorController";
 
     Animation controllerAnim;
     Animation navigationAnim;
@@ -78,7 +80,8 @@ public final class MainActivity extends AppCompatActivity {
                 savedInstanceState);
 
         if (!translatorRouter.hasRootController())
-            translatorRouter.setRoot(RouterTransaction.with(new TranslatorController()));
+            translatorRouter.setRoot(RouterTransaction.with(new TranslatorController())
+                    .tag(TRANSLATOR_CONTROLLER_TAG));
         if (!pagerRouter.hasRootController())
             pagerRouter.setRoot(RouterTransaction.with(new PagerController()));
         if (!settingsRouter.hasRootController())
@@ -88,7 +91,6 @@ public final class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
         controllerAnim = AnimationUtils.loadAnimation(this, R.anim.controller);
         navigationAnim = AnimationUtils.loadAnimation(this, R.anim.navigation);
-//        bottomNavigationView.getSelectedItemId()
     }
 
     @Override
@@ -109,5 +111,13 @@ public final class MainActivity extends AppCompatActivity {
         if (findViewById(R.id.settings_container).getVisibility() == View.VISIBLE)
             return settingsRouter;
         return translatorRouter;
+    }
+
+    public void showTranslatorController(Translation translation) {
+        if (translatorRouter.getControllerWithTag(TRANSLATOR_CONTROLLER_TAG) != null) {
+            ((TranslatorController) translatorRouter.getControllerWithTag(TRANSLATOR_CONTROLLER_TAG))
+                    .showTranslation(translation);
+        }
+        bottomNavigationView.findViewById(R.id.translator).performClick();
     }
 }

@@ -2,6 +2,8 @@ package rxlll.yandextest.business.client;
 
 import android.util.Pair;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
@@ -52,4 +54,10 @@ public class ClientInteractorImpl implements ClientInteractor {
     public Completable putTranslationFavorite(Translation translation) {
         return databaseRepository.putTranslation(translation);
     }
+
+    @Override
+    public Single<List<Translation>> getTranslations() {
+        return databaseRepository.getTranslations();
+    }
+
 }

@@ -27,15 +27,13 @@ import static rxlll.yandextest.ui.translator.TranslatorController.TYPE_L;
 
 public class LangsController extends MoxyController implements LangsView {
 
-    static final int FAVORITE_LANG_COUNT = 3;
-    static final int ALL_LANG = 0;
     @InjectPresenter
     LangsPresenter langsPresenter;
+
     private boolean type;
     private String currentLang;
     private RecyclerView recyclerView;
     private LangsRecyclerAdapter recyclerAdapter;
-    private Switch switchView;
     private boolean switchState;
 
     public LangsController() {
@@ -93,7 +91,7 @@ public class LangsController extends MoxyController implements LangsView {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         view.findViewById(R.id.back_image_view).setOnClickListener(v -> langsPresenter.popController());
         getActivity().findViewById(R.id.navigation).setVisibility(View.GONE);
-        switchView = (Switch) view.findViewById(R.id.switch_view);
+        Switch switchView = (Switch) view.findViewById(R.id.switch_view);
         if (type == TYPE_L) langsPresenter.setSwitchState();
     }
 

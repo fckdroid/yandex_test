@@ -2,6 +2,8 @@ package rxlll.yandextest.business.client;
 
 import android.util.Pair;
 
+import java.util.List;
+
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import rxlll.yandextest.data.repositories.database.Lang;
@@ -21,4 +23,6 @@ public interface ClientInteractor {
     Single<Pair<Lang, Lang>> getDir();
 
     Completable putTranslationFavorite(Translation translation);
+
+    Single<List<Translation>> getTranslations();
 }

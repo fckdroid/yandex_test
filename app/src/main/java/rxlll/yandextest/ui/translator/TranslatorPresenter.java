@@ -130,6 +130,10 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
 
     public void setTranslateFavorite(Translation translation, boolean isFavorite) {
         translation.setIsFavorite(isFavorite);
+        clientInteractor.putTranslationFavorite(translation)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
         getViewState().showTranslationFavorite(isFavorite);
     }
 }
