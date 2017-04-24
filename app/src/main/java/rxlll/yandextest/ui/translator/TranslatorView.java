@@ -7,7 +7,6 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
-import rxlll.yandextest.data.network.models.dictionary.Dictionary;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.data.repositories.database.Translation;
 
@@ -21,7 +20,7 @@ public interface TranslatorView extends MvpView {
     @StateStrategyType(SkipStrategy.class)
     void showDirUpdated(Pair<Lang, Lang> dir);
 
-    void showDir(Pair<Lang, Lang> dir);
+    void showDirWithoutAnim(Pair<Lang, Lang> dir);
 
     @StateStrategyType(SkipStrategy.class)
     void showLangsController(boolean type, String s);
@@ -31,5 +30,4 @@ public interface TranslatorView extends MvpView {
     @StateStrategyType(SkipStrategy.class)
     void showMessage(String localizedMessage);
 
-    void showDictionaryData(Dictionary body);
 }

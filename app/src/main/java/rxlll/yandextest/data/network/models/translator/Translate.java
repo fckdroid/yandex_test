@@ -1,6 +1,8 @@
 package rxlll.yandextest.data.network.models.translator;
 
-/** Created by Maksim Sukhotski on 4/15/2017. */
+/**
+ * Created by Maksim Sukhotski on 4/15/2017.
+ */
 
 public class Translate {
     private Detect detected;
@@ -10,10 +12,22 @@ public class Translate {
     public Detect getDetected() {
         return detected;
     }
+
     public String getLang() {
         return lang;
     }
-    public String[] getText() {
-        return text;
+
+    public String getText() {
+        String s = "";
+        if (text.length > 0) {
+            for (int i = 0; i < text.length; i++) {
+                if (i + 1 == text.length) {
+                    s = s + text[i];
+                } else {
+                    s = s + text[i] + ", ";
+                }
+            }
+        }
+        return s;
     }
 }

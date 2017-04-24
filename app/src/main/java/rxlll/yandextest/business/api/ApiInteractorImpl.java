@@ -54,7 +54,7 @@ public class ApiInteractorImpl implements ApiInteractor {
                     Translation translation = new Translation();
                     translation.setOriginal(text);
                     translation.setDir(lang);
-                    translation.setTranslate(new Gson().toJson(translateResponse.body().toString()));
+                    translation.setTranslate(new Gson().toJson(translateResponse.body()));
                     translation.setDictionary(new Gson().toJson(dictionaryResponse.body()));
                     databaseRepository.putTranslation(translation).subscribe();
                     return translation;

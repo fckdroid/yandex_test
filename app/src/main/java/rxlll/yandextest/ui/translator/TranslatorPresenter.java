@@ -72,12 +72,13 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
 
     public void swapDir(Pair<Lang, Lang> dir) {
         if (dir == null) return;
-        Pair<Lang, Lang> newDir = new Pair<>(dir.first, dir.second);
+        Pair<Lang, Lang> newDir = new Pair<>(dir.second, dir.first);
         clientInteractor.putDir(newDir)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
         getViewState().showDirUpdated(newDir);
+        getViewState().showDirWithoutAnim(newDir);
     }
 
     public void pushLangsController(boolean type, String currLang) {
@@ -90,7 +91,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
-        getViewState().showDir(dir);
+        getViewState().showDirWithoutAnim(dir);
     }
 
     public void translateText(String text, Pair<Lang, Lang> dir) {

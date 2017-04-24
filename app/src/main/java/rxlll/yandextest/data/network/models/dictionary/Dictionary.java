@@ -5,6 +5,9 @@ package rxlll.yandextest.data.network.models.dictionary;
  */
 
 public class Dictionary {
-    private Def[] def;
+    public Def[] def;
 
+    public Def[] getDef() {
+        return def;
+    }
 }

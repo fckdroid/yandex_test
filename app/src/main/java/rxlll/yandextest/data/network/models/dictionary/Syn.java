@@ -8,4 +8,10 @@ class Syn {
     private String text;
     private String pos;
     private String gen;
+
+    public Syn(String text, String pos, String gen) {
+        this.text = text;
+        this.pos = pos;
+        this.gen = gen;
+    }
 }

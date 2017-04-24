@@ -2,10 +2,16 @@ package rxlll.yandextest.data.repositories.database;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.Transient;
+
+import rxlll.yandextest.data.network.models.dictionary.Dictionary;
+import rxlll.yandextest.data.network.models.translator.Translate;
 
 /**
  * Created by Maksim Sukhotski on 4/21/2017.
@@ -32,6 +38,12 @@ public final class Translation {
     @NonNull
     private boolean isFavorite;
 
+    @Transient
+    private Translate translatePretty;
+
+    @Transient
+    private Dictionary dictionaryPretty;
+
     @Generated(hash = 1801338536)
     public Translation(Long id, @NonNull String dictionary,
                        @NonNull String translate, @NonNull String dir,
@@ -46,6 +58,18 @@ public final class Translation {
 
     @Generated(hash = 321689573)
     public Translation() {
+    }
+
+    public Dictionary getDictionaryPretty() {
+        if (dictionaryPretty == null)
+            dictionaryPretty = new Gson().fromJson(dictionary, Dictionary.class);
+        return dictionaryPretty;
+    }
+
+    public Translate getTranslatePretty() {
+        if (translatePretty == null)
+            translatePretty = new Gson().fromJson(translate, Translate.class);
+        return translatePretty;
     }
 
     public Long getId() {

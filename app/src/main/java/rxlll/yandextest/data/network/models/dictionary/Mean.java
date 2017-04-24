@@ -6,4 +6,8 @@ package rxlll.yandextest.data.network.models.dictionary;
 
 class Mean {
     private String text;
+
+    public String getText() {
+        return text;
+    }
 }

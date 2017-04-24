@@ -64,14 +64,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/include5">
 
                 <TextView
-                    android:id="@+id/textView2"
-                    style="@style/TextPrimary"
+                    android:id="@+id/translate_header_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Лиса" />
+                    android:text="Лиса"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/translate_descr_text_view"
                     style="@style/TextSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

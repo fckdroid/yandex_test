@@ -10,4 +10,24 @@ class Tr {
     private String gen;
     private Syn[] syn;
     private Mean[] mean;
+
+    public String getText() {
+        return text;
+    }
+
+    public String getPos() {
+        return pos;
+    }
+
+    public String getGen() {
+        return gen;
+    }
+
+    public Syn[] getSyn() {
+        return syn;
+    }
+
+    public Mean[] getMean() {
+        return mean;
+    }
 }

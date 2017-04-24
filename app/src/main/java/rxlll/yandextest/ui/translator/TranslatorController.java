@@ -21,7 +21,6 @@ import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import rxlll.yandextest.App;
 import rxlll.yandextest.R;
-import rxlll.yandextest.data.network.models.dictionary.Dictionary;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.data.repositories.database.Translation;
 import rxlll.yandextest.ui.base.MoxyController;
@@ -45,6 +44,8 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     private TextView translatorEditText;
     private Pair<Lang, Lang> dir;
     private Button translateButton;
+    private TextView translateHeaderTextView;
+    private TextView translateDescrTextView;
 
     @ProvidePresenter
     TranslatorPresenter translatorPresenter() {
@@ -63,6 +64,8 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         swapImageView = view.findViewById(R.id.swap_image_view);
         copyRightTextView = ((TextView) view.findViewById(R.id.copyright_text_view));
         translatorEditText = ((TextView) view.findViewById(R.id.translator_edit_text));
+        translateHeaderTextView = ((TextView) view.findViewById(R.id.translate_header_text_view));
+        translateDescrTextView = ((TextView) view.findViewById(R.id.translate_descr_text_view));
         translateButton = ((Button) view.findViewById(R.id.button));
 
         translateButton.setOnClickListener(v -> {
@@ -136,7 +139,6 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             public void onAnimationEnd(Animation animation) {
                 rightTextView.setText(dir.second.getDescription());
                 rightTextView.startAnimation(animCenterToRight);
-                translatorPresenter.updateCurrentDir(dir);
             }
 
             @Override
@@ -150,7 +152,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
     @Override
-    public void showDir(Pair<Lang, Lang> dir) {
+    public void showDirWithoutAnim(Pair<Lang, Lang> dir) {
         this.dir = dir;
         leftTextView.setText(dir.first.getDescription());
         rightTextView.setText(dir.second.getDescription());
@@ -193,17 +195,16 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
     @Override
     public void showTranslation(Translation translation) {
-
+        translateHeaderTextView.setText(translation.getTranslatePretty().getText());
+        if (translation.getDictionaryPretty() != null &&
+                translation.getDictionaryPretty().getDef().length > 0) {
+            translateDescrTextView.setText(translation.getDictionaryPretty().getDef()[0].getTs());
+        }
     }
 
     @Override
     public void showMessage(String localizedMessage) {
         Toast.makeText(getActivity(), localizedMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showDictionaryData(Dictionary body) {
-
     }
 
     private void closeKeyboard() {
