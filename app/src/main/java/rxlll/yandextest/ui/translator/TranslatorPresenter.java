@@ -95,10 +95,11 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
 
     public void translateText(String text, Pair<Lang, Lang> dir) {
         if (text.isEmpty() || dir == null) return;
-        apiInteractor.translate(text, dir.first.getCode() + "-" + dir.second.getCode())
+        String dirRequest = dir.first.getCode() + "-" + dir.second.getCode();
+        apiInteractor.translate(text, dirRequest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(translateResponse -> getViewState().showTranslation(translateResponse.body()),
+                .subscribe(translateResponse -> getViewState().showTranslation(translateResponse),
                         new ErrorConsumer(retrofitException -> getViewState().showMessage("Проверьте подключение к сети")));
     }
 

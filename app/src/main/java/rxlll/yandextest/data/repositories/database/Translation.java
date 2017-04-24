@@ -17,24 +17,30 @@ public final class Translation {
     @Id
     private Long id;
 
-    @NotNull
-    private String text;
-    @NotNull
-    private String lang;
+    @NonNull
+    private String dictionary;
 
     @NonNull
     private String translate;
 
     @NonNull
+    private String dir;
+
+    @NotNull
+    private String original;
+
+    @NonNull
     private boolean isFavorite;
 
-    @Generated(hash = 1903699825)
-    public Translation(Long id, @NotNull String text, @NotNull String lang,
-                       @NotNull String translate, boolean isFavorite) {
+    @Generated(hash = 1801338536)
+    public Translation(Long id, @NonNull String dictionary,
+                       @NonNull String translate, @NonNull String dir,
+                       @NonNull String original, boolean isFavorite) {
         this.id = id;
-        this.text = text;
-        this.lang = lang;
+        this.dictionary = dictionary;
         this.translate = translate;
+        this.dir = dir;
+        this.original = original;
         this.isFavorite = isFavorite;
     }
 
@@ -50,20 +56,12 @@ public final class Translation {
         this.id = id;
     }
 
-    public String getText() {
-        return this.text;
+    public String getDictionary() {
+        return this.dictionary;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getLang() {
-        return this.lang;
-    }
-
-    public void setLang(String lang) {
-        this.lang = lang;
+    public void setDictionary(String dictionary) {
+        this.dictionary = dictionary;
     }
 
     public String getTranslate() {
@@ -72,6 +70,22 @@ public final class Translation {
 
     public void setTranslate(String translate) {
         this.translate = translate;
+    }
+
+    public String getDir() {
+        return this.dir;
+    }
+
+    public void setDir(String dir) {
+        this.dir = dir;
+    }
+
+    public String getOriginal() {
+        return this.original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
     }
 
     public boolean getIsFavorite() {

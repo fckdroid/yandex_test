@@ -15,8 +15,8 @@ public interface DictionaryApi {
 
     @FormUrlEncoded
     @POST("lookup")
-    Single<Response<Dictionary>> lookup(@Field("lang") String text,
-                                        @Field("text") String lang,
+    Single<Response<Dictionary>> lookup(@Field("text") String text,
+                                        @Field("lang") String lang,
                                         @Field("ui") String ui,
                                         @Field("flags") String flags);
 }

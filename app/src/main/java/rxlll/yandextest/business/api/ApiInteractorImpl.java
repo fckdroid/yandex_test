@@ -2,6 +2,8 @@ package rxlll.yandextest.business.api;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import javax.inject.Inject;
 
 import io.reactivex.Maybe;
@@ -13,11 +15,13 @@ import rxlll.yandextest.data.network.models.translator.Detect;
 import rxlll.yandextest.data.network.models.translator.Langs;
 import rxlll.yandextest.data.network.models.translator.Translate;
 import rxlll.yandextest.data.repositories.database.DatabaseRepository;
+import rxlll.yandextest.data.repositories.database.Translation;
 import rxlll.yandextest.data.repositories.dictionary.DictionaryRepository;
 import rxlll.yandextest.data.repositories.preferences.PreferencesRepository;
 import rxlll.yandextest.data.repositories.translator.TranslatorRepository;
 
 import static rxlll.yandextest.App.LOG_TAG;
+import static rxlll.yandextest.App.UI;
 
 /**
  * Created by Maksim Sukhotski on 4/14/2017.
@@ -42,9 +46,27 @@ public class ApiInteractorImpl implements ApiInteractor {
     }
 
     @Override
-    public Single<Response<Translate>> translate(String text, String lang) {
-        return translatorRepository.translate(text, lang);
+    public Maybe<Translation> translate(String text, String lang) {
+        Single<Translation> remote = Single.zip(translatorRepository.translate(text, lang),
+                dictionaryRepository.lookup(text, lang, UI),
+                (translateResponse, dictionaryResponse) -> {
+                    Log.d(LOG_TAG, "Пришли оба ответа с сервера");
+                    Translation translation = new Translation();
+                    translation.setOriginal(text);
+                    translation.setDir(lang);
+                    translation.setTranslate(new Gson().toJson(translateResponse.body().toString()));
+                    translation.setDictionary(new Gson().toJson(dictionaryResponse.body()));
+                    databaseRepository.putTranslation(translation).subscribe();
+                    return translation;
+                });
+        return databaseRepository.getTranslation(text, lang)
+                .filter(translation -> {
+                    Log.d(LOG_TAG, "Фильтруем вывод из базы данных: " + String.valueOf(translation.getOriginal() != null));
+                    return translation.getOriginal() != null;
+                })
+                .switchIfEmpty(remote.toMaybe());
     }
+
 
     @Override
     public Single<Response<Translate>> translate(String text, String lang, String options) {
@@ -63,11 +85,11 @@ public class ApiInteractorImpl implements ApiInteractor {
 
     /**
      * On first app launch: Langs received locally ->
-     *                      But were empty ->
-     *                      Langs received remotely ->
-     *                      Dirs were written to the preferences ->
-     *                      Langs were written to the database;
-     *
+     * But were empty ->
+     * Langs received remotely ->
+     * Dirs were written to the preferences ->
+     * Langs were written to the database;
+     * <p>
      * Next time we will see only: Langs received locally.
      */
     @Override

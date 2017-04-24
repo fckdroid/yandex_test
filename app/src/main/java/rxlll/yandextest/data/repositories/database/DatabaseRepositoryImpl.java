@@ -1,5 +1,7 @@
 package rxlll.yandextest.data.repositories.database;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -10,6 +12,8 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import rxlll.yandextest.App;
+
+import static rxlll.yandextest.App.LOG_TAG;
 
 /**
  * Created by Maksim Sukhotski on 4/21/2017.
@@ -22,6 +26,7 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
 
     @Inject
     TranslationDao translationDao;
+
     List<String> lovelyLangs;
 
     public DatabaseRepositoryImpl() {
@@ -49,6 +54,37 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
 
     @Override
     public Single<List<Lang>> getLangs() {
-        return Single.fromCallable(() -> langDao.queryBuilder().orderDesc(LangDao.Properties.Rating).list());
+        return Single.fromCallable(() ->
+                langDao.queryBuilder().orderDesc(LangDao.Properties.Rating).list());
+    }
+
+    @Override
+    public Completable putTranslation(Translation translation) {
+        return Completable.fromAction(() -> translationDao.insertOrReplace(translation))
+                .doOnComplete(() -> Log.d(LOG_TAG, "Перевод записан в БД"));
+    }
+
+    @Override
+    public Single<List<Translation>> getTranslations() {
+        return Single.fromCallable(() ->
+                translationDao.queryBuilder().list());
+//                translationDao.queryBuilder().orderDesc(TranslationDao.Properties.Id).list());
+    }
+
+    @Override
+    public Single<Translation> getTranslation(String text, String lang) {
+        return Single.fromCallable(() -> {
+            Translation unique = translationDao.queryBuilder().
+                    where(TranslationDao.Properties.Original.eq(text),
+                            TranslationDao.Properties.Dir.eq(lang)).unique();
+            if (unique == null) {
+                Log.d(LOG_TAG, "В БД нет такого перевода");
+                return new Translation();
+
+            } else {
+                Log.d(LOG_TAG, "Перевод прочитан из БД");
+                return unique;
+            }
+        });
     }
 }

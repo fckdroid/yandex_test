@@ -21,8 +21,9 @@ import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import rxlll.yandextest.App;
 import rxlll.yandextest.R;
-import rxlll.yandextest.data.network.models.translator.Translate;
+import rxlll.yandextest.data.network.models.dictionary.Dictionary;
 import rxlll.yandextest.data.repositories.database.Lang;
+import rxlll.yandextest.data.repositories.database.Translation;
 import rxlll.yandextest.ui.base.MoxyController;
 import rxlll.yandextest.ui.langs.LangsController;
 
@@ -191,13 +192,18 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
     @Override
-    public void showTranslation(Translate body) {
+    public void showTranslation(Translation translation) {
 
     }
 
     @Override
     public void showMessage(String localizedMessage) {
         Toast.makeText(getActivity(), localizedMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showDictionaryData(Dictionary body) {
+
     }
 
     private void closeKeyboard() {
@@ -212,13 +218,13 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             dir.first.setDescription(lang.getDescription());
             dir.first.setCode(lang.getCode());
             dir.first.setRating(lang.getRating());
-            translatorPresenter.updateCurrentDir(new Pair(dir.first, dir.second));
+            translatorPresenter.updateCurrentDir(new Pair<>(dir.first, dir.second));
         } else {
             rightTextView.setText(lang.getDescription());
             dir.second.setDescription(lang.getDescription());
             dir.second.setCode(lang.getCode());
             dir.second.setRating(lang.getRating());
-            translatorPresenter.updateCurrentDir(new Pair(dir.first, dir.second));
+            translatorPresenter.updateCurrentDir(new Pair<>(dir.first, dir.second));
         }
     }
 }

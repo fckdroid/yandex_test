@@ -15,4 +15,9 @@ public interface DatabaseRepository {
 
     Single<List<Lang>> getLangs();
 
+    Completable putTranslation(Translation translation);
+
+    Single<List<Translation>> getTranslations();
+
+    Single<Translation> getTranslation(String text, String lang);
 }

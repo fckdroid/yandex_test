@@ -5,7 +5,6 @@ package rxlll.yandextest.data.network.models.dictionary;
  */
 
 public class Dictionary {
-    private String head;
     private Def[] def;
 
 }

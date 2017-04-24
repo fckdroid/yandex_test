@@ -7,13 +7,14 @@ import rxlll.yandextest.data.network.models.dictionary.Dictionary;
 import rxlll.yandextest.data.network.models.translator.Detect;
 import rxlll.yandextest.data.network.models.translator.Langs;
 import rxlll.yandextest.data.network.models.translator.Translate;
+import rxlll.yandextest.data.repositories.database.Translation;
 
 /** Created by Maksim Sukhotski on 4/14/2017. */
 
 public interface ApiInteractor {
 
-    Single<Response<Translate>> translate(String text,
-                                          String lang);
+    Maybe<Translation> translate(String text,
+                                 String lang);
 
     Single<Response<Translate>> translate(String text,
                                           String lang,
