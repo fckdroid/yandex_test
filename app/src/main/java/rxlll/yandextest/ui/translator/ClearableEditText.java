@@ -136,7 +136,10 @@ public class ClearableEditText extends android.support.v7.widget.AppCompatEditTe
             xD = getResources().getDrawable(R.drawable.cancel);
         }
         xD.setBounds(0, 0, xD.getIntrinsicWidth() / 5 * 2, xD.getIntrinsicHeight() / 5 * 2);
-        setPadding(getPaddingLeft(), getPaddingTop(), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()), getPaddingBottom());
+        setPadding(getPaddingLeft(),
+                getPaddingTop(),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()),
+                getPaddingBottom());
         int min = getPaddingTop() + xD.getIntrinsicHeight() + getPaddingBottom();
         if (getSuggestedMinimumHeight() < min) {
             setMinimumHeight(min);

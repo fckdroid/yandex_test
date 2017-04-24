@@ -48,7 +48,7 @@ public class ApiInteractorImpl implements ApiInteractor {
     @Override
     public Maybe<Translation> translate(String text, String lang) {
         Single<Translation> remote = Single.zip(translatorRepository.translate(text, lang),
-                dictionaryRepository.lookup(text, lang, UI),
+                dictionaryRepository.lookup(text.contains(" ") ? "" : text, lang, UI),
                 (translateResponse, dictionaryResponse) -> {
                     Log.d(LOG_TAG, "Пришли оба ответа с сервера");
                     Translation translation = new Translation();

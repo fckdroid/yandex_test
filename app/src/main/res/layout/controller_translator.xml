@@ -43,7 +43,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/translated_linear_layout" />
 
             <include
                 android:id="@+id/include5"
@@ -55,7 +55,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/linearLayout"
+                android:id="@+id/translated_linear_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -67,7 +67,6 @@
                     android:id="@+id/translate_header_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Лиса"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
@@ -75,8 +74,7 @@
                     android:id="@+id/translate_descr_text_view"
                     style="@style/TextSmall"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="fox [fɔks]" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
 

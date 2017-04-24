@@ -28,7 +28,7 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
     private final boolean type;
     private boolean switchState;
     private List<Lang> langs;
-    private boolean atFirst = true;
+    private boolean atFirst;
     private OnLangClickClickListener onLangClickListener;
     private OnSwitchClickClickListener onSwitchClickListener;
     private Switch switchView;
@@ -41,6 +41,7 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
         this.type = type;
         this.switchState = switchState;
         checkedPos = -1;
+        atFirst = true;
     }
 
     LangsRecyclerAdapter setOnLangClickListener(OnLangClickClickListener onLangClickListener) {

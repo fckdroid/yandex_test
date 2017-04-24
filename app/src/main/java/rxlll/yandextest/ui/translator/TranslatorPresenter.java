@@ -19,6 +19,7 @@ import rxlll.yandextest.business.api.ApiInteractor;
 import rxlll.yandextest.business.client.ClientInteractor;
 import rxlll.yandextest.data.network.errors.ErrorConsumer;
 import rxlll.yandextest.data.repositories.database.Lang;
+import rxlll.yandextest.data.repositories.database.Translation;
 
 import static rxlll.yandextest.App.UI;
 
@@ -78,7 +79,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
         getViewState().showDirUpdated(newDir);
-        getViewState().showDirWithoutAnim(newDir);
+//        getViewState().showDirWithoutAnim(newDir);
     }
 
     public void pushLangsController(boolean type, String currLang) {
@@ -91,7 +92,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
-        getViewState().showDirWithoutAnim(dir);
+//        getViewState().showDirWithoutAnim(dir);
     }
 
     public void translateText(String text, Pair<Lang, Lang> dir) {
@@ -115,4 +116,11 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
         context.registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
+    public void saveDirState(Pair<Lang, Lang> dir) {
+        getViewState().showDirWithoutAnim(dir);
+    }
+
+    public void clearTranslatedText() {
+        getViewState().showTranslation(new Translation());
+    }
 }

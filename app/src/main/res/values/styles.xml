@@ -34,7 +34,7 @@
     <style name="Button" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:background">@drawable/button</item>
         <item name="android:foreground">@drawable/ripple_circle</item>
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif</item>

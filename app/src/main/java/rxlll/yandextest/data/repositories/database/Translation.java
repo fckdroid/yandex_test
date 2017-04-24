@@ -120,4 +120,7 @@ public final class Translation {
         this.isFavorite = isFavorite;
     }
 
+    public boolean isNotEmpty() {
+        return id != null;
+    }
 }
