@@ -1,7 +1,6 @@
 package rxlll.yandextest.ui.translator;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -83,14 +82,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
     @Override
-    protected void onDetach(@NonNull View view) {
-        super.onDetach(view);
-        getActivity().findViewById(R.id.translator_container).setVisibility(View.GONE);
-    }
-
-    @Override
     protected void onViewBound(View view) {
-        getActivity().findViewById(R.id.translator_container).setVisibility(View.VISIBLE);
         leftTextView = (TextView) view.findViewById(R.id.lang_left_text_view);
         rightTextView = (TextView) view.findViewById(R.id.lang_right_text_view);
         swapImageView = view.findViewById(R.id.swap_image_view);

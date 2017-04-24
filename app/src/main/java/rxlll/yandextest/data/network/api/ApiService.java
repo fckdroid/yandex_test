@@ -1,7 +1,5 @@
 package rxlll.yandextest.data.network.api;
 
-import com.facebook.stetho.okhttp3.StethoInterceptor;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -35,7 +33,7 @@ public class ApiService {
 
     private OkHttpClient createHttpClient() {
         return new OkHttpClient.Builder()
-                .addNetworkInterceptor(new StethoInterceptor())
+//                .addNetworkInterceptor(new StethoInterceptor())
                 .addInterceptor(new TokenInterceptor(authToken))
                 .build();
     }

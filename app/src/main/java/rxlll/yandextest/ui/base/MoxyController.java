@@ -12,8 +12,6 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.ControllerChangeType;
 
-import rxlll.yandextest.App;
-
 /**
  * Created by Maksim Sukhotski on 4/15/2017.
  */
@@ -60,7 +58,7 @@ public abstract class MoxyController extends Controller {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (hasExited) App.refWatcher.watch(this);
+//        if (hasExited) App.refWatcher.watch(this);
         if (isStateSaved) return;
         mvpDelegate.onDestroy();
     }
@@ -91,6 +89,6 @@ public abstract class MoxyController extends Controller {
     protected void onChangeEnded(@NonNull ControllerChangeHandler changeHandler, @NonNull ControllerChangeType changeType) {
         super.onChangeEnded(changeHandler, changeType);
         hasExited = !changeType.isEnter;
-        if (isDestroyed()) App.refWatcher.watch(this);
+//        if (isDestroyed()) App.refWatcher.watch(this);
     }
 }

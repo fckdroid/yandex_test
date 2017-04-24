@@ -82,14 +82,7 @@ public class PagerController extends MoxyController implements PagerView {
     }
 
     @Override
-    protected void onDetach(@NonNull View view) {
-        super.onDetach(view);
-        getActivity().findViewById(R.id.pager_container).setVisibility(View.GONE);
-    }
-
-    @Override
     protected void onViewBound(@NonNull View view) {
-        getActivity().findViewById(R.id.pager_container).setVisibility(View.GONE);
         super.onViewBound(view);
         viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
