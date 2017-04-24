@@ -65,10 +65,13 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
     }
 
     @Override
-    public Single<List<Translation>> getTranslations() {
-        return Single.fromCallable(() ->
-                translationDao.queryBuilder().list());
-//                translationDao.queryBuilder().orderDesc(TranslationDao.Properties.Id).list());
+    public Single<List<Translation>> getTranslations(boolean favorites) {
+        return Single.fromCallable(() -> {
+            if (favorites) {
+                return translationDao.queryBuilder().where(TranslationDao.Properties.IsFavorite.eq(true)).list();
+            }
+            return translationDao.queryBuilder().list();
+        });
     }
 
     @Override

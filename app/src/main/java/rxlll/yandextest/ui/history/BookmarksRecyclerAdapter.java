@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import rxlll.yandextest.data.repositories.database.Translation;
  * Created by Maksim Sukhotski on 4/22/2017.
  */
 
-class BookmarksRecyclerAdapter extends RecyclerView.Adapter<BookmarksRecyclerAdapter.RecyclerViewHolder> {
+public class BookmarksRecyclerAdapter extends RecyclerView.Adapter<BookmarksRecyclerAdapter.RecyclerViewHolder> {
     private List<Translation> translations;
     private OnTranslationClickListener onTranslationClickListener;
     private OnFavoriteClickListener onFavoriteClickListener;
@@ -25,12 +26,12 @@ class BookmarksRecyclerAdapter extends RecyclerView.Adapter<BookmarksRecyclerAda
         this.translations = translations;
     }
 
-    BookmarksRecyclerAdapter setOnTranslationClickListener(OnTranslationClickListener onTranslationClickListener) {
+    public BookmarksRecyclerAdapter setOnTranslationClickListener(OnTranslationClickListener onTranslationClickListener) {
         this.onTranslationClickListener = onTranslationClickListener;
         return this;
     }
 
-    BookmarksRecyclerAdapter setOnFavoriteClickListener(OnFavoriteClickListener onFavoriteClickListener) {
+    public BookmarksRecyclerAdapter setOnFavoriteClickListener(OnFavoriteClickListener onFavoriteClickListener) {
         this.onFavoriteClickListener = onFavoriteClickListener;
         return this;
     }
@@ -45,12 +46,17 @@ class BookmarksRecyclerAdapter extends RecyclerView.Adapter<BookmarksRecyclerAda
         holder.originalTextView.setText(translations.get(position).getOriginal());
         holder.targetTextView.setText(translations.get(position).getTranslatePretty().getText());
         holder.dirTextView.setText(translations.get(position).getDir());
-        holder.itemView.setOnClickListener(view -> onTranslationClickListener.onTranslationClick(translations.get(position)));
+        holder.favoriteImageView.setImageResource(translations.get(position).getIsFavorite() ? R.drawable.star_full : R.drawable.star);
+        holder.linearLayout.setOnClickListener(view -> onTranslationClickListener.onTranslationClick(translations.get(position)));
         holder.favoriteImageView.setOnClickListener(view -> {
             Translation translation = translations.get(position);
             translation.setIsFavorite(!translation.getIsFavorite());
-            onFavoriteClickListener.onFavoriteClick(translation);
+            onFavoriteClickListener.onFavoriteClick(translation, position);
         });
+    }
+
+    public List<Translation> getTranslations() {
+        return translations;
     }
 
     @Override
@@ -58,12 +64,12 @@ class BookmarksRecyclerAdapter extends RecyclerView.Adapter<BookmarksRecyclerAda
         return translations.size();
     }
 
-    interface OnTranslationClickListener {
+    public interface OnTranslationClickListener {
         void onTranslationClick(Translation translation);
     }
 
-    interface OnFavoriteClickListener {
-        void onFavoriteClick(Translation checked);
+    public interface OnFavoriteClickListener {
+        void onFavoriteClick(Translation checked, int position);
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -71,9 +77,11 @@ class BookmarksRecyclerAdapter extends RecyclerView.Adapter<BookmarksRecyclerAda
         TextView originalTextView;
         TextView targetTextView;
         TextView dirTextView;
+        LinearLayout linearLayout;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.holder_view);
             favoriteImageView = (ImageView) itemView.findViewById(R.id.favorite_image_view);
             originalTextView = (TextView) itemView.findViewById(R.id.original_text_view);
             targetTextView = (TextView) itemView.findViewById(R.id.target_text_view);

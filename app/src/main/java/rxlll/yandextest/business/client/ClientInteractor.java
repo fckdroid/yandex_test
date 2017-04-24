@@ -24,5 +24,5 @@ public interface ClientInteractor {
 
     Completable putTranslationFavorite(Translation translation);
 
-    Single<List<Translation>> getTranslations();
+    Single<List<Translation>> getTranslations(boolean favorites);
 }

@@ -56,8 +56,8 @@ public class ClientInteractorImpl implements ClientInteractor {
     }
 
     @Override
-    public Single<List<Translation>> getTranslations() {
-        return databaseRepository.getTranslations();
+    public Single<List<Translation>> getTranslations(boolean favorites) {
+        return databaseRepository.getTranslations(favorites);
     }
 
 }

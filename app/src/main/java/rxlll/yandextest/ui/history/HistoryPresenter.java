@@ -18,6 +18,7 @@ import rxlll.yandextest.data.repositories.database.Translation;
 @InjectViewState
 public class HistoryPresenter extends MvpPresenter<HistoryView> {
 
+    public static final boolean All = false;
     @Inject
     ClientInteractor clientInteractor;
 
@@ -28,7 +29,7 @@ public class HistoryPresenter extends MvpPresenter<HistoryView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        clientInteractor.getTranslations()
+        clientInteractor.getTranslations(All)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(translations -> getViewState().showTranslations(translations));

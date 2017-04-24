@@ -25,6 +25,7 @@ public interface TranslatorView extends MvpView {
     @StateStrategyType(SkipStrategy.class)
     void showLangsController(boolean type, String s);
 
+    @StateStrategyType(SkipStrategy.class)
     void showTranslation(Translation translation);
 
     @StateStrategyType(SkipStrategy.class)

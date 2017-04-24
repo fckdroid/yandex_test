@@ -17,7 +17,7 @@ public interface DatabaseRepository {
 
     Completable putTranslation(Translation translation);
 
-    Single<List<Translation>> getTranslations();
+    Single<List<Translation>> getTranslations(boolean favorites);
 
     Single<Translation> getTranslation(String text, String lang);
 }

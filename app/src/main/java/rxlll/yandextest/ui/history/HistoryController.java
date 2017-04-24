@@ -47,7 +47,12 @@ public class HistoryController extends MoxyController implements HistoryView {
         recyclerAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setHasFixedSize(true);
-        recyclerAdapter.setOnFavoriteClickListener(translation -> historyPresenter.setFavorite(translation));
-        recyclerAdapter.setOnTranslationClickListener(translation -> ((MainActivity) getActivity()).showTranslatorController(translation));
+        recyclerAdapter.setOnTranslationClickListener(translation ->
+                ((MainActivity) getActivity()).showTranslatorController(translation));
+        recyclerAdapter.setOnFavoriteClickListener((checked, position) -> {
+            recyclerAdapter.getTranslations().set(position, checked);
+            recyclerAdapter.notifyDataSetChanged();
+            historyPresenter.setFavorite(checked);
+        });
     }
 }

@@ -12,6 +12,7 @@ import rxlll.yandextest.di.modules.DatabaseModule;
 import rxlll.yandextest.di.modules.InteractorsModule;
 import rxlll.yandextest.di.modules.NetworkModule;
 import rxlll.yandextest.di.modules.RepositoriesModule;
+import rxlll.yandextest.ui.favorites.FavoritesPresenter;
 import rxlll.yandextest.ui.history.HistoryPresenter;
 import rxlll.yandextest.ui.langs.LangsPresenter;
 import rxlll.yandextest.ui.translator.TranslatorPresenter;
@@ -41,4 +42,6 @@ public interface AppComponent {
     void inject(ClientInteractorImpl clientInteractor);
 
     void inject(HistoryPresenter historyPresenter);
+
+    void inject(FavoritesPresenter favoritesPresenter);
 }
