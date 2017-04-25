@@ -2,6 +2,11 @@ package rxlll.yandextest;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
+import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+
 import org.greenrobot.greendao.database.Database;
 
 import java.util.Locale;
@@ -30,7 +35,7 @@ public class App extends Application {
     public static final String LOG_TAG = "app-logs";
     public static final String UI = Locale.getDefault().getLanguage();
     private static final String DATABASE_NAME = "app-database";
-    //    public static RefWatcher refWatcher;
+    public static RefWatcher refWatcher;
     public static AppComponent appComponent;
     public static App instance;
 
@@ -46,14 +51,14 @@ public class App extends Application {
                         DICTIONARY_API_URL,
                         DICTIONARY_API_KEY))
                 .build();
-//        if (BuildConfig.DEBUG) {
-//            AndroidDevMetrics.initWith(this);
-//            Stetho.initialize(Stetho.newInitializerBuilder(this)
-//                    .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
-//                    .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-//                    .build());
-//            if (!LeakCanary.isInAnalyzerProcess(this)) refWatcher = LeakCanary.install(this);
-//        }
+        if (BuildConfig.DEBUG) {
+            AndroidDevMetrics.initWith(this);
+            Stetho.initialize(Stetho.newInitializerBuilder(this)
+                    .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                    .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                    .build());
+            if (!LeakCanary.isInAnalyzerProcess(this)) refWatcher = LeakCanary.install(this);
+        }
     }
 
     private DaoSession getDaoSession() {

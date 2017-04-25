@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="?attr/actionBarSize"
     android:elevation="4dp"
     android:orientation="vertical">
 
@@ -10,31 +10,30 @@
         android:id="@+id/search_edit_text"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginStart="8dp"
         android:hint="Найти в истории"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/imageView4"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="46dp"
         android:layout_height="46dp"
-        android:layout_marginBottom="6dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginStart="8dp"
         android:clickable="true"
         android:foreground="@drawable/ripple_circle"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/search" />
 </android.support.constraint.ConstraintLayout>

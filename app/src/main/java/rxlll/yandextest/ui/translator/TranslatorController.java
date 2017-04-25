@@ -213,12 +213,13 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         if (translation.isNotEmpty()) {
             this.translation = translation;
             translationUpdated = true;
+            translatorEditText.setText(translation.getOriginal());
+            translateHeaderTextView.setText(translation.getTranslatePretty().getText());
+            if (translation.getDictionaryPretty() != null &&
+                    translation.getDictionaryPretty().getDef().length > 0)
+                translateDescrTextView.setText(translation.getDictionaryPretty().getDef()[0].getTs());
             if (translatedLinearLayout.getVisibility() == View.GONE) {
-                translatorEditText.setText(translation.getOriginal());
-                translateHeaderTextView.setText(translation.getTranslatePretty().getText());
-                if (translation.getDictionaryPretty() != null &&
-                        translation.getDictionaryPretty().getDef().length > 0)
-                    translateDescrTextView.setText(translation.getDictionaryPretty().getDef()[0].getTs());
+
                 translatedLinearLayout.startAnimation(animFadingInvert);
             } else translatedLinearLayout.startAnimation(animFadingForRepeat);
         }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/colorPrimary"
@@ -11,8 +10,6 @@
         android:id="@+id/swap_image_view"
         android:layout_width="?attr/actionBarSize"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="0dp"
         android:background="@drawable/circle"
         android:clickable="true"
         android:elevation="4dp"
@@ -28,7 +25,7 @@
     <TextView
         android:id="@+id/lang_left_text_view"
         style="@style/TextPrimary"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:gravity="center"
         android:paddingLeft="16dp"
@@ -41,33 +38,17 @@
     <TextView
         android:id="@+id/lang_right_text_view"
         style="@style/TextPrimary"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="8dp"
         android:gravity="center"
         android:paddingRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/swap_image_view"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="20dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="20dp" />
 
 </android.support.constraint.ConstraintLayout>

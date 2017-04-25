@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,7 +90,6 @@ public class LangsController extends MoxyController implements LangsView {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         view.findViewById(R.id.back_image_view).setOnClickListener(v -> langsPresenter.popController());
         getActivity().findViewById(R.id.navigation).setVisibility(View.GONE);
-        Switch switchView = (Switch) view.findViewById(R.id.switch_view);
         if (type == TYPE_L) langsPresenter.setSwitchState();
     }
 

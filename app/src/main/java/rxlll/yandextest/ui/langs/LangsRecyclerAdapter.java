@@ -30,7 +30,7 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
     private List<Lang> langs;
     private boolean atFirst;
     private OnLangClickClickListener onLangClickListener;
-    private OnSwitchClickClickListener onSwitchClickListener;
+    private OnSwitchClickListener onSwitchClickListener;
     private Switch switchView;
     private boolean isChecked;
     private int checkedPos;
@@ -49,7 +49,7 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
         return this;
     }
 
-    LangsRecyclerAdapter setOnSwitchListener(OnSwitchClickClickListener onSwitchClickListener) {
+    LangsRecyclerAdapter setOnSwitchListener(OnSwitchClickListener onSwitchClickListener) {
         this.onSwitchClickListener = onSwitchClickListener;
         return this;
     }
@@ -118,7 +118,7 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
         void onLangClick(Lang lang);
     }
 
-    interface OnSwitchClickClickListener {
+    interface OnSwitchClickListener {
         void onSwitchClick(boolean checked);
     }
 

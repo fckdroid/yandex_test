@@ -33,15 +33,15 @@ public final class MainActivity extends AppCompatActivity {
     private Router settingsRouter;
     private BottomNavigationView bottomNavigationView;
     private int visibleLayoutNumber = -1;
+    private View translatorView;
+    private View pagerView;
+    private View settingsView;
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            View translatorView = findViewById(R.id.translator_container);
-            View pagerView = findViewById(R.id.pager_container);
-            View settingsView = findViewById(R.id.settings_container);
             translatorView.setVisibility(View.GONE);
             pagerView.setVisibility(View.GONE);
             settingsView.setVisibility(View.GONE);
@@ -75,6 +75,9 @@ public final class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        translatorView = findViewById(R.id.translator_container);
+        pagerView = findViewById(R.id.pager_container);
+        settingsView = findViewById(R.id.settings_container);
         translatorRouter = Conductor.attachRouter(this,
                 (ViewGroup) findViewById(R.id.translator_container),
                 savedInstanceState);
@@ -84,14 +87,6 @@ public final class MainActivity extends AppCompatActivity {
         settingsRouter = Conductor.attachRouter(this,
                 (ViewGroup) findViewById(R.id.settings_container),
                 savedInstanceState);
-
-        if (!translatorRouter.hasRootController())
-            translatorRouter.setRoot(RouterTransaction.with(new TranslatorController())
-                    .tag(TRANSLATOR_CONTROLLER_TAG));
-        if (!pagerRouter.hasRootController())
-            pagerRouter.setRoot(RouterTransaction.with(new PagerController()));
-        if (!settingsRouter.hasRootController())
-            settingsRouter.setRoot(RouterTransaction.with(new SettingsController()));
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
@@ -104,7 +99,17 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (!translatorRouter.hasRootController())
+            translatorRouter.setRoot(RouterTransaction.with(new TranslatorController())
+                    .tag(TRANSLATOR_CONTROLLER_TAG));
+        if (!pagerRouter.hasRootController())
+            pagerRouter.setRoot(RouterTransaction.with(new PagerController()));
+        if (!settingsRouter.hasRootController())
+            settingsRouter.setRoot(RouterTransaction.with(new SettingsController()));
         if (visibleLayoutNumber != -1) {
+            translatorView.setVisibility(View.GONE);
+            pagerView.setVisibility(View.GONE);
+            settingsView.setVisibility(View.GONE);
             switch (visibleLayoutNumber) {
                 case 1:
                     findViewById(R.id.translator_container).setVisibility(View.VISIBLE);

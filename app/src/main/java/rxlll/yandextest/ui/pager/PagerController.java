@@ -1,6 +1,7 @@
 package rxlll.yandextest.ui.pager;
 
 import android.app.AlertDialog;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -25,6 +26,7 @@ import rxlll.yandextest.ui.history.HistoryController;
 
 public class PagerController extends MoxyController implements PagerView {
 
+    public static final String SELECTED_ITEM = "selected_item";
     private static final int COUNT_OF_PAGES = 2;
     private final RouterPagerAdapter pagerAdapter;
     private final ViewPager.OnPageChangeListener onPageChangedListener;
@@ -32,6 +34,7 @@ public class PagerController extends MoxyController implements PagerView {
     PagerPresenter pagerPresenter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private int posSelected;
 
     public PagerController() {
         pagerAdapter = new RouterPagerAdapter(this) {
@@ -63,11 +66,14 @@ public class PagerController extends MoxyController implements PagerView {
         onPageChangedListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                posSelected = position;
                 EditText searchEditText = (EditText) getActivity().findViewById(R.id.search_edit_text);
-                if (position == 0) {
-                    searchEditText.setHint("Найти в истории");
-                } else {
-                    searchEditText.setHint("Найти в избранном");
+                if (searchEditText != null) {
+                    if (position == 0) {
+                        searchEditText.setHint("Найти в истории");
+                    } else {
+                        searchEditText.setHint("Найти в избранном");
+                    }
                 }
             }
 
@@ -89,6 +95,8 @@ public class PagerController extends MoxyController implements PagerView {
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(onPageChangedListener);
         tabLayout.setupWithViewPager(viewPager);
+
+
         view.findViewById(R.id.delete_image_view).setOnClickListener(v -> {
             new AlertDialog.Builder(getActivity())
                     .setTitle("Внимание!")
@@ -102,6 +110,21 @@ public class PagerController extends MoxyController implements PagerView {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         });
+    }
+
+    @Override
+    protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
+        EditText searchEditText = (EditText) view.findViewById(R.id.search_edit_text);
+        if (posSelected == 0) searchEditText.setHint("Найти в истории");
+        if (posSelected == 1) searchEditText.setHint("Найти в избранном");
+        posSelected = savedViewState.getInt(SELECTED_ITEM);
+        super.onRestoreViewState(view, savedViewState);
+    }
+
+    @Override
+    protected void onSaveViewState(@NonNull View view, @NonNull Bundle outState) {
+        outState.putInt(SELECTED_ITEM, posSelected);
+        super.onSaveViewState(view, outState);
     }
 
     @Override

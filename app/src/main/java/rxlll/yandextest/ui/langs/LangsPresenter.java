@@ -78,6 +78,5 @@ public class LangsPresenter extends MvpPresenter<LangsView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(b -> getViewState().showSwitch(b));
-
     }
 }
