@@ -15,7 +15,7 @@ import rxlll.yandextest.data.repositories.database.Lang;
 public class Langs {
     private Set<String> dirs;
     private Map<String, String> langs;
-    private List<Lang> langsPretty;
+    private List<Lang> langsObject;
 
     public Langs() {
     }
@@ -47,14 +47,14 @@ public class Langs {
     }
 
     public void setLangs(List<Lang> langs) {
-        this.langsPretty = langs;
+        this.langsObject = langs;
         this.langs = new LinkedTreeMap<>(String::compareTo);
         for (Lang lang : langs) {
             this.langs.put(lang.getCode(), lang.getDescription());
         }
     }
 
-    public List<Lang> getLangsPretty() {
-        return langsPretty;
+    public List<Lang> getLangsObject() {
+        return langsObject;
     }
 }

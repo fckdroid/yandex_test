@@ -1,4 +1,4 @@
-package rxlll.yandextest.ui.favorites;
+package rxlll.yandextest.ui.pager.favorites;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;

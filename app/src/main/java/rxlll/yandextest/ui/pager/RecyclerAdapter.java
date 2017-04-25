@@ -1,4 +1,4 @@
-package rxlll.yandextest.ui.history;
+package rxlll.yandextest.ui.pager;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,21 +17,21 @@ import rxlll.yandextest.data.repositories.database.Translation;
  * Created by Maksim Sukhotski on 4/22/2017.
  */
 
-public class BookmarksRecyclerAdapter extends RecyclerView.Adapter<BookmarksRecyclerAdapter.RecyclerViewHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder> {
     private List<Translation> translations;
     private OnTranslationClickListener onTranslationClickListener;
     private OnFavoriteClickListener onFavoriteClickListener;
 
-    public BookmarksRecyclerAdapter(List<Translation> translations) {
+    public RecyclerAdapter(List<Translation> translations) {
         this.translations = translations;
     }
 
-    public BookmarksRecyclerAdapter setOnTranslationClickListener(OnTranslationClickListener onTranslationClickListener) {
+    public RecyclerAdapter setOnTranslationClickListener(OnTranslationClickListener onTranslationClickListener) {
         this.onTranslationClickListener = onTranslationClickListener;
         return this;
     }
 
-    public BookmarksRecyclerAdapter setOnFavoriteClickListener(OnFavoriteClickListener onFavoriteClickListener) {
+    public RecyclerAdapter setOnFavoriteClickListener(OnFavoriteClickListener onFavoriteClickListener) {
         this.onFavoriteClickListener = onFavoriteClickListener;
         return this;
     }
@@ -42,10 +42,10 @@ public class BookmarksRecyclerAdapter extends RecyclerView.Adapter<BookmarksRecy
     }
 
     @Override
-    public void onBindViewHolder(BookmarksRecyclerAdapter.RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerAdapter.RecyclerViewHolder holder, int position) {
         holder.originalTextView.setText(translations.get(position).getOriginal());
-        holder.targetTextView.setText(translations.get(position).getTranslatePretty().getText());
-        holder.dirTextView.setText(translations.get(position).getDir());
+        holder.targetTextView.setText(translations.get(position).getTranslateObject().getText());
+        holder.dirTextView.setText(translations.get(position).getDirection());
         holder.favoriteImageView.setImageResource(translations.get(position).getIsFavorite() ? R.drawable.star_full : R.drawable.star);
         holder.linearLayout.setOnClickListener(view -> onTranslationClickListener.onTranslationClick(translations.get(position)));
         holder.favoriteImageView.setOnClickListener(view -> {

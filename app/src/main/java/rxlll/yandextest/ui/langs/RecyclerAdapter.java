@@ -20,7 +20,7 @@ import static rxlll.yandextest.ui.translator.TranslatorController.TYPE_R;
  * Created by Maksim Sukhotski on 4/22/2017.
  */
 
-class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.RecyclerViewHolder> {
+class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder> {
     private static final int VIEW_TYPE_SWITCH = 2;
     private static final int VIEW_TYPE_DESCRIPTION = 1;
     private static final int VIEW_TYPE_LANG = 0;
@@ -35,7 +35,7 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
     private boolean isChecked;
     private int checkedPos;
 
-    public LangsRecyclerAdapter(List<Lang> langs, String checkedLang, boolean type, boolean switchState) {
+    public RecyclerAdapter(List<Lang> langs, String checkedLang, boolean type, boolean switchState) {
         this.langs = langs;
         this.checkedLang = checkedLang;
         this.type = type;
@@ -44,12 +44,12 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
         atFirst = true;
     }
 
-    LangsRecyclerAdapter setOnLangClickListener(OnLangClickClickListener onLangClickListener) {
+    RecyclerAdapter setOnLangClickListener(OnLangClickClickListener onLangClickListener) {
         this.onLangClickListener = onLangClickListener;
         return this;
     }
 
-    LangsRecyclerAdapter setOnSwitchListener(OnSwitchClickListener onSwitchClickListener) {
+    RecyclerAdapter setOnSwitchListener(OnSwitchClickListener onSwitchClickListener) {
         this.onSwitchClickListener = onSwitchClickListener;
         return this;
     }
@@ -80,12 +80,13 @@ class LangsRecyclerAdapter extends RecyclerView.Adapter<LangsRecyclerAdapter.Rec
     }
 
     @Override
-    public void onBindViewHolder(LangsRecyclerAdapter.RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerAdapter.RecyclerViewHolder holder, int position) {
         if (holder.getItemViewType() == VIEW_TYPE_LANG) {
             holder.itemView.setOnClickListener(view -> onLangClickListener.onLangClick(langs.get(position)));
             holder.textView.setText(langs.get(position).getDescription());
             if (!isChecked) {
-                if (checkedLang.equals(langs.get(position).getDescription())) {
+                if (checkedLang != null &&
+                        checkedLang.equals(langs.get(position).getDescription())) {
                     checkedPos = position;
                 }
             }

@@ -1,4 +1,4 @@
-package rxlll.yandextest.ui.favorites;
+package rxlll.yandextest.ui.pager.history;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -16,25 +16,29 @@ import rxlll.yandextest.data.repositories.database.Translation;
  */
 
 @InjectViewState
-public class FavoritesPresenter extends MvpPresenter<FavoritesView> {
-    public static final boolean FAVORITES = true;
+public class HistoryPresenter extends MvpPresenter<HistoryView> {
+
+    public static final boolean All = false;
     @Inject
     ClientInteractor clientInteractor;
 
-    public FavoritesPresenter() {
+    public HistoryPresenter() {
         App.appComponent.inject(this);
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        clientInteractor.getTranslations(FAVORITES)
+        clientInteractor.getTranslations(All)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(translations -> getViewState().showTranslations(translations));
     }
 
     public void setFavorite(Translation translation) {
-        clientInteractor.putTranslationFavorite(translation);
+        clientInteractor.putTranslationFavorite(translation)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 }

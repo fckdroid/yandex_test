@@ -54,15 +54,34 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
         clientInteractor.getDir()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMapMaybe(langPair -> apiInteractor.getLangs(UI)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSuccess(langsResponse -> {
-                            langPair.first.setDescription(langsResponse.body().getLangs().get(langPair.first.getCode()));
-                            langPair.second.setDescription(langsResponse.body().getLangs().get(langPair.second.getCode()));
-                            getViewState().showDirUpdated(langPair);
-                            dataReceived = true;
-                        }))
+                .flatMapMaybe(dir ->
+                        apiInteractor.getLangs(UI)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .doOnSuccess(langsResponse -> {
+                                    if (langsResponse.body().getLangsObject() == null) {
+                                        dir.first.setDescription(langsResponse.body().getLangs().get(dir.first.getCode()));
+                                        dir.second.setDescription(langsResponse.body().getLangs().get(dir.second.getCode()));
+                                        getViewState().showDirUpdated(dir);
+                                    } else {
+                                        for (Lang lang : langsResponse.body().getLangsObject()) {
+                                            if (lang.getCode().equals(dir.first.getCode())) {
+                                                dir.first.setCode(lang.getCode());
+                                                dir.first.setDescription(lang.getDescription());
+                                                dir.first.setRating(lang.getRating());
+                                                dir.first.setId(lang.getId());
+                                            }
+                                            if (lang.getCode().equals(dir.second.getCode())) {
+                                                dir.second.setCode(lang.getCode());
+                                                dir.second.setDescription(lang.getDescription());
+                                                dir.second.setRating(lang.getRating());
+                                                dir.second.setId(lang.getId());
+                                            }
+                                        }
+                                    }
+                                    getViewState().showDirUpdated(dir);
+                                    dataReceived = true;
+                                }))
                 .subscribe(langsResponse -> {
                         }, new ErrorConsumer(retrofitException -> {
                             dataReceived = false;
@@ -79,7 +98,6 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
         getViewState().showDirUpdated(newDir);
-//        getViewState().showDirWithoutAnim(newDir);
     }
 
     public void pushLangsController(boolean type, String currLang) {
@@ -92,13 +110,11 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
-//        getViewState().showDirWithoutAnim(dir);
     }
 
     public void translateText(String text, Pair<Lang, Lang> dir) {
         if (text.isEmpty() || dir == null) return;
-        String dirRequest = dir.first.getCode() + "-" + dir.second.getCode();
-        apiInteractor.translate(text, dirRequest)
+        apiInteractor.translate(text, dir)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(translateResponse -> {

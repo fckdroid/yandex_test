@@ -14,15 +14,15 @@ import rxlll.yandextest.data.repositories.database.Lang;
  */
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface LangsView extends MvpView {
-    @StateStrategyType(SkipStrategy.class)
-    void popController();
-
-    void showLangs(List<Lang> langs);
-
     void showTitleText(boolean type);
 
     void showSwitch(boolean b);
 
+    void showLangs(List<Lang> langs);
+
     @StateStrategyType(SkipStrategy.class)
     void showMessage(String s);
+
+    @StateStrategyType(SkipStrategy.class)
+    void popController();
 }

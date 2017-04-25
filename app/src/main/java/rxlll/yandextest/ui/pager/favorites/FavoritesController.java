@@ -1,4 +1,4 @@
-package rxlll.yandextest.ui.history;
+package rxlll.yandextest.ui.pager.favorites;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,18 +15,19 @@ import rxlll.yandextest.R;
 import rxlll.yandextest.data.repositories.database.Translation;
 import rxlll.yandextest.ui.MainActivity;
 import rxlll.yandextest.ui.base.MoxyController;
+import rxlll.yandextest.ui.pager.RecyclerAdapter;
 
 /**
  * Created by Maksim Sukhotski on 4/17/2017.
  */
 
-public class HistoryController extends MoxyController implements HistoryView {
+public class FavoritesController extends MoxyController implements FavoritesView {
 
-    public static final String TAB_NAME = "История";
+    public static final String TAB_NAME = "Избранное";
     @InjectPresenter
-    HistoryPresenter historyPresenter;
+    FavoritesPresenter favoritesPresenter;
     private RecyclerView recyclerView;
-    private BookmarksRecyclerAdapter recyclerAdapter;
+    private RecyclerAdapter recyclerAdapter;
 
     @Override
     protected View inflateView(LayoutInflater inflater, ViewGroup container) {
@@ -43,7 +44,7 @@ public class HistoryController extends MoxyController implements HistoryView {
     @Override
     public void showTranslations(List<Translation> translations) {
         if (translations == null) return;
-        recyclerAdapter = new BookmarksRecyclerAdapter(translations);
+        recyclerAdapter = new RecyclerAdapter(translations);
         recyclerAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setHasFixedSize(true);
@@ -52,7 +53,7 @@ public class HistoryController extends MoxyController implements HistoryView {
         recyclerAdapter.setOnFavoriteClickListener((checked, position) -> {
             recyclerAdapter.getTranslations().set(position, checked);
             recyclerAdapter.notifyDataSetChanged();
-            historyPresenter.setFavorite(checked);
+            favoritesPresenter.setFavorite(checked);
         });
     }
 }

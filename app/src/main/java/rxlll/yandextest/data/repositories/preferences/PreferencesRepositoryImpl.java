@@ -57,8 +57,10 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
             Lang langRight = new Lang();
             langLeft.setCode(UI);
             langRight.setCode(UI.equals("ru") ? "en" : "ru");
-            Lang langLeftFinal = new Gson().fromJson(preferences.getString(KEY_LANG_LEFT, new Gson().toJson(langLeft)), Lang.class);
-            Lang langRightFinal = new Gson().fromJson(preferences.getString(KEY_LANG_RIGHT, new Gson().toJson(langRight)), Lang.class);
+            Lang langLeftFinal = new Gson().fromJson(
+                    preferences.getString(KEY_LANG_LEFT, new Gson().toJson(langLeft)), Lang.class);
+            Lang langRightFinal = new Gson().fromJson(
+                    preferences.getString(KEY_LANG_RIGHT, new Gson().toJson(langRight)), Lang.class);
             return new Pair<>(langLeftFinal, langRightFinal);
         });
     }

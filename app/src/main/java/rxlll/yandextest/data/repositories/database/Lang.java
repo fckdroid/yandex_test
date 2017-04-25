@@ -10,7 +10,7 @@ import org.greenrobot.greendao.annotation.NotNull;
  * Created by Maksim Sukhotski on 4/21/2017.
  */
 
-@Entity(nameInDb = "langs",
+@Entity(nameInDb = "lang",
         indexes = {
                 @Index(value = "code, rating DESC", unique = true)
         })
@@ -67,5 +67,6 @@ public final class Lang {
     public void setRating(int rating) {
         this.rating = rating;
     }
+
 
 }

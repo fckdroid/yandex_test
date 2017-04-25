@@ -12,10 +12,10 @@ import rxlll.yandextest.di.modules.DatabaseModule;
 import rxlll.yandextest.di.modules.InteractorsModule;
 import rxlll.yandextest.di.modules.NetworkModule;
 import rxlll.yandextest.di.modules.RepositoriesModule;
-import rxlll.yandextest.ui.favorites.FavoritesPresenter;
-import rxlll.yandextest.ui.history.HistoryPresenter;
 import rxlll.yandextest.ui.langs.LangsPresenter;
 import rxlll.yandextest.ui.pager.PagerPresenter;
+import rxlll.yandextest.ui.pager.favorites.FavoritesPresenter;
+import rxlll.yandextest.ui.pager.history.HistoryPresenter;
 import rxlll.yandextest.ui.translator.TranslatorPresenter;
 
 /**

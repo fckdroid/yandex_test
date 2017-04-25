@@ -1,6 +1,7 @@
 package rxlll.yandextest.business.api;
 
 import android.util.Log;
+import android.util.Pair;
 
 import com.google.gson.Gson;
 
@@ -15,6 +16,7 @@ import rxlll.yandextest.data.network.models.translator.Detect;
 import rxlll.yandextest.data.network.models.translator.Langs;
 import rxlll.yandextest.data.network.models.translator.Translate;
 import rxlll.yandextest.data.repositories.database.DatabaseRepository;
+import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.data.repositories.database.Translation;
 import rxlll.yandextest.data.repositories.dictionary.DictionaryRepository;
 import rxlll.yandextest.data.repositories.preferences.PreferencesRepository;
@@ -46,24 +48,23 @@ public class ApiInteractorImpl implements ApiInteractor {
     }
 
     @Override
-    public Maybe<Translation> translate(String text, String lang) {
-        Single<Translation> remote = Single.zip(translatorRepository.translate(text, lang),
-                dictionaryRepository.lookup(text.contains(" ") ? "" : text, lang, UI),
+    public Maybe<Translation> translate(String text, Pair<Lang, Lang> dir) {
+        String dirRequest = dir.first.getCode() + "-" + dir.second.getCode();
+        Single<Translation> remote = Single.zip(translatorRepository.translate(text, dirRequest),
+                dictionaryRepository.lookup(text.contains(" ") ? "" : text, dirRequest, UI),
                 (translateResponse, dictionaryResponse) -> {
                     Log.d(LOG_TAG, "Пришли оба ответа с сервера");
                     Translation translation = new Translation();
                     translation.setOriginal(text);
-                    translation.setDir(lang);
-                    translation.setTranslate(new Gson().toJson(translateResponse.body()));
-                    translation.setDictionary(new Gson().toJson(dictionaryResponse.body()));
+                    translation.setDir(dir);
+                    translation.setTranslateJsonResponse(new Gson().toJson(translateResponse.body()));
+                    translation.setDictionaryJsonResponse(new Gson().toJson(dictionaryResponse.body()));
+                    translation.setDirection(dirRequest);
                     databaseRepository.putTranslation(translation).subscribe();
                     return translation;
                 });
-        return databaseRepository.getTranslation(text, lang)
-                .filter(translation -> {
-                    Log.d(LOG_TAG, "Фильтруем вывод из базы данных: " + String.valueOf(translation.getOriginal() != null));
-                    return translation.getOriginal() != null;
-                })
+        return databaseRepository.getTranslation(text, dirRequest)
+                .filter(translation -> translation.getOriginal() != null)
                 .switchIfEmpty(remote.toMaybe());
     }
 
@@ -83,36 +84,26 @@ public class ApiInteractorImpl implements ApiInteractor {
         return translatorRepository.detect(text, hint);
     }
 
-    /**
-     * On first app launch: Langs received locally ->
-     * But were empty ->
-     * Langs received remotely ->
-     * Dirs were written to the preferences ->
-     * Langs were written to the database;
-     * <p>
-     * Next time we will see only: Langs received locally.
-     */
     @Override
     public Maybe<Response<Langs>> getLangs(String ui) {
-        Maybe<Response<Langs>> sourceRemote = translatorRepository.getLangs(ui)
-                .doOnSuccess(response -> {
-                    Log.d(LOG_TAG, "Langs received remotely");
-                    preferencesRepository.putDirs(response.body().getDirs())
-                            .doOnComplete(() -> Log.d(LOG_TAG, "Dirs were written to the preferences"))
-                            .subscribe();
-                    databaseRepository.putLangs(response.body().getLangs())
-                            .doOnComplete(() -> Log.d(LOG_TAG, "Langs were written to the database"))
-                            .subscribe();
-                });
+        Maybe<Response<Langs>> sourceRemote =
+                translatorRepository.getLangs(ui)
+                        .flatMap(langsResponse -> databaseRepository.putLangs(langsResponse)
+                                .doOnSuccess(response -> {
+                                    Log.d(LOG_TAG, "Языки из сети с дополненным телом из БД получены");
+                                    preferencesRepository.putDirs(response.body().getDirs())
+                                            .doOnComplete(() -> Log.d(LOG_TAG, "Направления записаны в preferences"))
+                                            .subscribe();
+                                }));
 
         return Single.zip(preferencesRepository.getDirs(), databaseRepository.getLangs(),
                 (dirs, langs) -> {
-                    Log.d(LOG_TAG, "Langs received locally");
+                    Log.d(LOG_TAG, "Языки получены из БД");
                     return Response.success(new Langs(dirs, langs));
                 })
                 .filter(langsResponse -> {
                     if (langsResponse.body().getLangs().size() == 0 || langsResponse.body().getDirs().size() == 0) {
-                        Log.d(LOG_TAG, "But were empty");
+                        Log.d(LOG_TAG, "Но оказались пустыми");
                         return false;
                     }
                     return true;

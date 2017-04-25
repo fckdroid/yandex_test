@@ -41,7 +41,7 @@ public class LangsPresenter extends MvpPresenter<LangsView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(langsResponse ->
-                                getViewState().showLangs(langsResponse.body().getLangsPretty()),
+                                getViewState().showLangs(langsResponse.body().getLangsObject()),
                         new ErrorConsumer(retrofitException -> getViewState().showMessage("Проверьте подключение к сети")));
     }
 

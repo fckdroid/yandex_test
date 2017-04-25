@@ -10,8 +10,11 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
+import retrofit2.Response;
 import rxlll.yandextest.App;
+import rxlll.yandextest.data.network.models.translator.Langs;
 
 import static rxlll.yandextest.App.LOG_TAG;
 
@@ -27,7 +30,7 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
     @Inject
     TranslationDao translationDao;
 
-    List<String> lovelyLangs;
+    private List<String> lovelyLangs;
 
     public DatabaseRepositoryImpl() {
         App.appComponent.inject(this);
@@ -38,17 +41,22 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
     }
 
     @Override
-    public Completable putLangs(Map<String, String> langs) {
-        return Completable.fromAction(() -> {
-            for (Map.Entry<String, String> entry : langs.entrySet()) {
+    public Maybe<Response<Langs>> putLangs(Response<Langs> langs) {
+        return Maybe.fromCallable(() -> {
+            for (Map.Entry<String, String> entry : langs.body().getLangs().entrySet()) {
                 Lang lang = new Lang();
                 lang.setCode(entry.getKey());
                 lang.setDescription(entry.getValue());
-                if (lovelyLangs.contains(lang.getCode())) {
-                    lang.setRating(1);
-                }
+                if (lovelyLangs.contains(lang.getCode())) lang.setRating(1);
                 langDao.insertOrReplace(lang);
+
             }
+            Log.d(LOG_TAG, "Языки сохранены в БД");
+            langs.body().setLangs(langDao.loadAll());
+            Log.d(LOG_TAG, "Языки считаны из БД и дополнили response body");
+            Log.d(LOG_TAG, "---------------------------------------------");
+
+            return langs;
         });
     }
 
@@ -67,9 +75,8 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
     @Override
     public Single<List<Translation>> getTranslations(boolean favorites) {
         return Single.fromCallable(() -> {
-            if (favorites) {
-                return translationDao.queryBuilder().where(TranslationDao.Properties.IsFavorite.eq(true)).list();
-            }
+            if (favorites) return translationDao.queryBuilder()
+                    .where(TranslationDao.Properties.IsFavorite.eq(true)).list();
             return translationDao.queryBuilder().list();
         });
     }
@@ -79,7 +86,7 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
         return Single.fromCallable(() -> {
             Translation unique = translationDao.queryBuilder().
                     where(TranslationDao.Properties.Original.eq(text),
-                            TranslationDao.Properties.Dir.eq(lang)).unique();
+                            TranslationDao.Properties.Direction.eq(lang)).unique();
             if (unique == null) {
                 Log.d(LOG_TAG, "В БД нет такого перевода");
                 return new Translation();

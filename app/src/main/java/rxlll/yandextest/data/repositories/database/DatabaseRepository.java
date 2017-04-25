@@ -1,17 +1,19 @@
 package rxlll.yandextest.data.repositories.database;
 
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
+import retrofit2.Response;
+import rxlll.yandextest.data.network.models.translator.Langs;
 
 /**
  * Created by Maksim Sukhotski on 4/21/2017.
  */
 
 public interface DatabaseRepository {
-    Completable putLangs(Map<String, String> langs);
+    Maybe<Response<Langs>> putLangs(Response<Langs> langs);
 
     Single<List<Lang>> getLangs();
 

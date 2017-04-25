@@ -1,4 +1,4 @@
-package rxlll.yandextest.ui.history;
+package rxlll.yandextest.ui.pager.history;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;

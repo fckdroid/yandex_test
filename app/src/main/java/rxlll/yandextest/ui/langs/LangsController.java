@@ -32,7 +32,7 @@ public class LangsController extends MoxyController implements LangsView {
     private boolean type;
     private String currentLang;
     private RecyclerView recyclerView;
-    private LangsRecyclerAdapter recyclerAdapter;
+    private RecyclerAdapter recyclerAdapter;
     private boolean switchState;
 
     public LangsController() {
@@ -54,7 +54,7 @@ public class LangsController extends MoxyController implements LangsView {
     @Override
     public void showLangs(List<Lang> langs) {
         if (langs == null) return;
-        recyclerAdapter = new LangsRecyclerAdapter(langs, currentLang, type, switchState);
+        recyclerAdapter = new RecyclerAdapter(langs, currentLang, type, switchState);
         recyclerAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setHasFixedSize(true);

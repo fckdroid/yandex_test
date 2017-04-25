@@ -17,8 +17,8 @@ import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
 import rxlll.yandextest.R;
 import rxlll.yandextest.ui.base.MoxyController;
-import rxlll.yandextest.ui.favorites.FavoritesController;
-import rxlll.yandextest.ui.history.HistoryController;
+import rxlll.yandextest.ui.pager.favorites.FavoritesController;
+import rxlll.yandextest.ui.pager.history.HistoryController;
 
 /**
  * Created by Maksim Sukhotski on 4/17/2017.
