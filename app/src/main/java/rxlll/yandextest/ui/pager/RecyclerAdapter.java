@@ -1,6 +1,7 @@
 package rxlll.yandextest.ui.pager;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import java.util.List;
 
 import rxlll.yandextest.R;
 import rxlll.yandextest.data.repositories.database.Translation;
+
+import static rxlll.yandextest.App.LOG_TAG;
 
 /**
  * Created by Maksim Sukhotski on 4/22/2017.
@@ -43,11 +46,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.RecyclerViewHolder holder, int position) {
+        Log.d(LOG_TAG, translations.get(position).getOriginalLang().getDescription() + " - " +
+                translations.get(position).getTranslationLang().getDescription());
         holder.originalTextView.setText(translations.get(position).getOriginal());
         holder.targetTextView.setText(translations.get(position).getTranslateObject().getText());
-        holder.dirTextView.setText(translations.get(position).getDirection());
+        holder.dirTextView.setText(translations.get(position).getOriginalLang().getCode() + " - " +
+                translations.get(position).getTranslationLang().getCode());
         holder.favoriteImageView.setImageResource(translations.get(position).getIsFavorite() ? R.drawable.star_full : R.drawable.star);
-        holder.linearLayout.setOnClickListener(view -> onTranslationClickListener.onTranslationClick(translations.get(position)));
+        holder.linearLayout.setOnClickListener(view -> {
+            onTranslationClickListener.onTranslationClick(translations.get(position));
+            Log.d(LOG_TAG, translations.get(position).getOriginalLang().getDescription() + " - " +
+                    translations.get(position).getTranslationLang().getDescription());
+        });
         holder.favoriteImageView.setOnClickListener(view -> {
             Translation translation = translations.get(position);
             translation.setIsFavorite(!translation.getIsFavorite());

@@ -30,7 +30,7 @@ public class LangsController extends MoxyController implements LangsView {
     LangsPresenter langsPresenter;
 
     private boolean type;
-    private String currentLang;
+    private Lang currentLang;
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     private boolean switchState;
@@ -39,7 +39,7 @@ public class LangsController extends MoxyController implements LangsView {
 
     }
 
-    public LangsController(TranslatorController translatorController, boolean type, String currLang) {
+    public LangsController(TranslatorController translatorController, boolean type, Lang currLang) {
         super();
         setTargetController(translatorController);
         this.type = type;

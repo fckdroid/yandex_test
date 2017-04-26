@@ -110,9 +110,9 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             }
         });
         leftTextView.setOnClickListener(v ->
-                translatorPresenter.pushLangsController(TYPE_L, leftTextView.getText().toString()));
+                translatorPresenter.pushLangsController(TYPE_L, dir.first));
         rightTextView.setOnClickListener(v ->
-                translatorPresenter.pushLangsController(TYPE_R, rightTextView.getText().toString()));
+                translatorPresenter.pushLangsController(TYPE_R, dir.second));
         swapImageView.setOnClickListener(v ->
                 translatorPresenter.swapDir(dir));
         copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
@@ -121,7 +121,6 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         translateButton.setOnClickListener(v -> {
             translatorPresenter.translateText(translatorEditText.getText().toString(), dir);
             closeKeyboard();
-
         });
 
         translatorEditText.setOnTouchListener((v, event) -> {
@@ -167,7 +166,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
     @Override
-    public void showLangsController(boolean type, String currLang) {
+    public void showLangsController(boolean type, Lang currLang) {
         closeKeyboard();
         navigationView.startAnimation(animNavDown);
         getRouter().pushController(RouterTransaction.with(new LangsController(this, type, currLang))
@@ -178,7 +177,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     @Override
     public void showTranslation(Translation translation) {
         if (translation.isNotEmpty()) {
-            translatorPresenter.saveDirState(translation.getDir());
+            this.translation = translation;
             if (translation.getDictionaryObject() != null &&
                     translation.getDictionaryObject().getDef().length > 0)
                 translateDescrTextView.setText(translation.getDictionaryObject().getDef()[0].getTs());
@@ -188,27 +187,16 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             rightTextView.setText(translation.getTranslationLang().getDescription());
             translatorEditText.setText(translation.getOriginal());
             translateHeaderTextView.setText(translation.getTranslateObject().getText());
-            this.translation = translation;
+            translatorPresenter.saveDirState(translation.getDir());
+            translatorPresenter.updateCurrentDir(translation.getDir());
             translationUpdated = true;
         }
     }
 
     @Override
     public void onLangPicked(boolean type, Lang lang) {
-        if (leftTextView != null) {
-            if (type == TYPE_L) {
-                leftTextView.setText(lang.getDescription());
-                dir.first.setDescription(lang.getDescription());
-                dir.first.setCode(lang.getCode());
-                dir.first.setRating(lang.getRating());
-            } else {
-                rightTextView.setText(lang.getDescription());
-                dir.second.setDescription(lang.getDescription());
-                dir.second.setCode(lang.getCode());
-                dir.first.setRating(lang.getRating());
-            }
-            translatorPresenter.updateCurrentDir(dir);
-        }
+        dir = new Pair<>(type == TYPE_L ? lang : dir.first, type == TYPE_R ? lang : dir.second);
+        translatorPresenter.updateCurrentDir(dir);
     }
 
     @Override

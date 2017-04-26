@@ -100,12 +100,13 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
         getViewState().showDirUpdated(newDir);
     }
 
-    public void pushLangsController(boolean type, String currLang) {
+    public void pushLangsController(boolean type, Lang currLang) {
         getViewState().showLangsController(type, currLang);
     }
 
     public void updateCurrentDir(Pair<Lang, Lang> dir) {
         if (dir == null) return;
+        getViewState().showDirWithoutAnim(dir);
         clientInteractor.putDir(dir)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

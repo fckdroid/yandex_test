@@ -14,22 +14,21 @@ import rxlll.yandextest.data.repositories.database.Translation;
  * Created by Maksim Sukhotski on 4/16/2017.
  */
 
-@StateStrategyType(AddToEndSingleStrategy.class)
+@StateStrategyType(SkipStrategy.class)
 public interface TranslatorView extends MvpView {
 
-    @StateStrategyType(SkipStrategy.class)
     void showDirUpdated(Pair<Lang, Lang> dir);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void showDirWithoutAnim(Pair<Lang, Lang> dir);
 
-    @StateStrategyType(SkipStrategy.class)
-    void showLangsController(boolean type, String s);
+    void showLangsController(boolean type, Lang s);
 
-    @StateStrategyType(SkipStrategy.class)
     void showTranslation(Translation translation);
 
-    @StateStrategyType(SkipStrategy.class)
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showTranslationFavorite(boolean isFavorite);
+
     void showMessage(String localizedMessage);
 
-    void showTranslationFavorite(boolean isFavorite);
 }

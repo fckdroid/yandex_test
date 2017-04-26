@@ -24,7 +24,7 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewH
     private static final int VIEW_TYPE_SWITCH = 2;
     private static final int VIEW_TYPE_DESCRIPTION = 1;
     private static final int VIEW_TYPE_LANG = 0;
-    private final String checkedLang;
+    private final Lang checkedLang;
     private final boolean type;
     private boolean switchState;
     private List<Lang> langs;
@@ -33,7 +33,7 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewH
     private OnSwitchClickListener onSwitchClickListener;
     private Switch switchView;
 
-    public RecyclerAdapter(List<Lang> langs, String checkedLang, boolean type, boolean switchState) {
+    public RecyclerAdapter(List<Lang> langs, Lang checkedLang, boolean type, boolean switchState) {
         this.langs = langs;
         this.checkedLang = checkedLang;
         this.type = type;
@@ -83,7 +83,7 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewH
                 holder.itemView.setOnClickListener(view -> onLangClickListener.onLangClick(langs.get(position - (type == TYPE_L ? 2 : 1))));
                 holder.textView.setText(langs.get(position - (type == TYPE_L ? 2 : 1)).getDescription());
                 holder.checkedImageView.setVisibility(View.INVISIBLE);
-                if (checkedLang != null && checkedLang.equals(langs.get(position - (type == TYPE_L ? 2 : 1)).getDescription()))
+                if (checkedLang != null && checkedLang.equals(langs.get(position - (type == TYPE_L ? 2 : 1))))
                     holder.checkedImageView.setVisibility(View.VISIBLE);
                 break;
             case VIEW_TYPE_SWITCH:
