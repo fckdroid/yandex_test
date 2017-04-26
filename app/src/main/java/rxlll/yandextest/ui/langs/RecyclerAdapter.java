@@ -32,15 +32,12 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewH
     private OnLangClickClickListener onLangClickListener;
     private OnSwitchClickListener onSwitchClickListener;
     private Switch switchView;
-    private boolean isChecked;
-    private int checkedPos;
 
     public RecyclerAdapter(List<Lang> langs, String checkedLang, boolean type, boolean switchState) {
         this.langs = langs;
         this.checkedLang = checkedLang;
         this.type = type;
         this.switchState = switchState;
-        checkedPos = -1;
         atFirst = true;
     }
 
@@ -81,32 +78,26 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewH
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.RecyclerViewHolder holder, int position) {
-        if (holder.getItemViewType() == VIEW_TYPE_LANG) {
-            holder.itemView.setOnClickListener(view -> onLangClickListener.onLangClick(langs.get(position)));
-            holder.textView.setText(langs.get(position).getDescription());
-            if (!isChecked) {
-                if (checkedLang != null &&
-                        checkedLang.equals(langs.get(position).getDescription())) {
-                    checkedPos = position;
-                }
-            }
-            if (position == checkedPos) {
-                holder.checkedImageView.setVisibility(View.VISIBLE);
-            } else {
+        switch (holder.getItemViewType()) {
+            case VIEW_TYPE_LANG:
+                holder.itemView.setOnClickListener(view -> onLangClickListener.onLangClick(langs.get(position - (type == TYPE_L ? 2 : 1))));
+                holder.textView.setText(langs.get(position - (type == TYPE_L ? 2 : 1)).getDescription());
                 holder.checkedImageView.setVisibility(View.INVISIBLE);
-            }
-        } else if (holder.getItemViewType() == VIEW_TYPE_SWITCH) {
-            switchView = holder.switchView;
-            switchView.setChecked(switchState);
-            holder.switchView.setOnCheckedChangeListener((buttonView, isChecked) ->
-                    onSwitchClickListener.onSwitchClick(isChecked));
-        } else {
-            if (atFirst) {
-                atFirst = false;
-                holder.textView.setText("Часто используемые");
-            } else {
-                holder.textView.setText("Другие языки");
-            }
+                if (checkedLang != null && checkedLang.equals(langs.get(position - (type == TYPE_L ? 2 : 1)).getDescription()))
+                    holder.checkedImageView.setVisibility(View.VISIBLE);
+                break;
+            case VIEW_TYPE_SWITCH:
+                holder.switchView.setOnCheckedChangeListener((buttonView, isChecked) ->
+                        onSwitchClickListener.onSwitchClick(isChecked));
+                switchView = holder.switchView;
+                switchView.setChecked(switchState);
+                break;
+            case VIEW_TYPE_DESCRIPTION:
+                if (atFirst) {
+                    atFirst = false;
+                    holder.textView.setText("Часто используемые");
+                } else holder.textView.setText("Другие языки");
+                break;
         }
     }
 

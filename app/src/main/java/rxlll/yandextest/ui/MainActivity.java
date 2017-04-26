@@ -159,10 +159,9 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     public void showTranslatorController(Translation translation) {
-        if (translatorRouter.getControllerWithTag(TRANSLATOR_CONTROLLER_TAG) != null) {
+        if (translatorRouter.getControllerWithTag(TRANSLATOR_CONTROLLER_TAG) != null)
             ((TranslatorController) translatorRouter.getControllerWithTag(TRANSLATOR_CONTROLLER_TAG))
                     .showTranslation(translation);
-        }
         bottomNavigationView.findViewById(R.id.translator).performClick();
     }
 }

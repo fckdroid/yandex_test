@@ -17,6 +17,7 @@ import rxlll.yandextest.App;
 import rxlll.yandextest.data.network.models.translator.Langs;
 
 import static rxlll.yandextest.App.LOG_TAG;
+import static rxlll.yandextest.App.UI;
 
 /**
  * Created by Maksim Sukhotski on 4/21/2017.
@@ -36,7 +37,7 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
         App.appComponent.inject(this);
         lovelyLangs = new ArrayList<>();
         lovelyLangs.add(Locale.getDefault().getLanguage());
-        lovelyLangs.add("en");
+        lovelyLangs.add(UI.equals("ru") ? "en" : "ru");
         lovelyLangs.add("de");
     }
 
@@ -47,7 +48,8 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
                 Lang lang = new Lang();
                 lang.setCode(entry.getKey());
                 lang.setDescription(entry.getValue());
-                if (lovelyLangs.contains(lang.getCode())) lang.setRating(1);
+                if (lovelyLangs.contains(lang.getCode()))
+                    lang.setRating(1);
                 langDao.insertOrReplace(lang);
 
             }
