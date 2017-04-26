@@ -63,13 +63,13 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     private Animation animButtonDown;
     private Animation animButtonUp;
     private Animation animFading;
-    private Animation animFadingForRepeat;
     private Animation animFadingInvert;
     private Animation animLeftToCenter;
     private Animation animCenterToLeft;
     private Animation animRightToCenter;
     private Animation animCenterToRight;
-    private Animation animNavHide;
+    private Animation animNavDown;
+    private Animation animNavUp;
 
     @ProvidePresenter
     TranslatorPresenter translatorPresenter() {
@@ -135,26 +135,9 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             }
             return false;
         });
-        Animation animNavHide = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_up);
-        animNavHide.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                navigationView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
 
         hideTheHorror();
-        navigationView.startAnimation(animNavHide);
+        navigationView.startAnimation(animNavUp);
     }
 
     @Override
@@ -186,7 +169,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     @Override
     public void showLangsController(boolean type, String currLang) {
         closeKeyboard();
-        navigationView.startAnimation(animNavHide);
+        navigationView.startAnimation(animNavDown);
         getRouter().pushController(RouterTransaction.with(new LangsController(this, type, currLang))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
@@ -234,16 +217,17 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             buttonContainer.startAnimation(animButtonDown);
         if (textInputLayout.isCounterEnabled() && text.length() <= 15 && animIsNotRun)
             buttonContainer.startAnimation(animButtonUp);
-        if (text.length() == 0) {
-            translationUpdated = false;
-            translatedLinearLayout.startAnimation(animFading);
-        } else translatedLinearLayout.startAnimation(animFadingInvert);
         if (text.length() > MAX_LETTERS) {
             translateButton.setClickable(false);
             translateButton.setBackground(getResources().getDrawable(R.drawable.button_inactive));
         } else {
             translateButton.setClickable(true);
             translateButton.setBackground(getResources().getDrawable(R.drawable.button));
+        }
+        if (text.length() == 0) {
+            translatedLinearLayout.setVisibility(View.GONE);
+            translationUpdated = false;
+            translatedLinearLayout.startAnimation(animFading);
         }
     }
 
@@ -267,17 +251,34 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         animButtonDown = AnimationUtils.loadAnimation(getActivity(), R.anim.button_down);
         animButtonUp = AnimationUtils.loadAnimation(getActivity(), R.anim.button_up);
         animFading = AnimationUtils.loadAnimation(getActivity(), R.anim.fading);
-        animFadingForRepeat = AnimationUtils.loadAnimation(getActivity(), R.anim.fading);
         animFadingInvert = AnimationUtils.loadAnimation(getActivity(), R.anim.fading_invert);
         animLeftToCenter = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_left_to_center);
         animCenterToLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_center_to_left);
         animRightToCenter = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_right_to_center);
         animCenterToRight = AnimationUtils.loadAnimation(getActivity(), R.anim.swap_center_to_right);
-        animNavHide = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_down);
-        navigationView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.nav_up));
+        Animation animFadingForRepeat = AnimationUtils.loadAnimation(getActivity(), R.anim.fading);
+        animNavDown = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_down);
+        animNavUp = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_up);
 
         animIsNotRun = true;
 
+        animNavUp.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                navigationView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+//        navigationView.startAnimation(animNavUp);
         animLeftToCenter.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -410,7 +411,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             public void onAnimationRepeat(Animation animation) {
             }
         });
-        animNavHide.setAnimationListener(new Animation.AnimationListener() {
+        animNavDown.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
