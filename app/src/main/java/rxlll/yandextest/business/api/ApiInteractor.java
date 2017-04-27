@@ -16,7 +16,7 @@ import rxlll.yandextest.data.repositories.database.Translation;
 public interface ApiInteractor {
 
     Maybe<Translation> translate(String text,
-                                 Pair<Lang, Lang> lang);
+                                 Pair<Lang, Lang> lang, String dirRequest);
 
     Single<Response<Detect>> detect(String text);
 

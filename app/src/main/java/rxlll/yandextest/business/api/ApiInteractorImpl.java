@@ -1,6 +1,5 @@
 package rxlll.yandextest.business.api;
 
-import android.util.Log;
 import android.util.Pair;
 
 import com.google.gson.Gson;
@@ -14,6 +13,7 @@ import rxlll.yandextest.App;
 import rxlll.yandextest.data.network.models.dictionary.Dictionary;
 import rxlll.yandextest.data.network.models.translator.Detect;
 import rxlll.yandextest.data.network.models.translator.Langs;
+import rxlll.yandextest.data.network.models.translator.Translate;
 import rxlll.yandextest.data.repositories.database.DatabaseRepository;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.data.repositories.database.Translation;
@@ -21,7 +21,6 @@ import rxlll.yandextest.data.repositories.dictionary.DictionaryRepository;
 import rxlll.yandextest.data.repositories.preferences.PreferencesRepository;
 import rxlll.yandextest.data.repositories.translator.TranslatorRepository;
 
-import static rxlll.yandextest.App.LOG_TAG;
 import static rxlll.yandextest.App.UI;
 
 /**
@@ -47,43 +46,36 @@ public class ApiInteractorImpl implements ApiInteractor {
     }
 
     @Override
-    public Maybe<Translation> translate(String text, Pair<Lang, Lang> dir) {
-        String dirRequest = ((dir.first.getCode() != null) ? dir.first.getCode() + "-" : "") +
-                dir.second.getCode();
-        Single<Translation> remote = Single.zip(
-                (dirRequest.length() > 2) ? translatorRepository.translate(text, dirRequest) :
-                        Single.zip(translatorRepository.translate(text, dirRequest),
-                                databaseRepository.getLangs(),
-                                (translateResponse, langs) -> {
-                                    for (Lang lang : langs) {
-                                        if (translateResponse.body()
-                                                .getDetected()
-                                                .getLang()
-                                                .equals(lang.getCode())) {
-                                            translateResponse.body().getDetected().setLangPretty(lang);
-                                            Log.d(LOG_TAG, "Ответ с определенным языком дополнен языком из БД");
-                                            return translateResponse;
-                                        }
-                                    }
-                                    return translateResponse;
-                                }),
-                dictionaryRepository.lookup(text.contains(" ") ? "" : text, dirRequest, UI),
+    public Maybe<Translation> translate(String text, Pair<Lang, Lang> direction, String lang) {
+        Single<Response<Translate>> translationsSingle = (lang.length() > 2) ?
+                translatorRepository.translate(text, lang) :
+                translatorRepository.translate(text, lang)
+                        .flatMap(translateResponse -> databaseRepository
+                                .getLang(translateResponse.body().getDetected().getLang())
+                                .flatMap(langObject -> {
+                                    translateResponse.body().getDetected().setLangObject(langObject);
+                                    return Single.just(translateResponse);
+                                }));
+
+        Single<Translation> remote = Single.zip(translationsSingle,
+                dictionaryRepository.lookup(text.contains(" ") ? "" : text, lang, UI),
                 (translateResponse, dictionaryResponse) -> {
-                    Log.d(LOG_TAG, "Пришли оба ответа с сервера");
                     Translation translation = new Translation();
+                    translation.setTranslateJson(new Gson().toJson(translateResponse.body()));
+                    translation.setDictionaryJson(new Gson().toJson(dictionaryResponse.body()));
                     translation.setOriginal(text);
-                    translation.setDir(dir);
-                    translation.setTranslateJsonResponse(new Gson().toJson(translateResponse.body()));
-                    translation.setDictionaryJsonResponse(new Gson().toJson(dictionaryResponse.body()));
-                    translation.setDirection(dirRequest);
-                    if (dir.first.getId() == null) {
-                        translation.setDir(new Pair<>(translateResponse.body().getDetected().getLangPretty(),
-                                dir.second));
-                    }
-                    databaseRepository.putTranslation(translation).subscribe();
+                    translation.setDir(direction);
+                    translation.setDirection(lang);
+                    if (direction.first.getId() == null)
+                        translation.setDir(new Pair<>(translateResponse.body()
+                                .getDetected()
+                                .getLangPretty(), direction.second));
                     return translation;
-                });
-        return databaseRepository.getTranslation(text, dirRequest)
+                })
+                .doOnSuccess(translation -> databaseRepository.putTranslation(translation)
+                        .subscribe());
+
+        return databaseRepository.getTranslation(text, lang)
                 .filter(translation -> translation.getOriginal() != null)
                 .switchIfEmpty(remote.toMaybe());
     }
@@ -100,28 +92,15 @@ public class ApiInteractorImpl implements ApiInteractor {
 
     @Override
     public Maybe<Response<Langs>> getLangs(String ui) {
-        Maybe<Response<Langs>> sourceRemote =
-                translatorRepository.getLangs(ui)
-                        .flatMap(langsResponse -> databaseRepository.putLangs(langsResponse)
-                                .doOnSuccess(response -> {
-                                    Log.d(LOG_TAG, "Языки из сети с дополненным телом из БД получены");
-                                    preferencesRepository.putDirs(response.body().getDirs())
-                                            .doOnComplete(() -> Log.d(LOG_TAG, "Направления записаны в preferences"))
-                                            .subscribe();
-                                }));
+        Maybe<Response<Langs>> sourceRemote = translatorRepository.getLangs(ui)
+                .flatMap(langsResponse -> databaseRepository.putLangs(langsResponse)
+                        .doOnSuccess(response -> preferencesRepository.putDirections(response.body()
+                                .getDirections()).subscribe()));
 
-        return Single.zip(preferencesRepository.getDirs(), databaseRepository.getLangs(),
-                (dirs, langs) -> {
-                    Log.d(LOG_TAG, "Языки получены из БД");
-                    return Response.success(new Langs(dirs, langs));
-                })
-                .filter(langsResponse -> {
-                    if (langsResponse.body().getLangs().size() == 0 || langsResponse.body().getDirs().size() == 0) {
-                        Log.d(LOG_TAG, "Но оказались пустыми");
-                        return false;
-                    }
-                    return true;
-                })
+        return Single.zip(preferencesRepository.getDirections(), databaseRepository.getLangs(),
+                (directions, langs) -> Response.success(new Langs(directions, langs)))
+                .filter(langsResponse -> !(langsResponse.body().getLangs().size() == 0
+                        || langsResponse.body().getDirections().size() == 0))
                 .switchIfEmpty(sourceRemote);
     }
 

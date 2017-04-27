@@ -14,9 +14,9 @@ import rxlll.yandextest.data.repositories.database.Lang;
 
 public interface PreferencesRepository {
 
-    Completable putDirs(Set<String> langs);
+    Completable putDirections(Set<String> langs);
 
-    Single<Set<String>> getDirs();
+    Single<Set<String>> getDirections();
 
     Completable putDir(Pair<Lang, Lang> dir);
 

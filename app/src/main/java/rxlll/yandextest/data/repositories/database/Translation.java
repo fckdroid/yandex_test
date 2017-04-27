@@ -39,9 +39,9 @@ public final class Translation {
     @NotNull
     private String direction;
 
-    private String dictionaryJsonResponse;
+    private String dictionaryJson;
 
-    private String translateJsonResponse;
+    private String translateJson;
 
     private boolean isFavorite;
 
@@ -68,47 +68,21 @@ public final class Translation {
     @Generated(hash = 1168386681)
     private transient Long translationLang__resolvedKey;
 
-    @Generated(hash = 1346614238)
+    @Generated(hash = 510044009)
     public Translation(Long id, Long originalId, Long translationId, @NotNull String original,
-                       @NotNull String direction, String dictionaryJsonResponse,
-                       String translateJsonResponse, boolean isFavorite) {
+                       @NotNull String direction, String dictionaryJson, String translateJson,
+                       boolean isFavorite) {
         this.id = id;
         this.originalId = originalId;
         this.translationId = translationId;
         this.original = original;
         this.direction = direction;
-        this.dictionaryJsonResponse = dictionaryJsonResponse;
-        this.translateJsonResponse = translateJsonResponse;
+        this.dictionaryJson = dictionaryJson;
+        this.translateJson = translateJson;
         this.isFavorite = isFavorite;
     }
     @Generated(hash = 321689573)
     public Translation() {
-    }
-
-    public Dictionary getDictionaryObject() {
-        if (dictionaryObject == null)
-            dictionaryObject = new Gson().fromJson(dictionaryJsonResponse, Dictionary.class);
-        return dictionaryObject;
-    }
-
-    public Translate getTranslateObject() {
-        if (translateObject == null)
-            translateObject = new Gson().fromJson(translateJsonResponse, Translate.class);
-        return translateObject;
-    }
-
-    public Pair<Lang, Lang> getDir() {
-        if (dir == null) dir = new Pair<>(getOriginalLang(), getTranslationLang());
-        return dir;
-    }
-
-    public void setDir(Pair<Lang, Lang> dir) {
-        setOriginalLang(dir.first);
-        setTranslationLang(dir.second);
-    }
-
-    public boolean isNotEmpty() {
-        return id != null;
     }
 
     public Long getId() {
@@ -151,20 +125,20 @@ public final class Translation {
         this.direction = direction;
     }
 
-    public String getDictionaryJsonResponse() {
-        return this.dictionaryJsonResponse;
+    public String getDictionaryJson() {
+        return this.dictionaryJson;
     }
 
-    public void setDictionaryJsonResponse(String dictionaryJsonResponse) {
-        this.dictionaryJsonResponse = dictionaryJsonResponse;
+    public void setDictionaryJson(String dictionaryJson) {
+        this.dictionaryJson = dictionaryJson;
     }
 
-    public String getTranslateJsonResponse() {
-        return this.translateJsonResponse;
+    public String getTranslateJson() {
+        return this.translateJson;
     }
 
-    public void setTranslateJsonResponse(String translateJsonResponse) {
-        this.translateJsonResponse = translateJsonResponse;
+    public void setTranslateJson(String translateJson) {
+        this.translateJson = translateJson;
     }
 
     public boolean getIsFavorite() {
@@ -173,6 +147,32 @@ public final class Translation {
 
     public void setIsFavorite(boolean isFavorite) {
         this.isFavorite = isFavorite;
+    }
+
+    public Dictionary getDictionaryObject() {
+        if (dictionaryObject == null)
+            dictionaryObject = new Gson().fromJson(dictionaryJson, Dictionary.class);
+        return dictionaryObject;
+    }
+
+    public Translate getTranslateObject() {
+        if (translateObject == null)
+            translateObject = new Gson().fromJson(translateJson, Translate.class);
+        return translateObject;
+    }
+
+    public Pair<Lang, Lang> getDir() {
+        if (dir == null) dir = new Pair<>(getOriginalLang(), getTranslationLang());
+        return dir;
+    }
+
+    public void setDir(Pair<Lang, Lang> dir) {
+        setOriginalLang(dir.first);
+        setTranslationLang(dir.second);
+    }
+
+    public boolean isNotEmpty() {
+        return id != null;
     }
 
     /**
@@ -286,6 +286,4 @@ public final class Translation {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getTranslationDao() : null;
     }
-
-
 }

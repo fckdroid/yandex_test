@@ -33,12 +33,12 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     @Override
-    public Completable putDirs(Set<String> dirs) {
+    public Completable putDirections(Set<String> dirs) {
         return Completable.fromAction(() -> preferences.edit().putStringSet(KEY_DIRS, dirs).commit());
     }
 
     @Override
-    public Single<Set<String>> getDirs() {
+    public Single<Set<String>> getDirections() {
         return Single.fromCallable(() -> preferences.getStringSet(KEY_DIRS, new HashSet<>()));
     }
 

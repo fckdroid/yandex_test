@@ -12,7 +12,7 @@ public class Detect {
         return langPretty;
     }
 
-    public void setLangPretty(Lang langPretty) {
+    public void setLangObject(Lang langPretty) {
         this.langPretty = langPretty;
     }
 

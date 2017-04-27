@@ -34,7 +34,7 @@ public class Langs {
         this.langs = langs;
     }
 
-    public Set<String> getDirs() {
+    public Set<String> getDirections() {
         return dirs;
     }
 

@@ -115,7 +115,9 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
 
     public void translate(String text, Pair<Lang, Lang> dir) {
         if (text.isEmpty() || dir == null) return;
-        apiInteractor.translate(text, dir)
+        String dirRequest = ((dir.first.getCode() != null) ?
+                dir.first.getCode() + "-" : "") + dir.second.getCode();
+        apiInteractor.translate(text, dir, dirRequest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(translateResponse -> {
