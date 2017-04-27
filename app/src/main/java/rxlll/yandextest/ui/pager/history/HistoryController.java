@@ -74,4 +74,9 @@ public class HistoryController extends MoxyController implements HistoryView {
             }
         }
     }
+
+    @Override
+    public void updateRecyclerWith(String s) {
+        recyclerAdapter.filter(s);
+    }
 }

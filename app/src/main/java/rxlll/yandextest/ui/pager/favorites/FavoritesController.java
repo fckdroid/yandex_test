@@ -74,4 +74,9 @@ public class FavoritesController extends MoxyController implements FavoritesView
 
         }
     }
+
+    @Override
+    public void updateRecyclerWith(String s) {
+        recyclerAdapter.filter(s);
+    }
 }

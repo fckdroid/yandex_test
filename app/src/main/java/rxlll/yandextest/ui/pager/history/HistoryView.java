@@ -17,4 +17,6 @@ public interface HistoryView extends MvpView {
     void showTranslations(List<Translation> translations);
 
     void updateTranslationsWith(Translation translation);
+
+    void updateRecyclerWith(String s);
 }

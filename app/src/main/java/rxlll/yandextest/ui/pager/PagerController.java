@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,7 @@ public class PagerController extends MoxyController implements PagerView {
     private int posSelected;
     private FavoritesController favoritesController;
     private HistoryController historyController;
+    private EditText searchEditText;
 
     public PagerController() {
         pagerAdapter = new RouterPagerAdapter(this) {
@@ -98,8 +101,27 @@ public class PagerController extends MoxyController implements PagerView {
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(onPageChangedListener);
         tabLayout.setupWithViewPager(viewPager);
+        searchEditText = (EditText) view.findViewById(R.id.search_edit_text);
 
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (posSelected == 0) {
+                    ((HistoryController) pagerAdapter.getRouter(0).getControllerWithTag(HistoryController.TAB_NAME)).updateRecyclerWith(s.toString());
+                }
+                if (posSelected == 1) {
+                    ((FavoritesController) pagerAdapter.getRouter(1).getControllerWithTag(FavoritesController.TAB_NAME)).updateRecyclerWith(s.toString());
+                }
+            }
+        });
         view.findViewById(R.id.delete_image_view).setOnClickListener(v -> {
             new AlertDialog.Builder(getActivity())
                     .setTitle("Внимание!")
@@ -118,7 +140,6 @@ public class PagerController extends MoxyController implements PagerView {
 
     @Override
     protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
-        EditText searchEditText = (EditText) view.findViewById(R.id.search_edit_text);
         if (posSelected == 0) searchEditText.setHint("Найти в истории");
         if (posSelected == 1) searchEditText.setHint("Найти в избранном");
         posSelected = savedViewState.getInt(SELECTED_ITEM);

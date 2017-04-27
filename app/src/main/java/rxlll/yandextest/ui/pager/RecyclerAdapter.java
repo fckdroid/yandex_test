@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rxlll.yandextest.R;
@@ -22,11 +23,13 @@ import static rxlll.yandextest.App.LOG_TAG;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder> {
     private List<Translation> translations;
+    private List<Translation> translationsCopy;
     private OnTranslationClickListener onTranslationClickListener;
     private OnFavoriteClickListener onFavoriteClickListener;
 
     public RecyclerAdapter(List<Translation> translations) {
         this.translations = translations;
+        translationsCopy = new ArrayList<>(translations);
     }
 
     public RecyclerAdapter setOnTranslationClickListener(OnTranslationClickListener onTranslationClickListener) {
@@ -72,6 +75,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     @Override
     public int getItemCount() {
         return translations.size();
+    }
+
+    public void filter(String text) {
+        translations.clear();
+        if (text.isEmpty()) {
+            translations.addAll(translationsCopy);
+        } else {
+            text = text.toLowerCase();
+            for (Translation translation : translationsCopy) {
+                if (translation.getOriginal().toLowerCase().contains(text) ||
+                        translation.getTranslateObject().getText().toLowerCase().contains(text)) {
+                    translations.add(translation);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public interface OnTranslationClickListener {
