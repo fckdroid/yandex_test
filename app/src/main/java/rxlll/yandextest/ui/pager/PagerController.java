@@ -16,6 +16,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
 import rxlll.yandextest.R;
+import rxlll.yandextest.ui.MainActivity;
 import rxlll.yandextest.ui.base.MoxyController;
 import rxlll.yandextest.ui.pager.favorites.FavoritesController;
 import rxlll.yandextest.ui.pager.history.HistoryController;
@@ -105,6 +106,7 @@ public class PagerController extends MoxyController implements PagerView {
                     .setMessage("Вы действительно хотите очистить историю и избранное?")
                     .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                         pagerPresenter.deleteAll();
+                        ((MainActivity) getActivity()).updateBookmarksController();
                     })
                     .setNegativeButton(android.R.string.no, (dialog, which) -> {
                         // do nothing

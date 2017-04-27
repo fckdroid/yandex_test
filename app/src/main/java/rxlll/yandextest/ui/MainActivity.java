@@ -41,6 +41,8 @@ public final class MainActivity extends AppCompatActivity {
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+        public boolean canUpdate;
+
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             translatorView.setVisibility(View.GONE);
@@ -58,9 +60,11 @@ public final class MainActivity extends AppCompatActivity {
                     visibleLayoutNumber = 2;
                     if (bottomNavigationView.getSelectedItemId() != item.getItemId())
                         pagerView.startAnimation(controllerAnim);
-                    if (pagerRouter.hasRootController())
+                    if (!pagerRouter.hasRootController() || canUpdate)
                         pagerRouter.setRoot(RouterTransaction.with(new PagerController())
-                                .pushChangeHandler(new FadeChangeHandler(300)));
+                                .pushChangeHandler(new FadeChangeHandler())
+                                .popChangeHandler(new FadeChangeHandler()));
+                    canUpdate = true;
                     break;
                 case R.id.settings:
                     settingsView.setVisibility(View.VISIBLE);
@@ -167,5 +171,11 @@ public final class MainActivity extends AppCompatActivity {
             ((TranslatorController) translatorRouter.getControllerWithTag(TRANSLATOR_CONTROLLER_TAG))
                     .showTranslation(translation);
         onBackPressed();
+    }
+
+    public void updateBookmarksController() {
+        pagerRouter.setRoot(RouterTransaction.with(new PagerController())
+                .pushChangeHandler(new FadeChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
     }
 }
