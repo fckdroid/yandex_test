@@ -15,7 +15,9 @@ import rxlll.yandextest.R;
 import rxlll.yandextest.data.repositories.database.Translation;
 import rxlll.yandextest.ui.MainActivity;
 import rxlll.yandextest.ui.base.MoxyController;
+import rxlll.yandextest.ui.pager.PagerController;
 import rxlll.yandextest.ui.pager.RecyclerAdapter;
+import rxlll.yandextest.ui.pager.favorites.FavoritesController;
 
 /**
  * Created by Maksim Sukhotski on 4/17/2017.
@@ -28,9 +30,11 @@ public class HistoryController extends MoxyController implements HistoryView {
     HistoryPresenter historyPresenter;
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
+    private ViewGroup container;
 
     @Override
     protected View inflateView(LayoutInflater inflater, ViewGroup container) {
+        this.container = container;
         return inflater.inflate(R.layout.part_recycler, container, false);
     }
 
@@ -50,10 +54,24 @@ public class HistoryController extends MoxyController implements HistoryView {
         recyclerView.setHasFixedSize(true);
         recyclerAdapter.setOnTranslationClickListener(translation ->
                 ((MainActivity) getActivity()).showTranslatorController(translation));
-        recyclerAdapter.setOnFavoriteClickListener((checked, position) -> {
-            recyclerAdapter.getTranslations().set(position, checked);
+        recyclerAdapter.setOnFavoriteClickListener((translation, position) -> {
+            recyclerAdapter.getTranslations().set(position, translation);
             recyclerAdapter.notifyDataSetChanged();
-            historyPresenter.setFavorite(checked);
+            historyPresenter.setFavorite(translation);
+            ((FavoritesController) ((PagerController) getParentController())
+                    .getPagerAdapter().getRouter(1).getControllerWithTag(FavoritesController.TAB_NAME))
+                    .updateTranslationsWith(translation);
         });
+    }
+
+    @Override
+    public void updateTranslationsWith(Translation translation) {
+        for (int i = 0; i < recyclerAdapter.getTranslations().size(); i++) {
+            if (recyclerAdapter.getTranslations().get(i).getId() == translation.getId()) {
+                recyclerAdapter.getTranslations().set(i, translation);
+                recyclerAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
     }
 }

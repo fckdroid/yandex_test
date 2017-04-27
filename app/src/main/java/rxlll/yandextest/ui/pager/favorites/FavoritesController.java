@@ -15,7 +15,9 @@ import rxlll.yandextest.R;
 import rxlll.yandextest.data.repositories.database.Translation;
 import rxlll.yandextest.ui.MainActivity;
 import rxlll.yandextest.ui.base.MoxyController;
+import rxlll.yandextest.ui.pager.PagerController;
 import rxlll.yandextest.ui.pager.RecyclerAdapter;
+import rxlll.yandextest.ui.pager.history.HistoryController;
 
 /**
  * Created by Maksim Sukhotski on 4/17/2017.
@@ -55,6 +57,21 @@ public class FavoritesController extends MoxyController implements FavoritesView
             recyclerAdapter.notifyItemRemoved(position);
             recyclerAdapter.notifyItemRangeChanged(position, recyclerAdapter.getItemCount());
             favoritesPresenter.updateTranslation(translation);
+            ((HistoryController) ((PagerController) getParentController())
+                    .getPagerAdapter().getRouter(0).getControllerWithTag(HistoryController.TAB_NAME))
+                    .updateTranslationsWith(translation);
         });
+    }
+
+    @Override
+    public void updateTranslationsWith(Translation translation) {
+        if (translation.getIsFavorite()) {
+            recyclerAdapter.getTranslations().add(translation);
+            recyclerAdapter.notifyDataSetChanged();
+        } else {
+            recyclerAdapter.getTranslations().remove(translation);
+            recyclerAdapter.notifyDataSetChanged();
+
+        }
     }
 }

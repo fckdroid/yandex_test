@@ -15,4 +15,6 @@ import rxlll.yandextest.data.repositories.database.Translation;
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface FavoritesView extends MvpView {
     void showTranslations(List<Translation> translations);
+
+    void updateTranslationsWith(Translation translation);
 }

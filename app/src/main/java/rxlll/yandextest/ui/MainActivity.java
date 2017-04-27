@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 
 import rxlll.yandextest.R;
 import rxlll.yandextest.data.repositories.database.Translation;
@@ -55,11 +56,11 @@ public final class MainActivity extends AppCompatActivity {
                 case R.id.pager:
                     pagerView.setVisibility(View.VISIBLE);
                     visibleLayoutNumber = 2;
-                    if (pagerRouter.hasRootController()) {
-                        pagerRouter.setRoot(RouterTransaction.with(new PagerController()));
-                    }
                     if (bottomNavigationView.getSelectedItemId() != item.getItemId())
                         pagerView.startAnimation(controllerAnim);
+                    if (pagerRouter.hasRootController())
+                        pagerRouter.setRoot(RouterTransaction.with(new PagerController())
+                                .pushChangeHandler(new FadeChangeHandler(300)));
                     break;
                 case R.id.settings:
                     settingsView.setVisibility(View.VISIBLE);

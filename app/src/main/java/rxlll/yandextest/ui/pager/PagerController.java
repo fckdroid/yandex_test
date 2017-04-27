@@ -35,6 +35,8 @@ public class PagerController extends MoxyController implements PagerView {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private int posSelected;
+    private FavoritesController favoritesController;
+    private HistoryController historyController;
 
     public PagerController() {
         pagerAdapter = new RouterPagerAdapter(this) {
@@ -43,10 +45,10 @@ public class PagerController extends MoxyController implements PagerView {
                 if (!router.hasRootController()) {
                     switch (position) {
                         case 0:
-                            router.setRoot(RouterTransaction.with(new HistoryController()));
+                            router.setRoot(RouterTransaction.with(new HistoryController()).tag(HistoryController.TAB_NAME));
                             break;
                         case 1:
-                            router.setRoot(RouterTransaction.with(new FavoritesController()));
+                            router.setRoot(RouterTransaction.with(new FavoritesController()).tag(FavoritesController.TAB_NAME));
                             break;
                     }
                 }
@@ -137,5 +139,9 @@ public class PagerController extends MoxyController implements PagerView {
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         return inflater.inflate(R.layout.controller_pager, container, false);
+    }
+
+    public RouterPagerAdapter getPagerAdapter() {
+        return pagerAdapter;
     }
 }
