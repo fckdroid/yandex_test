@@ -67,8 +67,10 @@ public class LangsPresenter extends MvpPresenter<LangsView> {
                 .doOnComplete(() -> {
                     Lang lang = new Lang();
                     lang.setDescription("Определить");
-                    ((TranslatorController) targetController).onLangPicked(type, lang);
-                    if (checked) getViewState().popController();
+                    if (checked) {
+                        getViewState().popController();
+                        ((TranslatorController) targetController).onLangPicked(type, lang);
+                    }
                 })
                 .subscribe();
     }

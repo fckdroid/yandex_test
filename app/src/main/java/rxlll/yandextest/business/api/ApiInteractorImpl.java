@@ -14,7 +14,6 @@ import rxlll.yandextest.App;
 import rxlll.yandextest.data.network.models.dictionary.Dictionary;
 import rxlll.yandextest.data.network.models.translator.Detect;
 import rxlll.yandextest.data.network.models.translator.Langs;
-import rxlll.yandextest.data.network.models.translator.Translate;
 import rxlll.yandextest.data.repositories.database.DatabaseRepository;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.data.repositories.database.Translation;
@@ -49,8 +48,25 @@ public class ApiInteractorImpl implements ApiInteractor {
 
     @Override
     public Maybe<Translation> translate(String text, Pair<Lang, Lang> dir) {
-        String dirRequest = dir.first.getCode() + "-" + dir.second.getCode();
-        Single<Translation> remote = Single.zip(translatorRepository.translate(text, dirRequest),
+        String dirRequest = ((dir.first.getCode() != null) ? dir.first.getCode() + "-" : "") +
+                dir.second.getCode();
+        Single<Translation> remote = Single.zip(
+                (dirRequest.length() > 2) ? translatorRepository.translate(text, dirRequest) :
+                        Single.zip(translatorRepository.translate(text, dirRequest),
+                                databaseRepository.getLangs(),
+                                (translateResponse, langs) -> {
+                                    for (Lang lang : langs) {
+                                        if (translateResponse.body()
+                                                .getDetected()
+                                                .getLang()
+                                                .equals(lang.getCode())) {
+                                            translateResponse.body().getDetected().setLangPretty(lang);
+                                            Log.d(LOG_TAG, "Ответ с определенным языком дополнен языком из БД");
+                                            return translateResponse;
+                                        }
+                                    }
+                                    return translateResponse;
+                                }),
                 dictionaryRepository.lookup(text.contains(" ") ? "" : text, dirRequest, UI),
                 (translateResponse, dictionaryResponse) -> {
                     Log.d(LOG_TAG, "Пришли оба ответа с сервера");
@@ -60,18 +76,16 @@ public class ApiInteractorImpl implements ApiInteractor {
                     translation.setTranslateJsonResponse(new Gson().toJson(translateResponse.body()));
                     translation.setDictionaryJsonResponse(new Gson().toJson(dictionaryResponse.body()));
                     translation.setDirection(dirRequest);
+                    if (dir.first.getId() == null) {
+                        translation.setDir(new Pair<>(translateResponse.body().getDetected().getLangPretty(),
+                                dir.second));
+                    }
                     databaseRepository.putTranslation(translation).subscribe();
                     return translation;
                 });
         return databaseRepository.getTranslation(text, dirRequest)
                 .filter(translation -> translation.getOriginal() != null)
                 .switchIfEmpty(remote.toMaybe());
-    }
-
-
-    @Override
-    public Single<Response<Translate>> translate(String text, String lang, String options) {
-        return translatorRepository.translate(text, lang, options);
     }
 
     @Override

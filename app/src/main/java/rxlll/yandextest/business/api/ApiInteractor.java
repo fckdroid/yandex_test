@@ -8,7 +8,6 @@ import retrofit2.Response;
 import rxlll.yandextest.data.network.models.dictionary.Dictionary;
 import rxlll.yandextest.data.network.models.translator.Detect;
 import rxlll.yandextest.data.network.models.translator.Langs;
-import rxlll.yandextest.data.network.models.translator.Translate;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.data.repositories.database.Translation;
 
@@ -18,10 +17,6 @@ public interface ApiInteractor {
 
     Maybe<Translation> translate(String text,
                                  Pair<Lang, Lang> lang);
-
-    Single<Response<Translate>> translate(String text,
-                                          String lang,
-                                          String options);
 
     Single<Response<Detect>> detect(String text);
 

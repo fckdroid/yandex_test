@@ -14,7 +14,6 @@ import rxlll.yandextest.R;
 import rxlll.yandextest.data.repositories.database.Lang;
 
 import static rxlll.yandextest.ui.translator.TranslatorController.TYPE_L;
-import static rxlll.yandextest.ui.translator.TranslatorController.TYPE_R;
 
 /**
  * Created by Maksim Sukhotski on 4/22/2017.
@@ -31,7 +30,6 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewH
     private boolean atFirst;
     private OnLangClickClickListener onLangClickListener;
     private OnSwitchClickListener onSwitchClickListener;
-    private Switch switchView;
 
     public RecyclerAdapter(List<Lang> langs, Lang checkedLang, boolean type, boolean switchState) {
         this.langs = langs;
@@ -59,11 +57,8 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewH
             if (position == 0) return VIEW_TYPE_SWITCH;
             return VIEW_TYPE_LANG;
         }
-        if (type == TYPE_R) {
-            if (position > 5) return VIEW_TYPE_LANG;
-            if (position == 4 || position == 0) return VIEW_TYPE_DESCRIPTION;
-            return VIEW_TYPE_LANG;
-        }
+        if (position > 5) return VIEW_TYPE_LANG;
+        if (position == 4 || position == 0) return VIEW_TYPE_DESCRIPTION;
         return VIEW_TYPE_LANG;
     }
 
@@ -80,17 +75,20 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewH
     public void onBindViewHolder(RecyclerAdapter.RecyclerViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_LANG:
-                holder.itemView.setOnClickListener(view -> onLangClickListener.onLangClick(langs.get(position - (type == TYPE_L ? 2 : 1))));
+                holder.itemView.setOnClickListener(view -> {
+                    if (checkedLang.getId() == null)
+                        onSwitchClickListener.onSwitchClick(false);
+                    onLangClickListener.onLangClick(langs.get(position - (type == TYPE_L ? 2 : 1)));
+                });
                 holder.textView.setText(langs.get(position - (type == TYPE_L ? 2 : 1)).getDescription());
                 holder.checkedImageView.setVisibility(View.INVISIBLE);
                 if (checkedLang != null && checkedLang.equals(langs.get(position - (type == TYPE_L ? 2 : 1))))
                     holder.checkedImageView.setVisibility(View.VISIBLE);
                 break;
             case VIEW_TYPE_SWITCH:
+                holder.switchView.setChecked(switchState);
                 holder.switchView.setOnCheckedChangeListener((buttonView, isChecked) ->
                         onSwitchClickListener.onSwitchClick(isChecked));
-                switchView = holder.switchView;
-                switchView.setChecked(switchState);
                 break;
             case VIEW_TYPE_DESCRIPTION:
                 if (atFirst) {

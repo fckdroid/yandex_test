@@ -15,6 +15,8 @@ import rxlll.yandextest.data.network.models.translator.Translate;
 
 public class TranslatorRepositoryImpl implements TranslatorRepository {
 
+    public static final int OPTION_AUTO_TRANSLATE_OFF = 0;
+    public static final int OPTION_AUTO_TRANSLATE_ON = 1;
     @Inject
     TranslatorApi translatorApi;
 
@@ -24,12 +26,8 @@ public class TranslatorRepositoryImpl implements TranslatorRepository {
 
     @Override
     public Single<Response<Translate>> translate(String text, String lang) {
-        return translatorApi.translate(text, lang, null);
-    }
-
-    @Override
-    public Single<Response<Translate>> translate(String text, String lang, String options) {
-        return translatorApi.translate(text, lang, options);
+        return lang.length() > 2 ? translatorApi.translate(text, lang, OPTION_AUTO_TRANSLATE_OFF) :
+                translatorApi.translate(text, lang, OPTION_AUTO_TRANSLATE_ON);
     }
 
     @Override
@@ -46,9 +44,4 @@ public class TranslatorRepositoryImpl implements TranslatorRepository {
     public Maybe<Response<Langs>> getLangs(String ui) {
         return translatorApi.getLangs(ui);
     }
-
-//    @Override
-//    public Completable putLangs(Langs langs) {
-//        return null;
-//    }
 }

@@ -69,6 +69,12 @@ public class DatabaseRepositoryImpl implements DatabaseRepository {
     }
 
     @Override
+    public Single<Lang> getLang(String code) {
+        return Single.fromCallable(() ->
+                langDao.queryBuilder().where(LangDao.Properties.Code.eq(code)).unique());
+    }
+
+    @Override
     public Completable putTranslation(Translation translation) {
         return Completable.fromAction(() -> translationDao.insertOrReplace(translation))
                 .doOnComplete(() -> Log.d(LOG_TAG, "Перевод записан в БД"));

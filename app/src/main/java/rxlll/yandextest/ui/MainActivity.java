@@ -55,6 +55,9 @@ public final class MainActivity extends AppCompatActivity {
                 case R.id.pager:
                     pagerView.setVisibility(View.VISIBLE);
                     visibleLayoutNumber = 2;
+                    if (pagerRouter.hasRootController()) {
+                        pagerRouter.setRoot(RouterTransaction.with(new PagerController()));
+                    }
                     if (bottomNavigationView.getSelectedItemId() != item.getItemId())
                         pagerView.startAnimation(controllerAnim);
                     break;

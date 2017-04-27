@@ -59,7 +59,11 @@ public class LangsController extends MoxyController implements LangsView {
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setHasFixedSize(true);
         recyclerAdapter.setOnLangClickListener(lang -> langsPresenter.setLang(type, lang, getTargetController()));
-        recyclerAdapter.setOnSwitchListener(checked -> langsPresenter.setAutoDetect(type, checked, getTargetController()));
+        recyclerAdapter.setOnSwitchListener(checked -> {
+            langsPresenter.setAutoDetect(type, checked, getTargetController());
+//            if (checked && currentLang.getId() != null) {
+//            }
+        });
     }
 
     @Override

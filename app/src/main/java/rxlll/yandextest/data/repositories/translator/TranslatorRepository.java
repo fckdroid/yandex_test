@@ -14,10 +14,6 @@ public interface TranslatorRepository {
     Single<Response<Translate>> translate(String text,
                                           String lang);
 
-    Single<Response<Translate>> translate(String text,
-                                          String lang,
-                                          String options);
-
     Single<Response<Detect>> detect(String text);
 
     Single<Response<Detect>> detect(String text,

@@ -20,7 +20,7 @@ public interface TranslatorApi {
     @POST("translate")
     Single<Response<Translate>> translate(@Field("text") String text,
                                           @Field("lang") String lang,
-                                          @Field("options") String options);
+                                          @Field("options") int options);
 
     @FormUrlEncoded
     @POST("detect")

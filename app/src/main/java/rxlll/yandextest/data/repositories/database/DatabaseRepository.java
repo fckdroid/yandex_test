@@ -17,6 +17,8 @@ public interface DatabaseRepository {
 
     Single<List<Lang>> getLangs();
 
+    Single<Lang> getLang(String code);
+
     Completable putTranslation(Translation translation);
 
     Single<List<Translation>> getTranslations(boolean favorites);

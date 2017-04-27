@@ -113,13 +113,12 @@ public class TranslatorController extends MoxyController implements TranslatorVi
                 translatorPresenter.pushLangsController(TYPE_L, dir.first));
         rightTextView.setOnClickListener(v ->
                 translatorPresenter.pushLangsController(TYPE_R, dir.second));
-        swapImageView.setOnClickListener(v ->
-                translatorPresenter.swapDir(dir));
+        swapImageView.setOnClickListener(v -> translatorPresenter.swapDir(dir));
         copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
         copyRightTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         translateButton.setOnClickListener(v -> {
-            translatorPresenter.translateText(translatorEditText.getText().toString(), dir);
+            translatorPresenter.translate(translatorEditText.getText().toString(), dir);
             closeKeyboard();
         });
 
@@ -155,13 +154,19 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         isSwapped = !isSwapped;
         leftTextView.setText(dir.first.getDescription());
         rightTextView.setText(dir.second.getDescription());
-        if (dir.first.getDescription() == "Определить") {
+        if (dir.first.getDescription().equals("Определить")) {
             translatorEditText.setHint("Введите текст");
             swapImageView.setClickable(false);
             swapImageView.setBackground(getResources().getDrawable(R.drawable.circle_gray));
         } else {
             translatorEditText.setHint("Введите текст (" + dir.first.getDescription() + ")");
+            swapImageView.setBackground(getResources().getDrawable(R.drawable.circle));
             swapImageView.setClickable(true);
+        }
+        if (dir.first.getId() != null) {
+            translatorPresenter.setAutoDetect(false);
+        } else {
+            translatorPresenter.setAutoDetect(true);
         }
     }
 
@@ -178,6 +183,9 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     public void showTranslation(Translation translation) {
         if (translation.isNotEmpty()) {
             this.translation = translation;
+            if (translation.getDir().first.getId() != null) {
+                translatorPresenter.setAutoDetect(false);
+            }
             if (translation.getDictionaryObject() != null &&
                     translation.getDictionaryObject().getDef().length > 0)
                 translateDescrTextView.setText(translation.getDictionaryObject().getDef()[0].getTs());

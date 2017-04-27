@@ -62,7 +62,6 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                                     if (langsResponse.body().getLangsObject() == null) {
                                         dir.first.setDescription(langsResponse.body().getLangs().get(dir.first.getCode()));
                                         dir.second.setDescription(langsResponse.body().getLangs().get(dir.second.getCode()));
-                                        getViewState().showDirUpdated(dir);
                                     } else {
                                         for (Lang lang : langsResponse.body().getLangsObject()) {
                                             if (lang.getCode().equals(dir.first.getCode())) {
@@ -79,6 +78,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                                             }
                                         }
                                     }
+                                    getViewState().showDirWithoutAnim(dir);
                                     getViewState().showDirUpdated(dir);
                                     dataReceived = true;
                                 }))
@@ -113,13 +113,14 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .subscribe();
     }
 
-    public void translateText(String text, Pair<Lang, Lang> dir) {
+    public void translate(String text, Pair<Lang, Lang> dir) {
         if (text.isEmpty() || dir == null) return;
         apiInteractor.translate(text, dir)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(translateResponse -> {
                             getViewState().showTranslation(translateResponse);
+                            getViewState().showDirWithoutAnim(translateResponse.getDir());
                             getViewState().showTranslationFavorite(translateResponse.getIsFavorite());
                         },
                         new ErrorConsumer(retrofitException -> getViewState().showMessage("Проверьте подключение к сети")));
@@ -152,5 +153,12 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
         getViewState().showTranslationFavorite(isFavorite);
+    }
+
+    public void setAutoDetect(boolean checked) {
+        clientInteractor.putAutoDetectSetting(checked)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 }
