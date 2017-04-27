@@ -34,7 +34,10 @@ public class FavoritesPresenter extends MvpPresenter<FavoritesView> {
                 .subscribe(translations -> getViewState().showTranslations(translations));
     }
 
-    public void setFavorite(Translation translation) {
-        clientInteractor.putTranslationFavorite(translation);
+    public void updateTranslation(Translation translation) {
+        clientInteractor.putTranslationFavorite(translation)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 }

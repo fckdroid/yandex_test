@@ -50,10 +50,11 @@ public class FavoritesController extends MoxyController implements FavoritesView
         recyclerView.setHasFixedSize(true);
         recyclerAdapter.setOnTranslationClickListener(translation ->
                 ((MainActivity) getActivity()).showTranslatorController(translation));
-        recyclerAdapter.setOnFavoriteClickListener((checked, position) -> {
-            recyclerAdapter.getTranslations().set(position, checked);
-            recyclerAdapter.notifyDataSetChanged();
-            favoritesPresenter.setFavorite(checked);
+        recyclerAdapter.setOnFavoriteClickListener((translation, position) -> {
+            recyclerAdapter.getTranslations().remove(position);
+            recyclerAdapter.notifyItemRemoved(position);
+            recyclerAdapter.notifyItemRangeChanged(position, recyclerAdapter.getItemCount());
+            favoritesPresenter.updateTranslation(translation);
         });
     }
 }
