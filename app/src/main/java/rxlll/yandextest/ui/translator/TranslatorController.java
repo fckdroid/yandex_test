@@ -139,7 +139,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
     @Override
-    public void showDirUpdated(Pair<Lang, Lang> dir) {
+    public void updateDirections(Pair<Lang, Lang> dir) {
         this.dir = dir;
         swapImageView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 isSwapped ? R.anim.rotate : R.anim.rotate_invert));
@@ -149,7 +149,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     }
 
     @Override
-    public void showDirWithoutAnim(Pair<Lang, Lang> dir) {
+    public void showDirections(Pair<Lang, Lang> dir) {
         this.dir = dir;
         isSwapped = !isSwapped;
         leftTextView.setText(dir.first.getDescription());

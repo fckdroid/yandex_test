@@ -78,8 +78,8 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                                             }
                                         }
                                     }
-                                    getViewState().showDirWithoutAnim(dir);
-                                    getViewState().showDirUpdated(dir);
+                                    getViewState().showDirections(dir);
+                                    getViewState().updateDirections(dir);
                                     dataReceived = true;
                                 }))
                 .subscribe(langsResponse -> {
@@ -97,7 +97,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
-        getViewState().showDirUpdated(newDir);
+        getViewState().updateDirections(newDir);
     }
 
     public void pushLangsController(boolean type, Lang currLang) {
@@ -106,7 +106,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
 
     public void updateCurrentDir(Pair<Lang, Lang> dir) {
         if (dir == null) return;
-        getViewState().showDirWithoutAnim(dir);
+        getViewState().showDirections(dir);
         clientInteractor.putDir(dir)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,7 +122,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(translateResponse -> {
                             getViewState().showTranslation(translateResponse);
-                            getViewState().showDirWithoutAnim(translateResponse.getDir());
+                            getViewState().showDirections(translateResponse.getDir());
                             getViewState().showTranslationFavorite(translateResponse.getIsFavorite());
                         },
                         new ErrorConsumer(retrofitException -> getViewState().showMessage("Проверьте подключение к сети")));
@@ -140,7 +140,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
     }
 
     public void saveDirState(Pair<Lang, Lang> dir) {
-        getViewState().showDirWithoutAnim(dir);
+        getViewState().showDirections(dir);
     }
 
     public void clearTranslatedText() {

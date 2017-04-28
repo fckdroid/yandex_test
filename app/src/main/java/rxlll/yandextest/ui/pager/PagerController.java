@@ -114,12 +114,10 @@ public class PagerController extends MoxyController implements PagerView {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (posSelected == 0) {
+                if (posSelected == 0 && pagerAdapter.getRouter(0) != null)
                     ((HistoryController) pagerAdapter.getRouter(0).getControllerWithTag(HistoryController.TAB_NAME)).updateRecyclerWith(s.toString());
-                }
-                if (posSelected == 1) {
+                if (posSelected == 1 && pagerAdapter.getRouter(1) != null)
                     ((FavoritesController) pagerAdapter.getRouter(1).getControllerWithTag(FavoritesController.TAB_NAME)).updateRecyclerWith(s.toString());
-                }
             }
         });
         view.findViewById(R.id.delete_image_view).setOnClickListener(v -> {

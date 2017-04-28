@@ -17,13 +17,14 @@ import rxlll.yandextest.data.repositories.database.Translation;
 @StateStrategyType(SkipStrategy.class)
 public interface TranslatorView extends MvpView {
 
-    void showDirUpdated(Pair<Lang, Lang> dir);
+    void updateDirections(Pair<Lang, Lang> dir);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void showDirWithoutAnim(Pair<Lang, Lang> dir);
+    void showDirections(Pair<Lang, Lang> dir);
 
     void showLangsController(boolean type, Lang s);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void showTranslation(Translation translation);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
