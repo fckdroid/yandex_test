@@ -6,14 +6,14 @@ import rxlll.yandextest.data.repositories.database.Lang;
 
 public class Detect {
     private String lang;
-    private Lang langPretty;
+    private Lang langObject;
 
-    public Lang getLangPretty() {
-        return langPretty;
+    public Lang getLangObject() {
+        return langObject;
     }
 
-    public void setLangObject(Lang langPretty) {
-        this.langPretty = langPretty;
+    public void setLangObject(Lang langObject) {
+        this.langObject = langObject;
     }
 
     public String getLang ()

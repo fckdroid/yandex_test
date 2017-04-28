@@ -69,7 +69,7 @@ public class ApiInteractorImpl implements ApiInteractor {
                     if (direction.first.getId() == null)
                         translation.setDir(new Pair<>(translateResponse.body()
                                 .getDetected()
-                                .getLangPretty(), direction.second));
+                                .getLangObject(), direction.second));
                     return translation;
                 })
                 .doOnSuccess(translation -> databaseRepository.putTranslation(translation)

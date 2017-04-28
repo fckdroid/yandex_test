@@ -54,6 +54,7 @@ public class FavoritesController extends MoxyController implements FavoritesView
                 ((MainActivity) getActivity()).showTranslatorController(translation));
         recyclerAdapter.setOnFavoriteClickListener((translation, position) -> {
             recyclerAdapter.getTranslations().remove(position);
+            recyclerAdapter.getTranslationsForFilter().remove(position);
             recyclerAdapter.notifyItemRemoved(position);
             recyclerAdapter.notifyItemRangeChanged(position, recyclerAdapter.getItemCount());
             favoritesPresenter.updateTranslation(translation);
@@ -67,9 +68,11 @@ public class FavoritesController extends MoxyController implements FavoritesView
     public void updateTranslationsWith(Translation translation) {
         if (translation.getIsFavorite()) {
             recyclerAdapter.getTranslations().add(translation);
+            recyclerAdapter.getTranslationsForFilter().add(translation);
             recyclerAdapter.notifyDataSetChanged();
         } else {
             recyclerAdapter.getTranslations().remove(translation);
+            recyclerAdapter.getTranslationsForFilter().remove(translation);
             recyclerAdapter.notifyDataSetChanged();
 
         }

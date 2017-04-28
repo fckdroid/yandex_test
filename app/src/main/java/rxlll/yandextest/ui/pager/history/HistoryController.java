@@ -56,6 +56,7 @@ public class HistoryController extends MoxyController implements HistoryView {
                 ((MainActivity) getActivity()).showTranslatorController(translation));
         recyclerAdapter.setOnFavoriteClickListener((translation, position) -> {
             recyclerAdapter.getTranslations().set(position, translation);
+            recyclerAdapter.getTranslationsForFilter().set(position, translation);
             recyclerAdapter.notifyDataSetChanged();
             historyPresenter.setFavorite(translation);
             ((FavoritesController) ((PagerController) getParentController())
@@ -69,6 +70,7 @@ public class HistoryController extends MoxyController implements HistoryView {
         for (int i = 0; i < recyclerAdapter.getTranslations().size(); i++) {
             if (recyclerAdapter.getTranslations().get(i).getId() == translation.getId()) {
                 recyclerAdapter.getTranslations().set(i, translation);
+                recyclerAdapter.getTranslationsForFilter().set(i, translation);
                 recyclerAdapter.notifyDataSetChanged();
                 return;
             }
