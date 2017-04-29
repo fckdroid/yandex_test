@@ -169,7 +169,7 @@ public final class MainActivity extends AppCompatActivity {
     public void showTranslatorController(Translation translation) {
         if (translatorRouter.getControllerWithTag(TRANSLATOR_CONTROLLER_TAG) != null)
             ((TranslatorController) translatorRouter.getControllerWithTag(TRANSLATOR_CONTROLLER_TAG))
-                    .showTranslation(translation);
+                    .translatorPresenter.getViewState().showTranslation(translation);
         onBackPressed();
     }
 

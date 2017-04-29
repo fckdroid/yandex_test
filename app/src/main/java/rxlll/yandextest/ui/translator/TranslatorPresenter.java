@@ -14,10 +14,12 @@ import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 import rxlll.yandextest.App;
 import rxlll.yandextest.business.api.ApiInteractor;
 import rxlll.yandextest.business.client.ClientInteractor;
 import rxlll.yandextest.data.network.errors.ErrorConsumer;
+import rxlll.yandextest.data.network.models.translator.Langs;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.data.repositories.database.Translation;
 
@@ -38,7 +40,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
 
     private boolean dataReceived;
 
-    public TranslatorPresenter(Context context) {
+    TranslatorPresenter(Context context) {
         App.appComponent.inject(this);
         dataReceived = true;
         updateNetworkState(context);
@@ -51,43 +53,46 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
     }
 
     private void getData() {
-        clientInteractor.getDir()
+        clientInteractor.getDirection()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMapMaybe(dir ->
-                        apiInteractor.getLangs(UI)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .doOnSuccess(langsResponse -> {
-                                    if (langsResponse.body().getLangsObject() == null) {
-                                        dir.first.setDescription(langsResponse.body().getLangs().get(dir.first.getCode()));
-                                        dir.second.setDescription(langsResponse.body().getLangs().get(dir.second.getCode()));
-                                    } else {
-                                        for (Lang lang : langsResponse.body().getLangsObject()) {
-                                            if (lang.getCode().equals(dir.first.getCode())) {
-                                                dir.first.setCode(lang.getCode());
-                                                dir.first.setDescription(lang.getDescription());
-                                                dir.first.setRating(lang.getRating());
-                                                dir.first.setId(lang.getId());
-                                            }
-                                            if (lang.getCode().equals(dir.second.getCode())) {
-                                                dir.second.setCode(lang.getCode());
-                                                dir.second.setDescription(lang.getDescription());
-                                                dir.second.setRating(lang.getRating());
-                                                dir.second.setId(lang.getId());
-                                            }
-                                        }
-                                    }
-                                    getViewState().showDirections(dir);
-                                    getViewState().updateDirections(dir);
-                                    dataReceived = true;
-                                }))
+                .flatMapMaybe(direction -> apiInteractor.getLangs(UI)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSuccess(langs -> makeDirections(direction, langs)))
                 .subscribe(langsResponse -> {
                         }, new ErrorConsumer(retrofitException -> {
                             dataReceived = false;
                             getViewState().showMessage("Проверьте подключение к сети");
                         })
                 );
+    }
+
+    private void makeDirections(Pair<Lang, Lang> direction, Response<Langs> langs) {
+        if (langs.body().getLangsObject() == null) {
+            String first = langs.body().getLangs().get(direction.first.getCode());
+            String second = langs.body().getLangs().get(direction.second.getCode());
+            direction.first.setDescription(first);
+            direction.second.setDescription(second);
+        } else {
+            for (Lang lang : langs.body().getLangsObject()) {
+                if (lang.getCode().equals(direction.first.getCode())) {
+                    direction.first.setCode(lang.getCode());
+                    direction.first.setDescription(lang.getDescription());
+                    direction.first.setRating(lang.getRating());
+                    direction.first.setId(lang.getId());
+                }
+                if (lang.getCode().equals(direction.second.getCode())) {
+                    direction.second.setCode(lang.getCode());
+                    direction.second.setDescription(lang.getDescription());
+                    direction.second.setRating(lang.getRating());
+                    direction.second.setId(lang.getId());
+                }
+            }
+        }
+        getViewState().showDirections(direction);
+        getViewState().updateDirections(direction);
+        dataReceived = true;
     }
 
     public void swapDir(Pair<Lang, Lang> dir) {
@@ -123,9 +128,33 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 .subscribe(translateResponse -> {
                             getViewState().showTranslation(translateResponse);
                             getViewState().showDirections(translateResponse.getDir());
-                            getViewState().showTranslationFavorite(translateResponse.getIsFavorite());
                         },
-                        new ErrorConsumer(retrofitException -> getViewState().showMessage("Проверьте подключение к сети")));
+                        new ErrorConsumer(retrofitException ->
+                                getViewState().showMessage("Проверьте подключение к сети")));
+    }
+
+    void saveDirState(Pair<Lang, Lang> dir) {
+        getViewState().showDirections(dir);
+    }
+
+    void clearTranslatedText() {
+        getViewState().showTranslation(new Translation());
+    }
+
+    void setTranslateFavorite(Translation translation, boolean isFavorite) {
+        translation.setIsFavorite(isFavorite);
+        clientInteractor.putTranslationFavorite(translation)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+        getViewState().showTranslation(translation);
+    }
+
+    void setAutoDetect(boolean checked) {
+        clientInteractor.putAutoDetectSetting(checked)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     private void updateNetworkState(Context context) {
@@ -136,31 +165,7 @@ public class TranslatorPresenter extends MvpPresenter<TranslatorView> {
                 if (!dataReceived) getData();
             }
         };
-        context.registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-    }
-
-    public void saveDirState(Pair<Lang, Lang> dir) {
-        getViewState().showDirections(dir);
-    }
-
-    public void clearTranslatedText() {
-        getViewState().showTranslation(new Translation());
-        getViewState().showTranslationFavorite(false);
-    }
-
-    public void setTranslateFavorite(Translation translation, boolean isFavorite) {
-        translation.setIsFavorite(isFavorite);
-        clientInteractor.putTranslationFavorite(translation)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-        getViewState().showTranslationFavorite(isFavorite);
-    }
-
-    public void setAutoDetect(boolean checked) {
-        clientInteractor.putAutoDetectSetting(checked)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+        context.registerReceiver(broadcastReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 }

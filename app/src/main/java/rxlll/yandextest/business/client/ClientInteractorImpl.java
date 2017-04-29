@@ -46,8 +46,8 @@ public class ClientInteractorImpl implements ClientInteractor {
     }
 
     @Override
-    public Single<Pair<Lang, Lang>> getDir() {
-        return preferencesRepository.getDir();
+    public Single<Pair<Lang, Lang>> getDirection() {
+        return preferencesRepository.getDirection();
     }
 
     @Override

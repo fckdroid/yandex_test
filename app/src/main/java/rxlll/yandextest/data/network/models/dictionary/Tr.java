@@ -1,16 +1,19 @@
 package rxlll.yandextest.data.network.models.dictionary;
 
+import java.util.List;
+
 /**
  * Created by Maksim Sukhotski on 4/21/2017.
  */
 
-class Tr {
+public class Tr {
     private String text;
     private String pos;
     private String gen;
-    private Syn[] syn;
-    private Mean[] mean;
-
+    private List<Syn> syn;
+    private List<Mean> mean;
+    private List<Ex> ex;
+    private String asp;
     public String getText() {
         return text;
     }
@@ -23,11 +26,19 @@ class Tr {
         return gen;
     }
 
-    public Syn[] getSyn() {
+    public List<Syn> getSyn() {
         return syn;
     }
 
-    public Mean[] getMean() {
+    public List<Mean> getMean() {
         return mean;
+    }
+
+    public List<Ex> getEx() {
+        return ex;
+    }
+
+    public String getAsp() {
+        return asp;
     }
 }

@@ -1,5 +1,7 @@
 package rxlll.yandextest.data.network.models.dictionary;
 
+import java.util.List;
+
 /**
  * Created by Maksim Sukhotski on 4/21/2017.
  */
@@ -8,7 +10,7 @@ public class Def {
     private String text;
     private String pos;
     private String ts;
-    private Tr[] tr;
+    private List<Tr> tr;
 
     public String getText() {
         return text;
@@ -22,7 +24,7 @@ public class Def {
         return ts;
     }
 
-    public Tr[] getTr() {
+    public List<Tr> getTr() {
         return tr;
     }
 }

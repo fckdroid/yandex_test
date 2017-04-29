@@ -26,10 +26,14 @@ import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import rxlll.yandextest.App;
 import rxlll.yandextest.R;
+import rxlll.yandextest.data.network.models.dictionary.Def;
 import rxlll.yandextest.data.repositories.database.Lang;
 import rxlll.yandextest.data.repositories.database.Translation;
 import rxlll.yandextest.ui.base.MoxyController;
 import rxlll.yandextest.ui.langs.LangsController;
+
+import static rxlll.yandextest.ui.translator.DictionaryBuilder.makeDef;
+import static rxlll.yandextest.ui.translator.DictionaryBuilder.makeTranslations;
 
 /**
  * Created by Maksim Sukhotski on 4/16/2017.
@@ -42,7 +46,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     public static final boolean TYPE_R = true;
     private static final int MAX_LETTERS = 10000;
     @InjectPresenter
-    TranslatorPresenter translatorPresenter;
+    public TranslatorPresenter translatorPresenter;
     private boolean animIsNotRun;
     private boolean translationUpdated;
     private boolean isSwapped;
@@ -50,6 +54,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     private View swapImageView;
     private LinearLayout buttonContainer;
     private LinearLayout translatedLinearLayout;
+    private LinearLayout dictionaryContainer;
     private TextInputLayout textInputLayout;
     private ImageView favoriteImageView;
     private Button translateButton;
@@ -95,9 +100,10 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         translatedLinearLayout = ((LinearLayout) view.findViewById(R.id.translated_linear_layout));
         navigationView = getActivity().findViewById(R.id.navigation);
         favoriteImageView = (ImageView) view.findViewById(R.id.favorite_image_view);
+        dictionaryContainer = (LinearLayout) view.findViewById(R.id.dictionary_container);
 
         TextView copyRightTextView = ((TextView) view.findViewById(R.id.copyright_text_view));
-        copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
+        copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.yandex_copyright)));
         copyRightTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         translatorEditText.addTextChangedListener(new TextWatcherAdapter(translatorEditText, this));
@@ -114,14 +120,10 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         rightTextView.setOnClickListener(v ->
                 translatorPresenter.pushLangsController(TYPE_R, dir.second));
         swapImageView.setOnClickListener(v -> translatorPresenter.swapDir(dir));
-        copyRightTextView.setText(Html.fromHtml(getActivity().getString(R.string.translateFragment_copyright)));
-        copyRightTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
         translateButton.setOnClickListener(v -> {
             translatorPresenter.translate(translatorEditText.getText().toString(), dir);
             closeKeyboard();
         });
-
         translatorEditText.setOnTouchListener((v, event) -> {
             if (v.getId() == R.id.translator_edit_text) {
                 v.getParent().requestDisallowInterceptTouchEvent(true);
@@ -134,7 +136,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             return false;
         });
 
-        hideTheHorror();
+        initAnimations();
         navigationView.startAnimation(animNavUp);
     }
 
@@ -183,12 +185,11 @@ public class TranslatorController extends MoxyController implements TranslatorVi
     public void showTranslation(Translation translation) {
         if (translation.isNotEmpty()) {
             this.translation = translation;
-            if (translation.getDir().first.getId() != null) {
+            if (translation.getDir().first.getId() != null)
                 translatorPresenter.setAutoDetect(false);
-            }
             if (translation.getDictionaryObject() != null &&
-                    translation.getDictionaryObject().getDef().length > 0)
-                translateDescrTextView.setText(translation.getDictionaryObject().getDef()[0].getTs());
+                    translation.getDictionaryObject().getDef().size() > 0)
+                translateDescrTextView.setText(makeDef(translation));
             if (translatedLinearLayout.getVisibility() == View.GONE)
                 translatedLinearLayout.startAnimation(animFadingInvert);
             leftTextView.setText(translation.getOriginalLang().getDescription());
@@ -197,7 +198,22 @@ public class TranslatorController extends MoxyController implements TranslatorVi
             translateHeaderTextView.setText(translation.getTranslateObject().getText());
             translatorPresenter.saveDirState(translation.getDir());
             translatorPresenter.updateCurrentDir(translation.getDir());
+            favoriteImageView.setImageDrawable(
+                    getResources().getDrawable(translation.getIsFavorite() ?
+                            R.drawable.star_full : R.drawable.star));
             translationUpdated = true;
+
+            final LayoutInflater inflater = LayoutInflater.from(getActivity());
+            dictionaryContainer.removeAllViews();
+            for (final Def definition : translation.getDictionaryObject().getDef()) {
+                final TextView textViewPartOfSpeech = (TextView) inflater
+                        .inflate(R.layout.part_dict_speech_name, null);
+                dictionaryContainer.addView(textViewPartOfSpeech);
+                textViewPartOfSpeech.setText(definition.getPos());
+                if (definition.getTr() != null) {
+                    makeTranslations(dictionaryContainer, inflater, definition.getTr());
+                }
+            }
         }
     }
 
@@ -232,18 +248,12 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         Toast.makeText(getActivity(), localizedMessage, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void showTranslationFavorite(boolean isFavorite) {
-        favoriteImageView.setImageDrawable(getResources()
-                .getDrawable(isFavorite ? R.drawable.star_full : R.drawable.star));
-    }
-
     private void closeKeyboard() {
         ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 
-    private void hideTheHorror() {
+    private void initAnimations() {
         animButtonDown = AnimationUtils.loadAnimation(getActivity(), R.anim.button_down);
         animButtonUp = AnimationUtils.loadAnimation(getActivity(), R.anim.button_up);
         animFading = AnimationUtils.loadAnimation(getActivity(), R.anim.fading);
@@ -255,9 +265,7 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         Animation animFadingForRepeat = AnimationUtils.loadAnimation(getActivity(), R.anim.fading);
         animNavDown = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_down);
         animNavUp = AnimationUtils.loadAnimation(getActivity(), R.anim.nav_up);
-
         animIsNotRun = true;
-
         animNavUp.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -266,15 +274,12 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
-//        navigationView.startAnimation(animNavUp);
         animLeftToCenter.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -288,7 +293,6 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
         animFadingForRepeat.setAnimationListener(new Animation.AnimationListener() {
@@ -302,21 +306,19 @@ public class TranslatorController extends MoxyController implements TranslatorVi
                     translateHeaderTextView.setText(translation.getTranslateObject().getText());
                     translatedLinearLayout.startAnimation(animFadingInvert);
                     if (translation.getDictionaryObject() != null &&
-                            translation.getDictionaryObject().getDef().length > 0)
+                            translation.getDictionaryObject().getDef().size() > 0)
                         translateDescrTextView.setText(
-                                translation.getDictionaryObject().getDef()[0].getTs());
+                                translation.getDictionaryObject().getDef().get(0).getTs());
                 }
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
         animRightToCenter.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
@@ -327,13 +329,11 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
         animCenterToLeft.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
@@ -343,7 +343,6 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
         animFadingInvert.setAnimationListener(new Animation.AnimationListener() {
@@ -410,7 +409,6 @@ public class TranslatorController extends MoxyController implements TranslatorVi
         animNavDown.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
@@ -420,7 +418,6 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
     }

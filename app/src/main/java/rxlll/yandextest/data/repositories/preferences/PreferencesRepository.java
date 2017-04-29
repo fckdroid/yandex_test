@@ -20,7 +20,7 @@ public interface PreferencesRepository {
 
     Completable putDir(Pair<Lang, Lang> dir);
 
-    Single<Pair<Lang, Lang>> getDir();
+    Single<Pair<Lang, Lang>> getDirection();
 
     Completable putAutoDetectSetting(boolean isTurnedOn);
 

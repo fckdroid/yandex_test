@@ -51,7 +51,7 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     @Override
-    public Single<Pair<Lang, Lang>> getDir() {
+    public Single<Pair<Lang, Lang>> getDirection() {
         return Single.fromCallable(() -> {
             Lang langLeft = new Lang();
             Lang langRight = new Lang();
