@@ -1,6 +1,6 @@
 {
   "translator_api_url": "https://translate.yandex.net/api/v1.5/tr.json/",
-  "translator_api_key": "",
+  "translator_api_key": "trnsl.1.1.20171030T134224Z.aa175e85a172bdf8.9efac0e6c9d8867bef9c7b0f9f9db661008f4ef6",
   "dictionary_api_url": "https://dictionary.yandex.net/api/v1/dicservice.json/",
-  "dictionary_api_key": ""
+  "dictionary_api_key": "dict.1.1.20171030T134305Z.476db7a6dfd7c220.73282dc885e302d6f9259c67e4607e28257c925f"
 }

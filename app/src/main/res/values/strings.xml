@@ -2,6 +2,6 @@
     <string name="app_name">Yandex Test</string>
     <string name="translate">Переводчик</string>
     <string name="phrasebook">Разговорник</string>
-    <string name="settings">Настройки</string>
+    <string name="settings">О приложении</string>
     <string name="yandex_copyright" tools:ignore="TypographyQuotes"><![CDATA[Переведено сервисом «<a href="http://translate.yandex.ru/">Яндекс.Переводчик</a>»]]></string>
 </resources>

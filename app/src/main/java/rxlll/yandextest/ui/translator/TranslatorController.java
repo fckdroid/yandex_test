@@ -205,13 +205,15 @@ public class TranslatorController extends MoxyController implements TranslatorVi
 
             final LayoutInflater inflater = LayoutInflater.from(getActivity());
             dictionaryContainer.removeAllViews();
-            for (final Def definition : translation.getDictionaryObject().getDef()) {
-                final TextView textViewPartOfSpeech = (TextView) inflater
-                        .inflate(R.layout.part_dict_speech_name, null);
-                dictionaryContainer.addView(textViewPartOfSpeech);
-                textViewPartOfSpeech.setText(definition.getPos());
-                if (definition.getTr() != null) {
-                    makeTranslations(dictionaryContainer, inflater, definition.getTr());
+            if (translation.getDictionaryObject() != null) {
+                for (final Def definition : translation.getDictionaryObject().getDef()) {
+                    final TextView textViewPartOfSpeech = (TextView) inflater
+                            .inflate(R.layout.part_dict_speech_name, null);
+                    dictionaryContainer.addView(textViewPartOfSpeech);
+                    textViewPartOfSpeech.setText(definition.getPos());
+                    if (definition.getTr() != null) {
+                        makeTranslations(dictionaryContainer, inflater, definition.getTr());
+                    }
                 }
             }
         }
