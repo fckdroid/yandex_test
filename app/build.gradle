@@ -1,26 +1,56 @@
 import groovy.json.JsonSlurper
 
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.6.+'
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 plugins {
     id "me.tatarka.retrolambda" version "3.5.0"
 }
 apply plugin: "com.android.application"
 apply plugin: "com.frogermcs.androiddevmetrics"
 apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'io.fabric'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "rxlll.yandextest"
+        applicationId "suhockii.dev.translator"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['releaseFile'])
+            keyAlias keystoreProperties['releaseAlias']
+            keyPassword keystoreProperties['releaseKeyPassword']
+            storePassword keystoreProperties['releaseStorePassword']
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
@@ -87,6 +117,7 @@ dependencies {
             rootProject.constraint,
             rootProject.recyclerview,
     )
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     debugCompile(
             rootProject.stetho,
             rootProject.stethoOkhttp,
@@ -96,5 +127,8 @@ dependencies {
     androidTestCompile(rootProject.espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+        transitive = true;
+    }
 }
 

@@ -22,7 +22,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <rxlll.yandextest.ui.translator.ClearableEditText
+        <suhockii.dev.translator.ui.translator.ClearableEditText
             android:id="@+id/translator_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

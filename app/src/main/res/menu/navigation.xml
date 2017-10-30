@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/translator"
-        android:icon="@drawable/translation"
+        android:icon="@drawable/translation_menu"
         android:title="@string/translate"/>
 
     <item

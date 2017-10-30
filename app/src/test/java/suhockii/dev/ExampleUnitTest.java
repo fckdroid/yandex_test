@@ -1,4 +1,4 @@
-package rxlll.yandextest;
+package suhockii.dev.translator;
 
 import org.junit.Test;
 
