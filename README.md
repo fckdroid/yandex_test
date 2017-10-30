@@ -4,6 +4,7 @@
 
 ## API
 To display the translations was used an open [Yandex Translator API](https://tech.yandex.ru/translate/)
+
 To display the dictionary content was used an open [Yandex Dictionary API](https://tech.yandex.ru/dictionary/)
 
 ## License
